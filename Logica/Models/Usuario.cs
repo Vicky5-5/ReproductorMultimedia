@@ -20,6 +20,7 @@ namespace Logica.Models
         public DateTime fechaRegistro { get; set; }
         public DateTime fechaBaja { get; set; }
         public bool Administrador { get; set; }
+        public virtual ICollection<ListaReproduccion> ListasReproduccion { get; set; }
 
         public Usuario()
         {

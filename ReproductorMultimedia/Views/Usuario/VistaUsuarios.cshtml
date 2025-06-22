@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Logica.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Administrador";
+}
+
+<h1>Listado Usuarios</h1>
+<a asp-action="Create">Crear Usuario</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaRegistro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaBaja)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Administrador)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaRegistro)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaBaja)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Administrador)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.idUsuario">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.idUsuario">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.idUsuario">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

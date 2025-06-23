@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 //Se configura aquii antes construir la app
 
 builder.Services.AddDbContext<Conexion>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Reproductor")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

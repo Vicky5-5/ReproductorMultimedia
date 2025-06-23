@@ -1,7 +1,9 @@
 ﻿using System;
 using Logica.Models;
 using Microsoft.AspNetCore.Http;
-usin
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+
 namespace Logica.Managers
 {
     public sealed class LoginManager
@@ -54,7 +56,7 @@ namespace Logica.Managers
 
             Session.SetString("Bienvenida", $"Bienvenido/a: {login.Nombre}");
             Session.SetString("UsuarioActual", login.Nombre);
-            Session.SetInt32("UsuarioID", login.IdUsuario);
+            Session.SetInt32("UsuarioID", login.idUsuario);
             Session.SetInt32("IntentosFallidos", 0);
             return login;
         }

@@ -1,17 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Validation;
-using System.Linq;
+﻿using System.Data.Entity.Validation;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using Logica.Contexto;
 using Logica.Models;
-using Logica.ViewModels;
 namespace Logica.Managers
 {
     public class UsuariosManager
     {
+        public static Usuario ObtenerUsuario(int id)
+        {
+            using (Conexion db = new Conexion())
+            {
+
+                //Obtener el id del producto desde la base de datos
+                Usuario usuario = db.Usuarios.FirstOrDefault(a => a.idUsuario == id);
+                return usuario;
+            }
+        }
+        public static Usuario ObtenerDatosUnUsuario(int id)
+        {
+            using (var db = new Conexion())
+            {
+
+                var usuario = db.Usuarios.SingleOrDefault(p => p.idUsuario == id);
+
+                return usuario;
+            }
+        }
         public static Usuario GuardarUsuario(int id, string nombre, string email, string password, bool estado, DateTime fechaRegistro, DateTime? fechaBaja, string direccion, bool administrador) //Esto sirve para editar y crear
         {
             using (var db = new Conexion())

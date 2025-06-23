@@ -54,11 +54,11 @@ namespace Logica.ViewModels
             //Se guarda el producto de la base de datos, del objeto producto y se retorna el producto entero
             var model = UsuariosManager.ObtenerUsuario(id);
 
-            UsuariosManager usuario = new UsuariosManager(model);
+            UsuarioViewModel usuario = new UsuarioViewModel(model);
 
             return usuario;
         }
-        public static List<UsuariosManager> ListUsuarios()
+        public static List<UsuarioViewModel> ListUsuarios()
         {
 
             var listar = UsuariosManager.ListarUsuarios();
@@ -94,13 +94,9 @@ namespace Logica.ViewModels
 
             return model;
         }
-        public static UsuarioViewModel RemoveUsuario(int id)
+        public static void RemoveUsuario(int id)
         {
-            var borrado = UsuariosManager.EliminarUsuario(id);
-
-            UsuarioViewModel model = new UsuarioViewModel(borrado);
-
-            return model;
+            UsuariosManager.EliminarUsuario(id);
         }
         public UsuarioViewModel LoginViewModel(string email, string password)
         {
@@ -120,3 +116,4 @@ namespace Logica.ViewModels
         }
     }
 }
+#endregion

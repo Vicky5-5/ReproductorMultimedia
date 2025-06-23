@@ -11,6 +11,10 @@ namespace Logica.Contexto
 {
     public class Conexion : DbContext
     {
+        public Conexion()
+        {
+        }
+
         public Conexion(DbContextOptions<Conexion> options) : base(options) { }
 
         public DbSet<Usuario> Usuarios { get; set; }

@@ -16,9 +16,10 @@ namespace Logica.Models
         public string Nombre { get; set; }
 
         public string Email { get; set; }
-
+        public string Password { get; set; }
+        public bool Estado { get; set; }
         public DateTime fechaRegistro { get; set; }
-        public DateTime fechaBaja { get; set; }
+        public DateTime? fechaBaja { get; set; }
         public bool Administrador { get; set; }
         public virtual ICollection<ListaReproduccion> ListasReproduccion { get; set; }
 

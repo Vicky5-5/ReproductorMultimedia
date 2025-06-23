@@ -1,8 +1,6 @@
 ﻿using System;
 using Logica.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Logica.Managers
 {
@@ -21,19 +19,22 @@ namespace Logica.Managers
 
         public Usuario Login(string email, string password)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
                 Session.SetString("Fallido", "Faltan datos por insertar");
                 return null;
             }
 
-            if (bloqueo && tiempoBloqueo.HasValue && DateTime.Now < tiempoBloqueo.Value)
+            var tiempoBloqueoStr = Session.GetString("TiempoBloqueo");
+            if (!string.IsNullOrEmpty(tiempoBloqueoStr) &&
+                DateTime.TryParse(tiempoBloqueoStr, out var tiempoBloqueo) &&
+                DateTime.Now < tiempoBloqueo)
             {
                 Session.SetString("Mensaje", "Cuenta bloqueada. Inténtelo nuevamente después de 10 minutos.");
                 return null;
             }
 
-            var login = UsuariosManager.Login(email, password); // Validación real contra la base de datos
+            var login = UsuariosManager.Login(email, password); // Validación real contra DB
             var hash = UsuariosManager.HashPassword(password);
 
             int intentosFallidos = Session.GetInt32("IntentosFallidos") ?? 0;
@@ -46,20 +47,22 @@ namespace Logica.Managers
 
                 if (intentosFallidos >= 3)
                 {
-                    bloqueo = true;
-                    tiempoBloqueo = DateTime.Now.AddMinutes(10);
+                    Session.SetString("TiempoBloqueo", DateTime.Now.AddMinutes(10).ToString());
                     Session.SetString("Mensaje", "Se ha superado el número de intentos. Inténtelo de nuevo en 10 minutos.");
                 }
 
                 return null;
             }
 
+            // Login exitoso
             Session.SetString("Bienvenida", $"Bienvenido/a: {login.Nombre}");
             Session.SetString("UsuarioActual", login.Nombre);
             Session.SetInt32("UsuarioID", login.idUsuario);
             Session.SetInt32("IntentosFallidos", 0);
+            Session.Remove("TiempoBloqueo"); // Reinicia bloqueo si existía
             return login;
         }
+
 
         public string GetCurrentUser()
         {

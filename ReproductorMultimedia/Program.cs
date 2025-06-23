@@ -1,5 +1,6 @@
 using System;
 using Logica.Contexto;
+using Logica.Managers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,11 @@ builder.Services.AddDbContext<Conexion>(options =>
 builder.Services.AddControllersWithViews();
 //Para controlar el el http current
 builder.Services.AddHttpContextAccessor();
+
+//Se registra con un servicio inyectable en el contenedor de dependenica
+//Para que pueda ser inyectada en culaquier controlado o servicio. El patrón Sinleton es una instancia GLOBAL
+builder.Services.AddScoped<LoginManager>();
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);

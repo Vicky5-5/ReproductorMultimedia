@@ -2,6 +2,7 @@
 using Logica.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Plugins;
 using RestSharp;
 
 namespace ReproductorMultimedia.Controllers
@@ -23,36 +24,33 @@ namespace ReproductorMultimedia.Controllers
             return RedirectToAction("Login", "Login");
 
         }
+        //Se declara solo lectura y contiene la instancia del LoginManager
+        private readonly LoginManager _loginManager;
+
+        //Creamos un constructor de inyección de dependencia para inyectar automática una instancia del LoginManager
+        //Esto va con patrón Singleton
+        public LoginController(LoginManager loginManager)
+        {
+            _loginManager = loginManager;
+        }
         //Revisar bien
         [HttpPost]
-        public ActionResult Entrar(string email, string password, UsuarioViewModel entrar)
+        public ActionResult Entrar(string email, string password)
         {
-            LoginManager loginManager = LoginManager.Instance;
-            var usuario = loginManager.Login(email, password);
+            var usuario = _loginManager.Login(email, password);
             if (usuario != null)
             {
-                if (usuario.Administrador == true)
+                if (usuario.Administrador)
                 {
-
-                    HttpCookie cookie = new HttpCookie("Nombre", entrar.Nombre); // Para sustituir el Temp Data
-                    var miCookie = ControllerContext.HttpContext.Request.Cookies["Nombre"];
-                    if (miCookie != null)
-                    {
-
-                        var nombre = loginManager.GetCurrentUser();
-                    }
-
+                    Response.Cookies.Append("Nombre", usuario.Nombre);
                     return RedirectToAction("Index", "Usuarios");
                 }
-                else
-                {
-                    TempData["Usuario"] = entrar.Nombre; // Creamos un TempData para que cuando el usuario inicie sesión se vea su nombre
-                    return RedirectToAction("Index", "Canciones");
-                }
 
+                TempData["Usuario"] = usuario.Nombre;
+                return RedirectToAction("Index", "Canciones");
             }
 
-            return RedirectToAction("Login", "Login");
+            return RedirectToAction("Login");
         }
 
         [HttpGet, ActionName("VerUsuarios")]
@@ -73,7 +71,7 @@ namespace ReproductorMultimedia.Controllers
             {
                 try
                 {
-                    var login = UsuarioViewModel.RegistroUsuarioNuevo(model.idUsuario, model.Nombre, model.Email, model.Password, model.Direccion);
+                    var login = UsuarioViewModel.RegistroUsuarioNuevo(model.idUsuario, model.Nombre, model.Email, model.Password);
                 }
                 catch (Exception ex)
                 {

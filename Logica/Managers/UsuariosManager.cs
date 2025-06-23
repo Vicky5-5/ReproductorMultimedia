@@ -116,7 +116,7 @@ namespace Logica.Managers
                 return usu;
             }
         }
-        public static Usuario RegistrarUsuario(int id, string nombre, string email, string password, string direccion)
+        public static Usuario RegistrarUsuario(int id, string nombre, string email, string password)
         {
             using (var db = new Conexion())
             {

@@ -33,7 +33,8 @@ namespace Logica.ViewModels
             this.fechaBaja = usuario.fechaBaja;
             this.Administrador = usuario.Administrador;
         }
-        public UsuarioViewModel(int id, string nombre, string email, string password, string direccion)
+        //PARA REGISTAR A UN USUARIO
+        public UsuarioViewModel(int id, string nombre, string email, string password)
         {
             this.idUsuario = id;
             this.Nombre = Nombre;
@@ -107,10 +108,10 @@ namespace Logica.ViewModels
             return model;
         }
 
-        public static UsuarioViewModel RegistroUsuarioNuevo(int id, string nombre, string email, string password, string direccion)
+        public static UsuarioViewModel RegistroUsuarioNuevo(int id, string nombre, string email, string password)
         {
-            var registro = UsuariosManager.RegistrarUsuario(id, nombre, email, password, direccion);
-            UsuarioViewModel model = new UsuarioViewModel(id, nombre, email, password, direccion);
+            var registro = UsuariosManager.RegistrarUsuario(id, nombre, email, password);
+            UsuarioViewModel model = new UsuarioViewModel(id, nombre, email, password);
 
             return model;
         }

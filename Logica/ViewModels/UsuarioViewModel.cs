@@ -13,14 +13,22 @@ namespace Logica.ViewModels
     {
         public int idUsuario { get; set; }
 
+        [Required(ErrorMessage = "El nombre es obligatorio")]
         public string Nombre { get; set; }
 
+        [Required(ErrorMessage = "El email es obligatorio")]
+        [EmailAddress(ErrorMessage = "Email no válido")]
         public string Email { get; set; }
+
+        [StringLength(4000, MinimumLength = 10, ErrorMessage = "La contraseña debe tener al menos 10 caracteres")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+
         public bool Estado { get; set; }
 
-        public DateTime fechaRegistro { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? fechaBaja { get; set; }
+
         public bool Administrador { get; set; }
         public virtual ICollection<ListaReproduccion> ListasReproduccion { get; set; }
 
@@ -86,9 +94,9 @@ namespace Logica.ViewModels
 
         }
         //Es usado por el modo editar y crear
-        public static UsuarioViewModel AddUsuario(int id, string nombre, string email, string password, bool estado, DateTime fechaRegistro, DateTime? fechaBaja, string direccion, bool administrador)
+        public static UsuarioViewModel AddUsuario(int id, string nombre, string email, string password, bool estado, DateTime? fechaBaja, bool administrador)
         {
-            var guardado = UsuariosManager.GuardarUsuario(id, nombre, email, password, estado, fechaRegistro, fechaBaja, direccion, administrador);
+            var guardado = UsuariosManager.GuardarUsuario(id, nombre, email, password, estado, fechaBaja, administrador);
 
             UsuarioViewModel model = new UsuarioViewModel(guardado);
 

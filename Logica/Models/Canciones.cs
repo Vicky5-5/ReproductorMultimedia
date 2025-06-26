@@ -11,13 +11,16 @@ namespace Logica.Models
     {
         [Key]
         public int idCancion { get; set; }
+        [Required]
         public string Titulo { get; set; }
+        [Required]
         public string Artista { get; set; }
+        [Required]
         public string Album { get; set; }
 
         [Range(typeof(TimeSpan), "00:00:00", "01:00:00", ErrorMessage = "La duración tiene que estar entre 0 y 30 minutos")]
         public TimeSpan Duracion { get; set; }
-        public Boolean Favorito { get; set; }
+        public bool  Favorito { get; set; }
         public virtual ICollection<ListaReproduccion> ListaReproduccion { get; set; }
 
     }

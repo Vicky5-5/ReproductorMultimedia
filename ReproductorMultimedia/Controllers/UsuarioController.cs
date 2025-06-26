@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Logica.Models;
+using Logica.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ReproductorMultimedia.Controllers
@@ -6,15 +8,24 @@ namespace ReproductorMultimedia.Controllers
     public class UsuarioController : Controller
     {
         // GET: UsuarioController
-        public ActionResult Index()
+        public ActionResult Administrador()
         {
-            return View();
+            List<UsuarioViewModel> lista = new List<UsuarioViewModel>();
+
+            lista = UsuarioViewModel.ListUsuarios();
+            return View(lista);
         }
 
         // GET: UsuarioController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var prViewModel = UsuarioViewModel.DatosUnUsuario(id);
+
+            if (prViewModel == null)
+            {
+                //return HttpNotFound();
+            }
+            return View(prViewModel);
         }
 
         // GET: UsuarioController/Create
@@ -26,58 +37,107 @@ namespace ReproductorMultimedia.Controllers
         // POST: UsuarioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(UsuarioViewModel usu)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+
+                    var model = UsuarioViewModel.AddUsuario(usu.idUsuario, usu.Nombre, usu.Email, usu.Password, usu.Estado, usu.fechaBaja, usu.Administrador);
+                    return RedirectToAction("Administrador");
+
+                    //EnviarCorreoBienvenida(model.Email);
+                }
+                catch (Exception ex)
+                {
+
+                    ViewBag.Error = $"Error al guardar: {ex.Message}";
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            return View(usu);
         }
 
         // GET: UsuarioController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            UsuarioViewModel prViewModel = UsuarioViewModel.GetUsuario(id);
+
+            if (prViewModel == null)
+            {
+                //return HttpNotFound();
+            }
+            return View(prViewModel);
         }
 
         // POST: UsuarioController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(UsuarioViewModel usuario)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+
+                    var model = UsuarioViewModel.AddUsuario(usuario.idUsuario, usuario.Nombre, usuario.Email, usuario.Password, usuario.Estado, usuario.fechaBaja, usuario.Administrador);
+
+                    //Si el usuario se da de baja que envíe otro correo
+                    if (model.Estado == false)
+                    {
+                        // EnviarCorreoBaja(model.Email);
+                        return RedirectToAction("Administrador");
+
+                    }
+                    else
+                    {
+                       // EnviarCorreoEditado(model.Email);
+                        return RedirectToAction("Administrador");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Error = $"Error al guardar: {ex.Message}";
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            return View(usuario);
         }
 
         // GET: UsuarioController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var prViewModel = UsuarioViewModel.GetUsuario(id);
+
+            if (prViewModel == null)
+            {
+                //return HttpNotFound();
+            }
+            return View(prViewModel);
         }
 
         // POST: UsuarioController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DeleteConfirmed(int id)
         {
-            try
+
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    UsuarioViewModel.RemoveUsuario(id);
+                    return View("VistaUsuarios");
+
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Error = $"Error al guardar: {ex.Message}";
+
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return View("Index");
         }
     }
 }

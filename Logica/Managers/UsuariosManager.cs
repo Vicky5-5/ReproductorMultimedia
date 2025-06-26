@@ -27,7 +27,7 @@ namespace Logica.Managers
                 return usuario;
             }
         }
-        public static Usuario GuardarUsuario(int id, string nombre, string email, string password, bool estado, DateTime fechaRegistro, DateTime? fechaBaja, string direccion, bool administrador) //Esto sirve para editar y crear
+        public static Usuario GuardarUsuario(int id, string nombre, string email, string password, bool estado, DateTime? fechaBaja, bool administrador) //Esto sirve para editar y crear
         {
             using (var db = new Conexion())
             {
@@ -106,9 +106,9 @@ namespace Logica.Managers
             return sb.ToString();
 
         }
-        public static Usuario Login(string email, string password)
+        public static Usuario? Login(string email, string password)
         {
-            using (var db = new Conexion())
+            using (Conexion db = new Conexion())
             {
                 var pEncript = HashPassword(password);
                 var usu2 = db.Usuarios.ToList();

@@ -16,8 +16,16 @@ namespace Logica.Contexto
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<ListaReproduccion> ListaReproduccion { get; set; }
         public DbSet<Canciones> Canciones { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                var connectionString = "Server=DESKTOP-F14E1IH\\SQLEXPRESS;Database=ReproductorMusica;Trusted_Connection=True;TrustServerCertificate=True;"; // o desde config
+                optionsBuilder.UseSqlServer(connectionString);
+            }
+        }
 
-       
+
     }
 
 }

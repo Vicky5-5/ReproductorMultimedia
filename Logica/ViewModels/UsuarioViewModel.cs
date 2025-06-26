@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace Logica.ViewModels
         public DateTime? fechaBaja { get; set; }
 
         public bool Administrador { get; set; }
+        [NotMapped]
         public virtual ICollection<ListaReproduccion> ListasReproduccion { get; set; }
 
         public UsuarioViewModel(Usuario usuario)
@@ -45,15 +47,31 @@ namespace Logica.ViewModels
         public UsuarioViewModel(int id, string nombre, string email, string password)
         {
             this.idUsuario = id;
-            this.Nombre = Nombre;
-            this.Email = Email;
-            this.Password = Password;
+            this.Nombre = nombre;
+            this.Email = email;
+            this.Password = password;
             this.fechaBaja = null;
             this.Administrador = false;
         }
+
+        /// <summary>
+        /// Hay que iniciarla para evitar las referencias nulas ya que podríamos intentar agregar elementos y así poder interactuar con ella.
+        /// 
+        /// Al inicializarla nos garantizamos que cada instacia de la clase tenga consistencia.Esto es especialmente importante si en algún momento 
+        /// se decide agregar listas de reproducción al usuario, 
+        /// ya que siempre tendrás una colección lista para recibir esos elementos.
+        /// 
+        /// Si la colección está inicializada, puedes agregar, eliminar o manipular elementos de ListasReproduccion sin tener que verificar si la colección es nula. 
+        /// Esto simplifica el código y reduce la posibilidad de errores.
+        /// 
+        /// Si en el futuro se decide guardar las listas de reproducción asociadas a un usuario en la base de datos, tener la colección inicializada 
+        /// permitirá trabajar con ella de manera más sencilla.
+        /// 
+        /// Tener la colección inicializada puede facilitar este proceso, ya que no tendrás que manejar casos donde la colección sea nula.
+        /// </summary>
         public UsuarioViewModel()
         {
-
+            ListasReproduccion = new List<ListaReproduccion>(); // Inicialización
         }
 
         #region Métodos

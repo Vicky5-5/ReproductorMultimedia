@@ -37,6 +37,11 @@ namespace Logica.Managers
                 //Productos productos = new Productos();
                 //var producto = productos.ObtenerProducto(id);
                 //Si el id es distinto de entramos en editar
+                if (db.Usuarios.Any(u => u.Email == email && u.idUsuario != id))
+                {
+                    throw new Exception("El correo electrónico ya está en uso.");
+                }
+
                 if (usuario != null)
                 {
                     usuario.idUsuario = id;
@@ -69,9 +74,9 @@ namespace Logica.Managers
 
                     db.SaveChanges();
                 }
-                catch (DbEntityValidationException ex)
+                catch (Exception ex)
                 {
-                    throw new Exception(ex.Message);
+                    throw new Exception($"Error al guardar el usuario: {ex.Message}");
                 }
                 return usuario;
             }

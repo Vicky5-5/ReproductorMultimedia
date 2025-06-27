@@ -43,7 +43,7 @@ namespace ReproductorMultimedia.Controllers
                 if (usuario.Administrador)
                 {
                     Response.Cookies.Append("Nombre", usuario.Nombre);
-                    return RedirectToAction("Administrador", "Usuarios");
+                    return RedirectToAction("Administrador", "Usuario");
                 }
 
                 TempData["Usuario"] = usuario.Nombre;
@@ -57,7 +57,7 @@ namespace ReproductorMultimedia.Controllers
         public ActionResult VerUsuarios()
         {
 
-            return RedirectToAction("Administrador", "Usuarios");
+            return RedirectToAction("Administrador", "Usuario");
         }
         public ActionResult Registro()
         {

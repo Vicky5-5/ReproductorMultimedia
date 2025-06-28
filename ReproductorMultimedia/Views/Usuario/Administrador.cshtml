@@ -1,10 +1,11 @@
-﻿@model IEnumerable<Logica.ViewModels.UsuarioViewModel>
+﻿@using Logica.Managers
+@model IEnumerable<Logica.ViewModels.UsuarioViewModel>
 
 @{
 	ViewData["Title"] = "Administrador";
 }
 
-<h1>Administrador</h1>
+<h1>Administrador: @ViewBag.NombreUsuario</h1>
 
 <p>
 	<a asp-action="Create">Crear</a>
@@ -43,7 +44,7 @@
 					@Html.DisplayFor(modelItem => item.fechaBaja)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.Administrador)
+					@(item.Administrador ? "Sí" : "No")
 				</td>
 				<td>
 					<a asp-action="Edit" asp-route-id="@item.idUsuario">Edit</a> |

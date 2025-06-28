@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Logica.Models.Canciones>
+
+@{
+    ViewData["Title"] = "ListaCanciones";
+}
+
+<h1>ListaCanciones</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Titulo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Artista)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Album)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Duracion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroReproducciones)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroLikes)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Titulo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Artista)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Album)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Duracion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumeroReproducciones)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumeroLikes)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.idCancion">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.idCancion">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.idCancion">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

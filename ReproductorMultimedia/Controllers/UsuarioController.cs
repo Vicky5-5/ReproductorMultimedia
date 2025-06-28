@@ -10,6 +10,10 @@ namespace ReproductorMultimedia.Controllers
         // GET: UsuarioController
         public ActionResult Administrador()
         {
+            var nombreUsuario = HttpContext.Session.GetString("Nombre");
+            Console.WriteLine($"Nombre del usuario en sesión: {nombreUsuario}"); // Para depuración
+            ViewBag.NombreUsuario = nombreUsuario;
+
             List<UsuarioViewModel> lista = new List<UsuarioViewModel>();
 
             lista = UsuarioViewModel.ListUsuarios();

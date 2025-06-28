@@ -14,7 +14,7 @@ builder.Services.AddDbContext<Conexion>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 //Para controlar el el http current
-builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpContextAccessor();// Permite el acceso a HttpContext
 
 //Se registra con un servicio inyectable en el contenedor de dependenica
 //Para que pueda ser inyectada en culaquier controlado o servicio. El patrón Sinleton es una instancia GLOBAL
@@ -26,6 +26,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
 
 var app = builder.Build();
 

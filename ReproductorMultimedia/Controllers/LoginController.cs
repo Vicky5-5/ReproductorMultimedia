@@ -1,64 +1,76 @@
 ﻿using Logica.Managers;
 using Logica.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol.Plugins;
-using RestSharp;
 
 namespace ReproductorMultimedia.Controllers
 {
-
-    // GET: LoginController1
     public class LoginController : Controller
     {
-
-        // GET: Login
-        public ActionResult Login()
-        {
-
-            return View();
-        }
-        [ActionName("LogOut")]
-        public ActionResult LogOut()
-        {
-            return RedirectToAction("Login", "Login");
-
-        }
-        //Se declara solo lectura y contiene la instancia del LoginManager
         private readonly LoginManager _loginManager;
 
-        //Creamos un constructor de inyección de dependencia para inyectar automática una instancia del LoginManager
-        //Esto va con patrón Singleton
         public LoginController(LoginManager loginManager)
         {
             _loginManager = loginManager;
         }
-        //Revisar bien
+
+        // GET: Login
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        [ActionName("LogOut")]
+        public ActionResult LogOut()
+        {
+            HttpContext.Session.Clear(); // Limpia todos los datos de la sesión
+            Response.Cookies.Delete("Nombre"); // Elimina la cookie si la estás usando
+            return RedirectToAction("Login", "Login");
+        }
+
+
         [HttpPost]
         public ActionResult Entrar(string email, string password)
         {
-            var usuario = _loginManager.Login(email, password);
-            if (usuario != null)
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
-                if (usuario.Administrador)
+                TempData["Error"] = "Por favor, ingrese su correo electrónico y contraseña.";
+                return RedirectToAction("Login");
+            }
+
+            try
+            {
+                var usuario = _loginManager.Login(email, password);
+                if (usuario != null)
                 {
-                    Response.Cookies.Append("Nombre", usuario.Nombre);
-                    return RedirectToAction("Administrador", "Usuario");
+                    // Almacenar el nombre del usuario en la sesión
+                    HttpContext.Session.SetString("Nombre", usuario.Nombre);
+
+                    if (usuario.Administrador)
+                    {
+                        return RedirectToAction("Administrador", "Usuario");
+                    }
+
+                    TempData["Usuario"] = usuario.Nombre;
+                    return RedirectToAction("Index", "Canciones");
                 }
 
-                TempData["Usuario"] = usuario.Nombre;
-                return RedirectToAction("Index", "Canciones");
+                TempData["Error"] = "Correo electrónico o contraseña incorrectos.";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Error al iniciar sesión: {ex.Message}";
             }
 
             return RedirectToAction("Login");
         }
 
+
         [HttpGet, ActionName("VerUsuarios")]
         public ActionResult VerUsuarios()
         {
-
             return RedirectToAction("Administrador", "Usuario");
         }
+
         public ActionResult Registro()
         {
             return View();
@@ -72,17 +84,18 @@ namespace ReproductorMultimedia.Controllers
                 try
                 {
                     var login = UsuarioViewModel.RegistroUsuarioNuevo(model.idUsuario, model.Nombre, model.Email, model.Password);
+                    // Redirigir a Login después de un registro exitoso
+                    return RedirectToAction("Login", "Login");
                 }
                 catch (Exception ex)
                 {
-
                     ViewBag.Error = $"Error al guardar: {ex.Message}";
                 }
             }
 
-            return RedirectToAction("Login", "Login");
+            // Si el modelo no es válido o hay un error, volver a mostrar el formulario
+            return View(model);
         }
-
 
     }
 }

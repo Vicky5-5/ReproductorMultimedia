@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Logica.Models
 {
@@ -22,6 +24,9 @@ namespace Logica.Models
         public TimeSpan Duracion { get; set; }
         public int NumeroReproducciones { get; set; }=0;
         public int NumeroLikes { get; set; } = 0;
+        [NotMapped]
+        public IFormFile ArchivoCancion { get; set; }
+        public string RutaArchivo { get; set; } // Ruta del archivo
         public virtual ICollection<ListaReproduccion> ListaReproduccion { get; set; }
 
     }

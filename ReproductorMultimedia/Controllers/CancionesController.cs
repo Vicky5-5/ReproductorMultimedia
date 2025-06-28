@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Logica.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ReproductorMultimedia.Controllers
@@ -6,9 +7,13 @@ namespace ReproductorMultimedia.Controllers
     public class CancionesController : Controller
     {
         // GET: CancionesController
-        public ActionResult Index()
+        public ActionResult ListarCanciones()
         {
-            return View();
+            List<CancionesViewModel> lista = new List<CancionesViewModel>();
+
+            lista = CancionesViewModel.ListProductos();
+            //lista.AddRange(viewModel.ListProductos()); //Esto es otra forma de hacer el listado
+            return View(lista);
         }
 
         // GET: CancionesController/Details/5
@@ -18,7 +23,7 @@ namespace ReproductorMultimedia.Controllers
         }
 
         // GET: CancionesController/Create
-        public ActionResult Create()
+        public ActionResult AgregarCancion()
         {
             return View();
         }
@@ -26,7 +31,7 @@ namespace ReproductorMultimedia.Controllers
         // POST: CancionesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult AgregarCancion(IFormCollection collection)
         {
             try
             {

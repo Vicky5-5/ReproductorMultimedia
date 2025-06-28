@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Logica\Logica.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CancionesAgregadas\" />
+  </ItemGroup>
+
 </Project>

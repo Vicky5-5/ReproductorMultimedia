@@ -40,7 +40,7 @@ namespace Logica.Managers
             }
         }
 
-        public static Canciones GuardarProducto(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion) //Esto sirve para editar y crear
+        public static Canciones GuardarCancion(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion) //Esto sirve para editar y crear
         {
             using (var db = new Conexion())
             {
@@ -57,7 +57,7 @@ namespace Logica.Managers
                     canciones.NumeroReproducciones = reproducciones;
                     canciones.NumeroLikes = likes;
                     canciones.RutaArchivo = ruta;
-                    
+
                     db.SaveChanges();
                     return canciones;
                 }
@@ -74,21 +74,33 @@ namespace Logica.Managers
                     NumeroReproducciones = reproducciones,
                     NumeroLikes = likes,
                     RutaArchivo = ruta,
-                   
+
 
                 };
 
                 try
                 {
+                    // Guardar el archivo en el servidor
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "CancionesAgregadas");
+                    if (!Directory.Exists(uploadsFolder))
+                        Directory.CreateDirectory(uploadsFolder);
+                    var fullPath = Path.Combine(uploadsFolder, ruta); using (var fileStream = new FileStream(uploadsFolder, FileMode.Create))
+                    {
+                        cancion.CopyTo(fileStream);
+                    }
+                    // Leer los metadatos de la canción
+                    var file = TagLib.File.Create(uploadsFolder);
+                    canciones.Titulo = file.Tag.Title ?? canciones.Titulo; // Título de la canción
+                    canciones.Artista = string.Join(", ", file.Tag.Performers) ?? canciones.Artista; // Artista(s)
+                    canciones.Album = file.Tag.Album ?? canciones.Album; // Álbum
+                    canciones.Duracion = file.Properties.Duration; // Duración
                     db.Canciones.Add(canciones);
-
                     db.SaveChanges();
                 }
                 catch (DbEntityValidationException ex)
                 {
                     throw new Exception(ex.Message);
                 }
-
                 return canciones;
             }
 
@@ -102,6 +114,6 @@ namespace Logica.Managers
                 var eliminado = db.Canciones.Remove(producto);
                 db.SaveChanges();
             }
-        }       
+        }
     }
 }

@@ -1,97 +1,71 @@
 ﻿@model Logica.ViewModels.CancionesViewModel
 
 @{
-    ViewData["Title"] = "AgregarCancion";
+    ViewData["Title"] = "Agregar Canción";
 }
 
-<h1>AgregarCancion</h1>
+<h1>Agregar Canción</h1>
 
-<h4>Canciones</h4>
-<hr />
-<div class="card">
-    @using (Html.BeginForm("AgregarCancion","Canciones", FormMethod.Post, new {enctype = "multipart/form-data"})){
+<div class="card p-4">
+    @using (Html.BeginForm("AgregarCancion", "Canciones", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
         @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <br />
-<h4>Canción</h4> 
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" }) <!--Se comprueba si lo insertado es válido-->
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="Titulo"><strong>Nombre de la canción</strong></label>
+                    @Html.EditorFor(m => m.Titulo, new { htmlAttributes = new { @class = "form-control", placeholder = "Inserta el nombre de la canción" } })
+                    @Html.ValidationMessageFor(m => m.Titulo, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="Artista"><strong>Artista</strong></label>
+                    @Html.EditorFor(m => m.Artista, new { htmlAttributes = new { @class = "form-control", placeholder = "Nombre del artista" } })
+                    @Html.ValidationMessageFor(m => m.Artista, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="Album"><strong>Álbum</strong></label>
+                    @Html.EditorFor(m => m.Album, new { htmlAttributes = new { @class = "form-control", placeholder = "Nombre del álbum" } })
+                    @Html.ValidationMessageFor(m => m.Album, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="Duracion"><strong>Duración (mm:ss)</strong></label>
+                    @Html.EditorFor(m => m.Duracion, new { htmlAttributes = new { @class = "form-control", placeholder = "Ejemplo: 05:20" } })
+                    @Html.ValidationMessageFor(m => m.Duracion, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @* <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="NumeroReproducciones"><strong>Número de Reproducciones</strong></label>
+                    @Html.EditorFor(m => m.NumeroReproducciones, new { htmlAttributes = new { @class = "form-control", placeholder = "Ejemplo: 1500" } })
+                    @Html.ValidationMessageFor(m => m.NumeroReproducciones, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="NumeroLikes"><strong>Número de Likes</strong></label>
+                    @Html.EditorFor(m => m.NumeroLikes, new { htmlAttributes = new { @class = "form-control", placeholder = "Ejemplo: 300" } })
+                    @Html.ValidationMessageFor(m => m.NumeroLikes, "", new { @class = "text-danger" })
+                </div>
+            </div> *@
+
             <div class="form-group">
-            <div class="row" id="fila">
-                    <div class="form-group col-md-6">
-                        <h6><strong>Nombre de la canción</strong></h6>
-                        <div class="col-md-12">
-                            @Html.EditorFor(model => model.Titulo, new { htmlAttributes = new { style = "width=500vw", @class = "form-control", placeholder = "Inserta el nombre del Producto", id = "nombre" } }) <!--Para insertarlo-->
-                            @Html.ValidationMessageFor(model => model.Titulo, "", new { @class = "text-danger" }) <!--Marca un mensaje de error-->
-                        </div>
-                    </div>
-                    <br />
-                    <div class="form-group col-md-6">
-                        <h6><strong>Artista</strong></h6>
-                        <div class="col-md-12">
-                            @Html.EditorFor(model => model.Artista, "{0:0.00}", new { htmlAttributes = new { style = "width:8vw", @class = "form-control", placeholder = "Precio" } })
-                            @Html.ValidationMessageFor(model => model.Artista, "", new { @class = "text-danger" }) <!--Gracias al jqueryFixes va los decimales-->
-
-
-                        </div>
-                    </div>
-            </div>
-                <div class="row" id="fila">
-                    <div class="form-group col-md-6">
-                        <h6><strong>Album</strong></h6>
-                        <div class="col-md-12">
-                            @Html.EditorFor(model => model.Album, new { htmlAttributes = new { style = "width=500vw", @class = "form-control", placeholder = "Inserta el nombre del Producto", id = "nombre" } }) <!--Para insertarlo-->
-                            @Html.ValidationMessageFor(model => model.Album, "", new { @class = "text-danger" }) <!--Marca un mensaje de error-->
-                        </div>
-                    </div>
-                    <br />
-                    <div class="form-group col-md-6">
-                        <h6><strong>Duración</strong></h6>
-                        <div class="col-md-12">
-                            @Html.EditorFor(model => model.Duracion, "{0:0.00}", new { htmlAttributes = new { style = "width:8vw", @class = "form-control", placeholder = "Precio" } })
-                            @Html.ValidationMessageFor(model => model.Duracion, "", new { @class = "text-danger" }) <!--Gracias al jqueryFixes va los decimales-->
-
-
-                        </div>
-                    </div>
-                </div>
-                </div>
-                <div class="row" id="fila">
-                    <div class="form-group col-md-6">
-                        <h6><strong>Número de Reproducciones</strong></h6>
-                        <div class="col-md-12">
-                            @Html.EditorFor(model => model.NumeroReproducciones, new { htmlAttributes = new { style = "width=500vw", @class = "form-control", placeholder = "Inserta el nombre del Producto", id = "nombre" } }) <!--Para insertarlo-->
-                            @Html.ValidationMessageFor(model => model.NumeroReproducciones, "", new { @class = "text-danger" }) <!--Marca un mensaje de error-->
-                        </div>
-                    </div>
-                    <br />
-                    <div class="form-group col-md-6">
-                        <h6><strong>Número de Likes</strong></h6>
-                        <div class="col-md-12">
-                            @Html.EditorFor(model => model.NumeroLikes, "{0:0.00}", new { htmlAttributes = new { style = "width:8vw", @class = "form-control", placeholder = "Precio" } })
-                            @Html.ValidationMessageFor(model => model.NumeroLikes, "", new { @class = "text-danger" }) <!--Gracias al jqueryFixes va los decimales-->
-
-
-                        </div>
-                    </div>
-                </div>
-                @* <div class="row" id="fila">
-                    <div class="form-group col-md-6">
-                        <h6><strong>Número de Reproducciones</strong></h6>
-                        <div class="col-md-12">
-                            @Html.EditorFor(model => model.NumeroReproducciones, new { htmlAttributes = new { style = "width=500vw", @class = "form-control", placeholder = "Inserta el nombre del Producto", id = "nombre" } }) <!--Para insertarlo-->
-                            @Html.ValidationMessageFor(model => model.NumeroReproducciones, "", new { @class = "text-danger" }) <!--Marca un mensaje de error-->
-                        </div>
-                    </div>
-                    <br />
-                    
-                </div> *@
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label for="ArchivoCancion"><strong>Archivo de la Canción (mp3)</strong></label>
+                @Html.TextBoxFor(m => m.ArchivoCancion, new { type = "file", @class = "form-control-file", accept = ".mp3", required = "required" })
+                @Html.ValidationMessageFor(m => m.ArchivoCancion, "", new { @class = "text-danger" })
             </div>
 
-<div>
-    <a asp-action="ListaCanciones">Back to List</a>
+            <div class="form-group mt-3">
+                <input type="submit" value="Guardar Canción" class="btn btn-primary" />
+                <a asp-action="ListaCanciones" class="btn btn-secondary ml-2">Volver a la lista</a>
+            </div>
+        </div>
+    }
 </div>
-}

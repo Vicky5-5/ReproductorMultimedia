@@ -18,7 +18,7 @@ namespace Logica.ViewModels
         public string Artista { get; set; }
         public string Album { get; set; }
 
-        [Range(typeof(TimeSpan), "00:00:00", "01:00:00", ErrorMessage = "La duración tiene que estar entre 0 y 30 minutos")]
+        [RegularExpression(@"^([0-5]?\d):([0-5]\d)$", ErrorMessage = "Duración debe tener formato mm:ss")]
         public TimeSpan Duracion { get; set; }
         public int NumeroReproducciones { get; set; } = 0;
         public int NumeroLikes { get; set; } = 0;
@@ -52,7 +52,7 @@ namespace Logica.ViewModels
             return model;
         }
         //List
-        public static List<CancionesViewModel> ListProductos()
+        public static List<CancionesViewModel> ListSongs()
         {
 
             var listar = CancionesManager.ListarCanciones();
@@ -77,9 +77,9 @@ namespace Logica.ViewModels
 
         }
 
-        public static CancionesViewModel AddProducto(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion)
+        public static CancionesViewModel AddSong(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion)
         {
-            var guardado = CancionesManager.GuardarProducto(id, titulo, artista, album, duracion, reproducciones, likes, ruta, cancion);
+            var guardado = CancionesManager.GuardarCancion(id, titulo, artista, album, duracion, reproducciones, likes,ruta, cancion);
 
             CancionesViewModel model = new CancionesViewModel(guardado);
             return model;

@@ -1,0 +1,144 @@
+﻿@model Logica.ViewModels.UsuarioViewModel
+@{
+    ViewBag.Title = "Registro";
+}
+
+<h2>Registro</h2>
+
+<br />
+<div class="card">
+
+    @using (Html.BeginForm("Registrar", "Login", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4 id="fila" class=" p-4"><strong>Usuario</strong></h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row" id="fila">
+                <div class="form-group col-md-6">
+                    <h6><strong>Nombre</strong></h6>
+                    <div class="col-md-10" id="name">
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Nombre Usuario" } })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <h6><strong>Email</strong></h6>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Email" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row" id="fila">
+                <div class="form-group col-md-6">
+                    <h6><strong>Contraseña</strong></h6>
+                    <div class="col-md-10" id="password">
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", type = "password", id = "myInput", placeholder = "Contraseña" } })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        <input type="checkbox" id="toggle" class="offscreen" onclick="myFunction()">
+                        <label for="toggle" class="switch">
+
+                        </label>
+                    </div>
+                </div>
+                
+            </div>
+
+            <br />
+            <div class="row" id="fila">
+                <div class="form-group col-md-6">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input id="boton" type="submit" value="Crear" class="btn btn-default" />
+                        @*@Html.ActionLink("Crear Usuario", "Registro", "Login")*@
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    @Html.ActionLink("Volver", "Login")
+                </div>
+            </div>
+            <br />
+        </div>
+    }
+</div>
+<style>
+    #boton {
+        border-radius: 5px;
+        background-color: black;
+        color: white;
+        width: 5vw;
+    }
+
+    #fila {
+        margin-left: 10vw;
+    }
+
+    #card {
+        justify-content: center;
+        margin-left: 8vw;
+    }
+
+    #texto {
+        text-align: center;
+    }
+
+    #name {
+        width: 200vw;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 35px;
+        height: 15px;
+        background-color: rgba(0, 0, 0, 0.25);
+        border-radius: 22px;
+        transition: all 0.3s;
+    }
+
+        .switch::after {
+            content: '';
+            position: absolute;
+            width: 11px;
+            height: 11px;
+            border-radius: 22px;
+            background-color: white;
+            top: 1px;
+            left: 1px;
+            transition: all 0.3s;
+        }
+
+    input[type='checkbox']:checked + .switch::after {
+        transform: translateX(20px);
+    }
+
+    input[type='checkbox']:checked + .switch {
+        background-color: #7983ff;
+    }
+
+    .offscreen {
+        position: absolute;
+        left: -9999px;
+    }
+</style>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    function myFunction() {
+        var x = document.getElementById("myInput");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
+
+
+
+
+</script>
+

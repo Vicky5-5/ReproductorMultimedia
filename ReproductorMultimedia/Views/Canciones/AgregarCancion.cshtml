@@ -1,5 +1,5 @@
 ﻿@model Logica.ViewModels.CancionesViewModel
-
+@using Microsoft.AspNetCore.Mvc.Rendering
 @{
     ViewData["Title"] = "Agregar Canción";
 }
@@ -7,64 +7,73 @@
 <h1>Agregar Canción</h1>
 
 <div class="card p-4">
-    @using (Html.BeginForm("AgregarCancion", "Canciones", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("AgregarCancion", "Canciones", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label><strong>Nombre de la canción</strong></label>
+                @Html.EditorFor(m => m.Titulo, new { htmlAttributes = new { @class = "form-control", placeholder = "Nombre de la canción" } })
+                @Html.ValidationMessageFor(m => m.Titulo, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group col-md-6">
+                <label><strong>Artista</strong></label>
+                @Html.EditorFor(m => m.Artista, new { htmlAttributes = new { @class = "form-control", placeholder = "Nombre del artista" } })
+                @Html.ValidationMessageFor(m => m.Artista, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-            <div class="form-row">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label><strong>Álbum</strong></label>
+                @Html.EditorFor(m => m.Album, new { htmlAttributes = new { @class = "form-control", placeholder = "Álbum" } })
+                @Html.ValidationMessageFor(m => m.Album, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group col-md-6">
+                   <label>Duración (mm:ss)</label>
+        @Html.TextBoxFor(m => m.DuracionTexto, new { @class = "form-control", placeholder = "Ej: 03:30" })
+        @Html.ValidationMessageFor(m => m.DuracionTexto, "", new { @class = "text-danger" })
+   
+            </div>
+        </div>
+        <div class="row" id="fila">
+               
                 <div class="form-group col-md-6">
-                    <label for="Titulo"><strong>Nombre de la canción</strong></label>
-                    @Html.EditorFor(m => m.Titulo, new { htmlAttributes = new { @class = "form-control", placeholder = "Inserta el nombre de la canción" } })
-                    @Html.ValidationMessageFor(m => m.Titulo, "", new { @class = "text-danger" })
-                </div>
 
-                <div class="form-group col-md-6">
-                    <label for="Artista"><strong>Artista</strong></label>
-                    @Html.EditorFor(m => m.Artista, new { htmlAttributes = new { @class = "form-control", placeholder = "Nombre del artista" } })
-                    @Html.ValidationMessageFor(m => m.Artista, "", new { @class = "text-danger" })
+                    <h6><strong>Género</strong></h6>
+                    <div class="col-md-6">
+
+                        @Html.DropDownListFor(model => model.Genero, 
+                        new SelectList(Enum.GetValues(typeof(Logica.Models.Genero))), 
+                        "-- Selecciona género --", 
+                        new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Genero, "", new { @class = "text-danger" })
+
+                    </div>
+
                 </div>
             </div>
+        <div class="form-group">
+                <label>Archivo MP3</label>
+        @Html.TextBoxFor(m => m.ArchivoCancion, new { type = "file", @class = "form-control-file", accept = ".mp3" })
+@Html.ValidationMessageFor(m => m.ArchivoCancion, "", new { @class = "text-danger" })
 
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="Album"><strong>Álbum</strong></label>
-                    @Html.EditorFor(m => m.Album, new { htmlAttributes = new { @class = "form-control", placeholder = "Nombre del álbum" } })
-                    @Html.ValidationMessageFor(m => m.Album, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label for="Duracion"><strong>Duración (mm:ss)</strong></label>
-                    @Html.EditorFor(m => m.Duracion, new { htmlAttributes = new { @class = "form-control", placeholder = "Ejemplo: 05:20" } })
-                    @Html.ValidationMessageFor(m => m.Duracion, "", new { @class = "text-danger" })
+   
+        </div>
+        <div class="form-group">
+    @Html.HiddenFor(m => m.idCancion)
+</div>
+        <div class="row" id="fila">
+            <div class="form-group col-md-6">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Subir" class="btn btn-primary" />
                 </div>
             </div>
+            <br />
 
-            @* <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="NumeroReproducciones"><strong>Número de Reproducciones</strong></label>
-                    @Html.EditorFor(m => m.NumeroReproducciones, new { htmlAttributes = new { @class = "form-control", placeholder = "Ejemplo: 1500" } })
-                    @Html.ValidationMessageFor(m => m.NumeroReproducciones, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label for="NumeroLikes"><strong>Número de Likes</strong></label>
-                    @Html.EditorFor(m => m.NumeroLikes, new { htmlAttributes = new { @class = "form-control", placeholder = "Ejemplo: 300" } })
-                    @Html.ValidationMessageFor(m => m.NumeroLikes, "", new { @class = "text-danger" })
-                </div>
-            </div> *@
-
-            <div class="form-group">
-                <label for="ArchivoCancion"><strong>Archivo de la Canción (mp3)</strong></label>
-                @Html.TextBoxFor(m => m.ArchivoCancion, new { type = "file", @class = "form-control-file", accept = ".mp3", required = "required" })
-                @Html.ValidationMessageFor(m => m.ArchivoCancion, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group mt-3">
-                <input type="submit" value="Guardar Canción" class="btn btn-primary" />
-                <a asp-action="ListaCanciones" class="btn btn-secondary ml-2">Volver a la lista</a>
+            <div class="col-md-6">
+                @Html.ActionLink("Volver", "Index")
             </div>
         </div>
     }

@@ -28,6 +28,9 @@
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                 </div>
             </div>
+            <h6>¿No tienes cuenta? </h6>@Html.ActionLink("Regístrate", "Registro", "Login")
+
+
             <div class="form-group col-md-12 text-center mt-3">
                 <button type="submit" class="btn btn-primary">Entrar</button>
             </div>

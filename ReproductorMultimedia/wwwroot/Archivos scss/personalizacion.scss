@@ -1,0 +1,8 @@
+// Sin espacio entre columnas
+$grid-gutter-width: 0;
+
+// Contenedor con ancho 100%
+$container-max-widths: ( sm: 100%, md: 100%, lg: 100%, xl: 100%, xxl: 100% );
+
+// Importar Bootstrap completo con grid
+@import "../node_modules/bootstrap/scss/bootstrap";

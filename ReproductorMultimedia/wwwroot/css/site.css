@@ -16,7 +16,41 @@ html {
   position: relative;
   min-height: 100%;
 }
-
+.navbar {
+    background-color: #343a40;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    color: white;
+    
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+.nav-link {
+    color: #343a40;
+}
+    .nav-link:hover {
+        background-color: white;
+        color: #343a40 !important;
+    }
 body {
-  margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+}
+main {
+    flex: 1;
+}
+main,
+.container-fluid,
+.row,
+.col-12,
+.fullscreen-carousel {
+    height: 100%;
+    width:100%;
+}
+.navbar-brand,
+.nav-link {
+    color: white !important;
 }

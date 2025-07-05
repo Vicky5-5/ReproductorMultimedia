@@ -20,11 +20,15 @@ namespace Logica.ViewModels
 
         [RegularExpression(@"^([0-5]?\d):([0-5]\d)$", ErrorMessage = "Duración debe tener formato mm:ss")]
         public TimeSpan Duracion { get; set; }
+        [NotMapped]
+        [RegularExpression(@"^([0-5]?\d):([0-5]\d)$", ErrorMessage = "Duración debe tener formato mm:ss")]
+        public string DuracionTexto { get; set; } // para la vista y validación
         public int NumeroReproducciones { get; set; } = 0;
         public int NumeroLikes { get; set; } = 0;
         [NotMapped]
         public IFormFile ArchivoCancion { get; set; }
         public string RutaArchivo { get; set; } // Ruta del archivo
+        public Genero Genero { get; set; }
 
         public virtual ICollection<ListaReproduccion> ListaReproduccion { get; set; }
         public CancionesViewModel(Canciones canciones)
@@ -34,12 +38,37 @@ namespace Logica.ViewModels
             this.Artista = canciones.Artista;
             this.Album = canciones.Album;
             this.Duracion = canciones.Duracion;
+            this.DuracionTexto = canciones.Duracion.ToString(@"m\:ss");
             this.NumeroReproducciones = canciones.NumeroReproducciones;
             this.NumeroLikes = canciones.NumeroLikes;
             this.ArchivoCancion = canciones.ArchivoCancion;
             this.RutaArchivo = canciones.RutaArchivo;
+            this.Genero = canciones.Genero;
         }
 
+        /*
+         * CREAR CLASE PARA VALIDAR EL TIMESPAN
+         * public class TimeSpanRangeAttribute : ValidationAttribute
+{
+    private readonly TimeSpan _min;
+    private readonly TimeSpan _max;
+
+    public TimeSpanRangeAttribute(string min, string max)
+    {
+        _min = TimeSpan.Parse(min);
+        _max = TimeSpan.Parse(max);
+    }
+
+    public override bool IsValid(object value)
+    {
+        if (value is TimeSpan ts)
+        {
+            return ts >= _min && ts <= _max;
+        }
+        return false;
+    }
+}
+*/
         public CancionesViewModel()
         {
         }
@@ -77,9 +106,9 @@ namespace Logica.ViewModels
 
         }
 
-        public static CancionesViewModel AddSong(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion)
+        public static CancionesViewModel AddSong(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion,Genero genero)
         {
-            var guardado = CancionesManager.GuardarCancion(id, titulo, artista, album, duracion, reproducciones, likes,ruta, cancion);
+            var guardado = CancionesManager.GuardarCancion(id, titulo, artista, album, duracion, reproducciones, likes, ruta, cancion,genero);
 
             CancionesViewModel model = new CancionesViewModel(guardado);
             return model;
@@ -90,7 +119,7 @@ namespace Logica.ViewModels
             CancionesManager.EliminarCancion(id);
         }
 
-    
+
 
     }
 }

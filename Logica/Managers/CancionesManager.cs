@@ -40,16 +40,14 @@ namespace Logica.Managers
             }
         }
 
-        public static Canciones GuardarCancion(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion) //Esto sirve para editar y crear
+        public static Canciones GuardarCancion(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion, Genero genero)
         {
             using (var db = new Conexion())
             {
-
                 var canciones = db.Canciones.FirstOrDefault(a => a.idCancion == id);
-                //Si el id es distinto de entramos en editar
+
                 if (canciones != null)
                 {
-                    canciones.idCancion = id;
                     canciones.Titulo = titulo;
                     canciones.Artista = artista;
                     canciones.Album = album;
@@ -57,53 +55,60 @@ namespace Logica.Managers
                     canciones.NumeroReproducciones = reproducciones;
                     canciones.NumeroLikes = likes;
                     canciones.RutaArchivo = ruta;
-
+                    canciones.Genero= genero;
                     db.SaveChanges();
                     return canciones;
                 }
 
-                //Esto es para crear un nuevo producto
-                canciones = new Canciones()
+                canciones = new Canciones
                 {
-
-                    idCancion = id,
-                    Titulo = titulo,
-                    Artista = artista,
-                    Album = album,
-                    Duracion = duracion,
                     NumeroReproducciones = reproducciones,
                     NumeroLikes = likes,
-                    RutaArchivo = ruta,
-
-
+                    Genero = genero
                 };
+
 
                 try
                 {
-                    // Guardar el archivo en el servidor
+                    // 1. Guardar archivo
                     var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "CancionesAgregadas");
                     if (!Directory.Exists(uploadsFolder))
                         Directory.CreateDirectory(uploadsFolder);
-                    var fullPath = Path.Combine(uploadsFolder, ruta); using (var fileStream = new FileStream(uploadsFolder, FileMode.Create))
+
+                    if (cancion == null || cancion.Length == 0)
+                        throw new ArgumentException("No se ha proporcionado ningún archivo de audio válido.");
+
+                    // Nombre único del archivo
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(cancion.FileName);
+                    var fullPath = Path.Combine(uploadsFolder, fileName);
+
+                    // Guardar archivo
+                    using (var fileStream = new FileStream(fullPath, FileMode.Create))
                     {
                         cancion.CopyTo(fileStream);
                     }
-                    // Leer los metadatos de la canción
-                    var file = TagLib.File.Create(uploadsFolder);
-                    canciones.Titulo = file.Tag.Title ?? canciones.Titulo; // Título de la canción
-                    canciones.Artista = string.Join(", ", file.Tag.Performers) ?? canciones.Artista; // Artista(s)
-                    canciones.Album = file.Tag.Album ?? canciones.Album; // Álbum
-                    canciones.Duracion = file.Properties.Duration; // Duración
+
+                    // 2. Leer metadatos
+                    var file = TagLib.File.Create(fullPath);
+                    canciones.Titulo = !string.IsNullOrWhiteSpace(file.Tag.Title) ? file.Tag.Title : titulo;
+                    canciones.Artista = string.Join(", ", file.Tag.Performers) ?? artista;
+                    canciones.Album = file.Tag.Album ?? album;
+                    canciones.Duracion = file.Properties.Duration;
+
+                    // 3. Guardar ruta relativa
+                    canciones.RutaArchivo = "/CancionesAgregadas/" + fileName;
+
+                    // 4. Guardar en base de datos
                     db.Canciones.Add(canciones);
                     db.SaveChanges();
                 }
                 catch (DbEntityValidationException ex)
                 {
-                    throw new Exception(ex.Message);
+                    throw new Exception("Error al guardar canción: " + ex.Message);
                 }
+
                 return canciones;
             }
-
         }
 
         public static void EliminarCancion(int id)

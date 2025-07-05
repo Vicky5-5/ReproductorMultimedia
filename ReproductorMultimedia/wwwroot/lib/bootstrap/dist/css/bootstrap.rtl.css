@@ -621,11 +621,11 @@ progress {
 .container-lg,
 .container-md,
 .container-sm {
-  width: 100%;
-  padding-left: var(--bs-gutter-x, 0.75rem);
-  padding-right: var(--bs-gutter-x, 0.75rem);
-  margin-left: auto;
-  margin-right: auto;
+    width: 100%;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
 }
 
 @media (min-width: 576px) {

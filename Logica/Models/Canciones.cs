@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -19,9 +20,12 @@ namespace Logica.Models
         public string Artista { get; set; }
         [Required]
         public string Album { get; set; }
+        [Required]
+        [RegularExpression(@"^([0-5]?\d):([0-5]\d)$", ErrorMessage = "Duración debe tener formato mm:ss")]
 
-        [Range(typeof(TimeSpan), "00:00:00", "01:00:00", ErrorMessage = "La duración tiene que estar entre 0 y 30 minutos")]
         public TimeSpan Duracion { get; set; }
+        public Genero Genero { get; set; }
+
         public int NumeroReproducciones { get; set; }=0;
         public int NumeroLikes { get; set; } = 0;
         [NotMapped]
@@ -29,5 +33,16 @@ namespace Logica.Models
         public string RutaArchivo { get; set; } // Ruta del archivo
         public virtual ICollection<ListaReproduccion> ListaReproduccion { get; set; }
 
+    }
+    public enum Genero
+    {
+        [DescriptionAttribute("Pop")]
+        Pop, //0
+
+        [DescriptionAttribute("Rock")]
+        Rock, //1
+
+        [DescriptionAttribute("Electrónica")]
+        Electronica //2
     }
 }

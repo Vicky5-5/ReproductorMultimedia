@@ -24,7 +24,7 @@ namespace ReproductorMultimedia.Controllers
         // POST: Canciones/AgregarCancion
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AgregarCancion(int idCancion,string titulo, string artista, string album,string DuracionTexto,IFormFile archivo, string ruta,Genero genero)
+        public IActionResult AgregarCancion(int idCancion,string titulo, string artista, string album,string DuracionTexto,IFormFile archivo, Genero genero)
         {
             if (!TimeSpan.TryParseExact(DuracionTexto, @"m\:ss", null, out var duracion))
             {
@@ -59,7 +59,7 @@ namespace ReproductorMultimedia.Controllers
                 duracion,
                 0, 0,
                 relativePath,
-                null, // no se guarda el archivo binario
+                archivo, // no se guarda el archivo binario
                 genero
             );
 

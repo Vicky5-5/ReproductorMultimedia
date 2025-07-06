@@ -33,4 +33,8 @@
     <Folder Include="wwwroot\Archivos scss\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\Icono\icono.png" />
+  </ItemGroup>
+
 </Project>

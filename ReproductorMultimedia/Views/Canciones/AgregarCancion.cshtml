@@ -56,9 +56,8 @@
             </div>
         <div class="form-group">
                 <label>Archivo MP3</label>
-        @Html.TextBoxFor(m => m.ArchivoCancion, new { type = "file", @class = "form-control-file", accept = ".mp3" })
-@Html.ValidationMessageFor(m => m.ArchivoCancion, "", new { @class = "text-danger" })
-
+        <input type="file" name="archivo" class="form-control-file" accept=".mp3" />
+        @Html.ValidationMessageFor(m => m.ArchivoCancion, "", new { @class = "text-danger" })
    
         </div>
         <div class="form-group">

@@ -40,12 +40,13 @@ namespace Logica.Managers
             }
         }
 
-        public static Canciones GuardarCancion(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion, Genero genero)
+        public static Canciones GuardarCancion(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion, Genero genero, int year, IFormFile caratula, string rutaCaratula)
         {
             using (var db = new Conexion())
             {
+                //Comprobamos si existe
                 var canciones = db.Canciones.FirstOrDefault(a => a.idCancion == id);
-
+                
                 if (canciones != null)
                 {
                     canciones.Titulo = titulo;
@@ -56,10 +57,12 @@ namespace Logica.Managers
                     canciones.NumeroLikes = likes;
                     canciones.RutaArchivo = ruta;
                     canciones.Genero= genero;
+                    canciones.Year = year;
+                    canciones.RutaCaratulaAlbum = rutaCaratula;
                     db.SaveChanges();
                     return canciones;
                 }
-
+                //Si no existe, se crea una instancia con reproducciones, likes y génnero iniciales
                 canciones = new Canciones
                 {
                     NumeroReproducciones = reproducciones,
@@ -70,7 +73,7 @@ namespace Logica.Managers
 
                 try
                 {
-                    // 1. Guardar archivo
+                    // Guardamos el archivo MP3 en el proyecto
                     var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "CancionesAgregadas");
                     if (!Directory.Exists(uploadsFolder))
                         Directory.CreateDirectory(uploadsFolder);
@@ -88,17 +91,20 @@ namespace Logica.Managers
                         cancion.CopyTo(fileStream);
                     }
 
-                    // 2. Leer metadatos
+                    // Leemos los metadatos del archivo, si el metadato no existe utiliza el valor introducido en el formulario
                     var file = TagLib.File.Create(fullPath);
                     canciones.Titulo = !string.IsNullOrWhiteSpace(file.Tag.Title) ? file.Tag.Title : titulo;
-                    canciones.Artista = string.Join(", ", file.Tag.Performers) ?? artista;
+                    canciones.Artista = file.Tag.Performers != null && file.Tag.Performers.Length > 0
+                        ? string.Join(", ", file.Tag.Performers)
+                        : artista;
                     canciones.Album = file.Tag.Album ?? album;
-                    canciones.Duracion = file.Properties.Duration;
+                    var duracionCompleta = file.Properties.Duration;
+                    canciones.Duracion = new TimeSpan(0, duracionCompleta.Minutes, duracionCompleta.Seconds);
 
-                    // 3. Guardar ruta relativa
+                    // Guardamos la ruta
                     canciones.RutaArchivo = "/CancionesAgregadas/" + fileName;
 
-                    // 4. Guardar en base de datos
+                    // Guardamos en base de datos
                     db.Canciones.Add(canciones);
                     db.SaveChanges();
                 }

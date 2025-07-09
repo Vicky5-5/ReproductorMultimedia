@@ -53,12 +53,31 @@
                     </div>
 
                 </div>
+                <div class="form-group col-md-6">
+
+                    <h6><strong>Año</strong></h6>
+                    <div class="col-md-6">
+
+                        @Html.EditorFor(m => m.Year, new { htmlAttributes = new { @class = "form-control", placeholder = "Año" } })
+                        @Html.ValidationMessageFor(model => model.Year, "", new { @class = "text-danger" })
+
+                    </div>
+
+                </div>
             </div>
-        <div class="form-group">
+        <div class="row" id="fila">
+                <div class="form-group col-md-6">
                 <label>Archivo MP3</label>
         <input type="file" name="archivo" class="form-control-file" accept=".mp3" />
         @Html.ValidationMessageFor(m => m.ArchivoCancion, "", new { @class = "text-danger" })
    
+        </div>
+                <div class="form-group col-md-6">
+                <label>Carátula</label>
+        <input type="file" name="caratula" class="form-control-file" accept="image/*" />
+        @Html.ValidationMessageFor(m => m.CaratulaAlbum, "", new { @class = "text-danger" })
+   
+        </div>
         </div>
         <div class="form-group">
     @Html.HiddenFor(m => m.idCancion)
@@ -77,3 +96,21 @@
         </div>
     }
 </div>
+
+<!--Vemos la vista previa de la carátula para asegurarnos que es la que queremos dubir-->
+<img id="previewCaratula" src="#" style="display:none; width: 120px; height: 120px; object-fit:cover;" />
+
+<script>
+    document.querySelector("input[name='caratula']").addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (ev) {
+                const img = document.getElementById("previewCaratula");
+                img.src = ev.target.result;
+                img.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>

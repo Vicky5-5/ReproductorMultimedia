@@ -23,6 +23,7 @@ namespace Logica.Models
         [Required]
         [RegularExpression(@"^([0-5]?\d):([0-5]\d)$", ErrorMessage = "Duración debe tener formato mm:ss")]
 
+        public int Year { get; set; }
         public TimeSpan Duracion { get; set; }
         public Genero Genero { get; set; }
 
@@ -31,6 +32,9 @@ namespace Logica.Models
         [NotMapped]
         public IFormFile ArchivoCancion { get; set; }
         public string RutaArchivo { get; set; } // Ruta del archivo
+        public string RutaCaratulaAlbum { get; set; }
+        [NotMapped]
+        public IFormFile CaratulaAlbum { get; set; }
         public virtual ICollection<ListaReproduccion> ListaReproduccion { get; set; }
 
     }

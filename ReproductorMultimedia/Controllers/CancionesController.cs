@@ -24,23 +24,26 @@ namespace ReproductorMultimedia.Controllers
         // POST: Canciones/AgregarCancion
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AgregarCancion(int idCancion,string titulo, string artista, string album,string DuracionTexto,IFormFile archivo, Genero genero)
+        public IActionResult AgregarCancion(int idCancion,string titulo, string artista, string album,string DuracionTexto,IFormFile archivo, Genero genero, int year, IFormFile caratula, string rutaCaratula)
         {
+            //Convertimos el texto en TimeSpan y si el formato es incorrecto nos notifica
             if (!TimeSpan.TryParseExact(DuracionTexto, @"m\:ss", null, out var duracion))
             {
                 ModelState.AddModelError("DuracionTexto", "Formato inválido, usa mm:ss");
                 return View();
             }
-
+            //Comporbamos que el archivo existe
             if (archivo == null || archivo.Length == 0)
             {
                 ModelState.AddModelError("ArchivoCancion", "Debes subir un archivo MP3.");
                 return View();
             }
-
+            //Preparamos la carpeta para guardar la canción
             var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "CancionesAgregadas");
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
+
+            //Generamos un nombre aleatoria único para evitar conflictos
 
             var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(archivo.FileName)}";
             var fullPath = Path.Combine(folderPath, uniqueFileName);
@@ -50,8 +53,20 @@ namespace ReproductorMultimedia.Controllers
             {
                 archivo.CopyTo(stream);
             }
+            var caratulaFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Caratulas");
+            if (!Directory.Exists(caratulaFolder))
+                Directory.CreateDirectory(caratulaFolder);
 
-            CancionesManager.GuardarCancion(
+            var caratulaFileName = $"{Guid.NewGuid()}{Path.GetExtension(caratula.FileName)}";
+            var caratulaFullPath = Path.Combine(caratulaFolder, caratulaFileName);
+            var caratulaRelativePath = $"/Caratulas/{caratulaFileName}";
+
+            using (var stream = new FileStream(caratulaFullPath, FileMode.Create))
+            {
+                caratula.CopyTo(stream);
+            }
+
+            CancionesViewModel.AddSong(
                 idCancion,
                 titulo,
                 artista,
@@ -60,7 +75,10 @@ namespace ReproductorMultimedia.Controllers
                 0, 0,
                 relativePath,
                 archivo, // no se guarda el archivo binario
-                genero
+                genero,
+                year,
+                caratula,
+                caratulaRelativePath
             );
 
             return RedirectToAction("ListaCanciones");

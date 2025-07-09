@@ -26,6 +26,10 @@
                 <div class="col-md-12">
                     @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Contraseña", type = "password" } })
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    <input type="checkbox" id="toggle" class="offscreen" onclick="myFunction()">
+                    <label for="toggle" class="switch">
+
+                    </label>
                 </div>
             </div>
             <h6>¿No tienes cuenta? </h6>@Html.ActionLink("Regístrate", "Registro", "Login")
@@ -37,3 +41,54 @@
         </div>
     }
 </div>
+<style>
+    
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 35px;
+        height: 15px;
+        background-color: rgba(0, 0, 0, 0.25);
+        border-radius: 22px;
+        transition: all 0.3s;
+    }
+
+        .switch::after {
+            content: '';
+            position: absolute;
+            width: 11px;
+            height: 11px;
+            border-radius: 22px;
+            background-color: white;
+            top: 1px;
+            left: 1px;
+            transition: all 0.3s;
+        }
+
+    input[type='checkbox']:checked + .switch::after {
+        transform: translateX(20px);
+    }
+
+    input[type='checkbox']:checked + .switch {
+        background-color: #7983ff;
+    }
+
+    .offscreen {
+        position: absolute;
+        left: -9999px;
+    }
+</style>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    function myFunction() {
+        var x = document.getElementById("myInput");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
+
+</script>

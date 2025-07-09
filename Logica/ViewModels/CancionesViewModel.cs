@@ -17,6 +17,7 @@ namespace Logica.ViewModels
         public string Titulo { get; set; }
         public string Artista { get; set; }
         public string Album { get; set; }
+        public int Year { get; set; }
 
         [RegularExpression(@"^([0-5]?\d):([0-5]\d)$", ErrorMessage = "Duración debe tener formato mm:ss")]
         public TimeSpan Duracion { get; set; }
@@ -28,6 +29,8 @@ namespace Logica.ViewModels
         [NotMapped]
         public IFormFile ArchivoCancion { get; set; }
         public string RutaArchivo { get; set; } // Ruta del archivo
+        public string RutaCaratulaAlbum { get; set; }
+        public IFormFile CaratulaAlbum { get; set; }
         public Genero Genero { get; set; }
 
         public virtual ICollection<ListaReproduccion> ListaReproduccion { get; set; }
@@ -44,6 +47,10 @@ namespace Logica.ViewModels
             this.ArchivoCancion = canciones.ArchivoCancion;
             this.RutaArchivo = canciones.RutaArchivo;
             this.Genero = canciones.Genero;
+            this.Year = canciones.Year;
+            this.RutaCaratulaAlbum = canciones.RutaCaratulaAlbum;
+            this.CaratulaAlbum = canciones.CaratulaAlbum;
+
         }
 
         /*
@@ -106,9 +113,9 @@ namespace Logica.ViewModels
 
         }
 
-        public static CancionesViewModel AddSong(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion,Genero genero)
+        public static CancionesViewModel AddSong(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion,Genero genero, int year, IFormFile caratula, string rutaCaratula)
         {
-            var guardado = CancionesManager.GuardarCancion(id, titulo, artista, album, duracion, reproducciones, likes, ruta, cancion,genero);
+            var guardado = CancionesManager.GuardarCancion(id, titulo, artista, album, duracion, reproducciones, likes, ruta, cancion,genero,year,caratula,rutaCaratula);
 
             CancionesViewModel model = new CancionesViewModel(guardado);
             return model;

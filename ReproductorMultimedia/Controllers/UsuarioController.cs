@@ -112,36 +112,28 @@ namespace ReproductorMultimedia.Controllers
         // GET: UsuarioController/Delete/5
         public ActionResult Delete(int id)
         {
-            var prViewModel = UsuarioViewModel.GetUsuario(id);
+            var usuario = UsuarioViewModel.GetUsuario(id);
+            if (usuario == null)
+                return NotFound();
 
-            if (prViewModel == null)
-            {
-                //return HttpNotFound();
-            }
-            return View(prViewModel);
+            return View(usuario);
         }
+
 
         // POST: UsuarioController/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        [HttpPost, ActionName("DeleteConfirmed")]
+        public IActionResult DeleteConfirmed(UsuarioViewModel model)
         {
-
-            if (ModelState.IsValid)
+            if (model.idUsuario == 0)
             {
-                try
-                {
-                    UsuarioViewModel.RemoveUsuario(id);
-                    return View("VistaUsuarios");
-
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.Error = $"Error al guardar: {ex.Message}";
-
-                }
+                // id nulo o no recibido
+                return BadRequest("ID de usuario no válido.");
             }
-            return View("Index");
+
+            UsuarioViewModel.RemoveUsuario(model.idUsuario);
+            return RedirectToAction("Administrador");
         }
+
+
     }
 }

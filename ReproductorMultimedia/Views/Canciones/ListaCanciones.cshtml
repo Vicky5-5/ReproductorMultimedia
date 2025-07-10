@@ -1,78 +1,163 @@
 ﻿@model IEnumerable<Logica.ViewModels.CancionesViewModel>
 
 @{
-    ViewData["Title"] = "ListaCanciones";
+	ViewData["Title"] = "ListaCanciones";
 }
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-<h1>ListaCanciones</h1>
+<h1>Listado de Canciones</h1>
 
 <p>
-    @Html.ActionLink("Subir Canción", "AgregarCancion", "Canciones")
+	@Html.ActionLink("Subir Canción", "AgregarCancion", "Canciones")
 </p>
 <table class="table">
-    <thead>
-        <tr>
-            <th>Reproducir</th>
-            <th>
-                @Html.DisplayNameFor(model => model.Titulo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Artista)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Album)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Duracion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genero)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumeroReproducciones)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumeroLikes)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-                <td>
-                    <audio controls style="width: 250px;">
-                        <source src="@item.RutaArchivo" type="audio/mpeg" />
-                        Tu navegador no soporta la reproducción de audio.
-                    </audio>
-                </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Titulo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Artista)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Album)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Duracion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genero)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumeroReproducciones)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumeroLikes)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.idCancion">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.idCancion">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.idCancion">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+	<thead>
+		<tr>
+			<th>Carátula</th>
+			<th>Reproducir</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Titulo)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Artista)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Album)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Duracion)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Genero)
+			</th>
+			<th>
+				Reproducciones
+			</th>
+			<th>
+				Likes
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					<div class="disco" id="disco-@item.idCancion">
+						<img src="@item.RutaCaratulaAlbum" alt="Carátula" />
+					</div>
+				</td>
+				<td>
+					<audio controls id="audio-@item.idCancion" style="width: 250px;">
+						<source src="@item.RutaArchivo" type="audio/mpeg" />
+						Tu navegador no soporta la reproducción de audio.
+					</audio>
+				</td>
+
+				<td>
+					@Html.DisplayFor(modelItem => item.Titulo)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Artista)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Album)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Duracion)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Genero)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.NumeroReproducciones)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.NumeroLikes)
+				</td>
+				<td>
+					<a class="icono" href="@Url.Action("Edit", new { id = item.idCancion })">
+						<i style="color: #e8d15e; font-size: 21px;" class="fa-solid fa-pen-to-square"></i>
+					</a> |
+
+					<a class="icono" href="@Url.Action("Details", new { id = item.idCancion })">
+						<i style="color: green; font-size: 21px;" class="fa-regular fa-file-lines"></i>
+					</a>
+					|
+					<a class="icono" href="@Url.Action("Delete", new { id = item.idCancion }))">
+						<i style="color: red; font-size: 21px;" class="fas fa-trash-alt"></i>
+					</a>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>
+<style>
+	.icono {
+		margin: 0 10px;
+		font-size: 22px;
+		text-decoration: none;
+		transition: transform 0.2s ease;
+		display: inline-block;
+	}
+
+		.icono:hover {
+			transform: scale(1.2);
+		}
+
+	.disco {
+		width: 120px;
+		height: 120px;
+		border-radius: 50%;
+		background: radial-gradient(circle, #333 30%, #111 70%);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 0 10px rgba(0,0,0,0.4);
+		position: relative;
+	}
+
+		.disco img {
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+			object-fit: cover;
+			z-index: 1;
+		}
+	keyframes girar {
+		from
+
+	{
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
+
+	}
+
+	.girando {
+		animation: girar 4s linear infinite;
+	}
+
+
+
+</style>
+<script>
+	document.querySelectorAll('audio').forEach(audio => {
+		const id = audio.id.split('-')[1];
+		const disco = document.getElementById('disco-' + id);
+
+		audio.addEventListener('play', () => {
+			disco.classList.add('girando');
+		});
+		audio.addEventListener('pause', () => {
+			disco.classList.remove('girando');
+		});
+		audio.addEventListener('ended', () => {
+			disco.classList.remove('girando');
+		});
+	});
+</script>

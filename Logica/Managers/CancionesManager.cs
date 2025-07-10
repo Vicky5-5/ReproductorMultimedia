@@ -103,7 +103,7 @@ namespace Logica.Managers
 
                     // Guardamos la ruta
                     canciones.RutaArchivo = "/CancionesAgregadas/" + fileName;
-
+                    canciones.RutaCaratulaAlbum = rutaCaratula;
                     // Guardamos en base de datos
                     db.Canciones.Add(canciones);
                     db.SaveChanges();

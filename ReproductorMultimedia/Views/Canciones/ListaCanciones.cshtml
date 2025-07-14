@@ -7,9 +7,7 @@
 
 <h1>Listado de Canciones</h1>
 
-<p>
-	@Html.ActionLink("Subir Canción", "AgregarCancion", "Canciones")
-</p>
+
 <table class="table">
 	<thead>
 		<tr>
@@ -25,7 +23,7 @@
 				@Html.DisplayNameFor(model => model.Album)
 			</th>
 			<th>
-				@Html.DisplayNameFor(model => model.Duracion)
+				<i class="fa-solid fa-clock"></i>
 			</th>
 			<th>
 				@Html.DisplayNameFor(model => model.Genero)
@@ -84,8 +82,8 @@
 					<a class="icono" href="@Url.Action("Details", new { id = item.idCancion })">
 						<i style="color: green; font-size: 21px;" class="fa-regular fa-file-lines"></i>
 					</a>
-					|
-					<a class="icono" href="@Url.Action("Delete", new { id = item.idCancion }))">
+					| 
+					<a class="icono" href="@Url.Action("Delete", new { id = item.idCancion })">
 						<i style="color: red; font-size: 21px;" class="fas fa-trash-alt"></i>
 					</a>
 				</td>
@@ -149,15 +147,32 @@
 	document.querySelectorAll('audio').forEach(audio => {
 		const id = audio.id.split('-')[1];
 		const disco = document.getElementById('disco-' + id);
+		let reproducido = false;
 
 		audio.addEventListener('play', () => {
+			if (!reproducido) {
+				fetch('/Canciones/ActualizarReproducciones', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+					},
+					body: JSON.stringify({ id: parseInt(id) })
+				}).then(res => {
+					if (!res.ok) console.error('Error al sumar reproducción');
+				});
+				reproducido = true;
+			}
 			disco.classList.add('girando');
 		});
+
 		audio.addEventListener('pause', () => {
 			disco.classList.remove('girando');
 		});
 		audio.addEventListener('ended', () => {
 			disco.classList.remove('girando');
+			reproducido = false; // Permite sumar de nuevo si se vuelve a reproducir
 		});
 	});
 </script>
+

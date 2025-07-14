@@ -121,12 +121,15 @@ namespace Logica.ViewModels
             return model;
         }
 
-        public static void RemoveProducto(int id)
+        public static void RemoveCancion(int id)
         {
             CancionesManager.EliminarCancion(id);
         }
 
-
+        public static void UpdateSong(int id)
+        {
+            CancionesManager.ActualizarReproducciones(id);
+        }
 
     }
 }

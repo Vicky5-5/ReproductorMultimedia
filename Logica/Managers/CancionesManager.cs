@@ -121,9 +121,21 @@ namespace Logica.Managers
         {
             using (var db = new Conexion())
             {
-                var producto = db.Canciones.FirstOrDefault(a => a.idCancion == id);
-                var eliminado = db.Canciones.Remove(producto);
+                var cancion = db.Canciones.FirstOrDefault(a => a.idCancion == id);
+                var eliminado = db.Canciones.Remove(cancion);
                 db.SaveChanges();
+            }
+        }
+        public static void ActualizarReproducciones(int id)
+        {
+            using (var db = new Conexion())
+            {
+                var cancion = db.Canciones.FirstOrDefault(a => a.idCancion == id);
+                if (cancion != null)
+                {
+                    cancion.NumeroReproducciones++;
+                    db.SaveChanges();
+                }
             }
         }
     }

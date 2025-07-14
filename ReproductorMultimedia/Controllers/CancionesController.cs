@@ -100,17 +100,42 @@ namespace ReproductorMultimedia.Controllers
         }
 
         // GET: Canciones/Delete/5
+        [HttpGet]
         public IActionResult Delete(int id)
         {
-            return View();
+            var cancion = CancionesViewModel.ObtenerCancionView(id);
+            if (cancion == null)
+            {
+                return NotFound();
+            }
+            return View(cancion);
         }
 
         // POST: Canciones/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id, IFormCollection collection)
+        public IActionResult DeleteConfirmed(int id)
         {
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // RemoveCancion is a void method, so no assignment is needed.
+                    CancionesViewModel.RemoveCancion(id);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Error = $"Error al guardar: {ex.Message}";
+                }
+            }
+            return RedirectToAction("ListaCanciones");
         }
+        [HttpPost]
+        public IActionResult ActualizarReproducciones(int id) { 
+        
+            CancionesViewModel.UpdateSong(id);
+            return RedirectToAction("ListaCanciones");
+        }
+
     }
 }

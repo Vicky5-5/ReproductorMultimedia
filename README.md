@@ -1,4 +1,4 @@
-# Reproductor Muktimedia
+# Reproductor Multimedia
 
 Este proyecto es un reproductor multimedia de archivos MP3.
 Permite a los usuarios escuchar música localmente, mientras que los administradores pueden subir nuevas canciones al sistema. Es una alternativa sencilla a otras aplicaciones multimedia.

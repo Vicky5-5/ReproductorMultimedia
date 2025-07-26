@@ -131,11 +131,20 @@ namespace ReproductorMultimedia.Controllers
             return RedirectToAction("ListaCanciones");
         }
         [HttpPost]
-        public IActionResult ActualizarReproducciones(int id) { 
-        
-            CancionesViewModel.UpdateSong(id);
-            return RedirectToAction("ListaCanciones");
+        [ValidateAntiForgeryToken]
+        public IActionResult ActualizarReproducciones(int id)
+        {
+            try
+            {
+                CancionesViewModel.UpdateSong(id);
+                return Ok(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, error = ex.Message });
+            }
         }
+
 
     }
 }

@@ -51,31 +51,7 @@ namespace Logica.ViewModels
             this.RutaCaratulaAlbum = canciones.RutaCaratulaAlbum;
             this.CaratulaAlbum = canciones.CaratulaAlbum;
 
-        }
-
-        /*
-         * CREAR CLASE PARA VALIDAR EL TIMESPAN
-         * public class TimeSpanRangeAttribute : ValidationAttribute
-{
-    private readonly TimeSpan _min;
-    private readonly TimeSpan _max;
-
-    public TimeSpanRangeAttribute(string min, string max)
-    {
-        _min = TimeSpan.Parse(min);
-        _max = TimeSpan.Parse(max);
-    }
-
-    public override bool IsValid(object value)
-    {
-        if (value is TimeSpan ts)
-        {
-            return ts >= _min && ts <= _max;
-        }
-        return false;
-    }
-}
-*/
+        }        
         public CancionesViewModel()
         {
         }
@@ -130,6 +106,9 @@ namespace Logica.ViewModels
         {
             CancionesManager.ActualizarReproducciones(id);
         }
-
+        public static void UpdateLikes(int id)
+        {
+            CancionesManager.ActualizarLikes(id);
+        }
     }
 }

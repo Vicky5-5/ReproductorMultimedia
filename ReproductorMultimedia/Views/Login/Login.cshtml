@@ -5,7 +5,7 @@
 }
 
 <h1>Login</h1>
-
+<br />
 <div class="card justify-content-center">
     <br />
 
@@ -26,6 +26,7 @@
                 <div class="col-md-12">
                     @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Contraseña", type = "password" } })
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    <br />
                     <input type="checkbox" id="toggle" class="offscreen" onclick="myFunction()">
                     <label for="toggle" class="switch">
 
@@ -35,15 +36,27 @@
             <h6>¿No tienes cuenta? </h6>@Html.ActionLink("Regístrate", "Registro", "Login")
 
 
-            <div class="form-group col-md-12 text-center mt-3">
-                <button type="submit" class="btn btn-primary">Entrar</button>
+            <div class="boton form-group col-md-12 text-center mt-3">
+                <button type="submit" class="btn btn-dark">Entrar</button>
             </div>
         </div>
     }
 </div>
 <style>
-    
+    h1{
+        text-align: center;
+        color: #333;
+    }
+    .boton button:hover {
+        background-color: #0056b3;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
 
+   .card{
+        background-color: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+   }
     .switch {
         position: relative;
         display: inline-block;

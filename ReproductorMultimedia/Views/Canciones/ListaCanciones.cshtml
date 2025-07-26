@@ -75,10 +75,7 @@
 					@Html.DisplayFor(modelItem => item.NumeroLikes)
 				</td>
 				<td>
-					<a class="icono" href="@Url.Action("Edit", new { id = item.idCancion })">
-						<i style="color: #e8d15e; font-size: 21px;" class="fa-solid fa-pen-to-square"></i>
-					</a> |
-
+					
 					<a class="icono" href="@Url.Action("Details", new { id = item.idCancion })">
 						<i style="color: green; font-size: 21px;" class="fa-regular fa-file-lines"></i>
 					</a>
@@ -143,36 +140,50 @@
 
 
 </style>
+<form id="tokenForm" method="post">
+	@Html.AntiForgeryToken()
+</form>
+<script src="https://example.com/script.js"></script>
 <script>
-	document.querySelectorAll('audio').forEach(audio => {
-		const id = audio.id.split('-')[1];
-		const disco = document.getElementById('disco-' + id);
-		let reproducido = false;
+	document.addEventListener('DOMContentLoaded', () => {
+		const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+		const token = tokenInput ? tokenInput.value : '';
 
-		audio.addEventListener('play', () => {
-			if (!reproducido) {
+		document.querySelectorAll('audio').forEach(audio => {
+			const id = audio.id.split('-')[1];
+			const disco = document.getElementById('disco-' + id);
+
+			audio.addEventListener('playing', () => {
+				disco.classList.add('girando');
+			});
+
+			audio.addEventListener('pause', () => {
+				disco.classList.remove('girando');
+			});
+
+			audio.addEventListener('ended', () => {
+				disco.classList.remove('girando');
+
+				// ✅ Enviar reproducción solo si se terminó la canción
+				const formData = new FormData();
+				formData.append('__RequestVerificationToken', token);
+				formData.append('id', id);
+
 				fetch('/Canciones/ActualizarReproducciones', {
 					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-					},
-					body: JSON.stringify({ id: parseInt(id) })
+					body: formData
 				}).then(res => {
-					if (!res.ok) console.error('Error al sumar reproducción');
+					if (res.ok) {
+						mostrarMensaje(`✅ Reproducción registrada para ID ${id}`);
+					} else {
+						console.error('❌ Error al registrar reproducción');
+						mostrarMensaje(`❌ Error al registrar reproducción`, true);
+					}
 				});
-				reproducido = true;
-			}
-			disco.classList.add('girando');
+			});
 		});
 
-		audio.addEventListener('pause', () => {
-			disco.classList.remove('girando');
-		});
-		audio.addEventListener('ended', () => {
-			disco.classList.remove('girando');
-			reproducido = false; // Permite sumar de nuevo si se vuelve a reproducir
-		});
-	});
+
 </script>
+
 

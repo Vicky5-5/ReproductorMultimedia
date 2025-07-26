@@ -29,8 +29,8 @@
 
   <ItemGroup>
     <Folder Include="CancionesAgregadas\" />
+    <Folder Include="wwwroot\Archivos scss\wwwroot\" />
     <Folder Include="wwwroot\ImagenesCarrusel\" />
-    <Folder Include="wwwroot\Archivos scss\" />
   </ItemGroup>
 
   <ItemGroup>

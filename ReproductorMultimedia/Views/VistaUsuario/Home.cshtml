@@ -1,0 +1,206 @@
+﻿@using Logica.Managers
+@model IEnumerable<Logica.ViewModels.CancionesViewModel>
+
+@{
+    ViewData["Title"] = "ListaCanciones";
+}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<h1>Usuario:</h1>
+
+<h1>Listado de Canciones</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Carátula</th>
+            <th>Reproducir</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Titulo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Artista)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Album)
+            </th>
+            <th>
+                <i class="fa-solid fa-clock"></i>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genero)
+            </th>
+            <th>
+                Reproducciones
+            </th>
+            <th>
+                Likes
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <div class="disco" id="disco-@item.idCancion">
+                        <img src="@item.RutaCaratulaAlbum" alt="Carátula" />
+                    </div>
+                </td>
+                <td>
+                    <audio controls id="audio-@item.idCancion" style="width: 250px;">
+                        <source src="@item.RutaArchivo" type="audio/mpeg" />
+                        Tu navegador no soporta la reproducción de audio.
+                    </audio>
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Titulo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Artista)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Album)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Duracion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genero)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroReproducciones)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroLikes)
+                </td>
+                <td>
+
+                    <a class="icono" href="@Url.Action("Details", new { id = item.idCancion })">
+                        <i style="color: green; font-size: 21px;" class="fa-regular fa-file-lines"></i>
+                    </a>
+                    <a class="like" href="@Url.Action("Likes", new { id = item.idCancion })">
+                        <i style="color:grey" class="fa-solid fa-heart"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<style>
+    .icono {
+        margin: 0 10px;
+        font-size: 22px;
+        text-decoration: none;
+        transition: transform 0.2s ease;
+        display: inline-block;
+    }
+
+        .icono:hover {
+            transform: scale(1.2);
+        }
+        .like{
+        margin: 0 10px;
+        font-size: 22px;
+        text-decoration: none;
+        transition: transform 0.2s ease;
+        display: inline-block;
+        color: grey;
+    }
+
+    .like:hover {
+        transform: scale(1.2);
+        color: #C73636;
+    }
+
+    .like-activo i {
+        color: #C73636;
+    }
+    .disco {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #333 30%, #111 70%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 10px rgba(0,0,0,0.4);
+        position: relative;
+    }
+
+        .disco img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+    keyframes girar {
+        from
+
+    {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+    }
+
+    .girando {
+        animation: girar 4s linear infinite;
+    }
+
+</style>
+<form id="tokenForm" method="post">
+    @Html.AntiForgeryToken()
+</form>
+<script src="https://example.com/script.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+        const token = tokenInput ? tokenInput.value : '';
+
+        document.querySelectorAll('audio').forEach(audio => {
+            const id = audio.id.split('-')[1];
+            const disco = document.getElementById('disco-' + id);
+
+            audio.addEventListener('playing', () => {
+                disco.classList.add('girando');
+            });
+
+            audio.addEventListener('pause', () => {
+                disco.classList.remove('girando');
+            });
+
+            audio.addEventListener('ended', () => {
+                disco.classList.remove('girando');
+
+                // ✅ Enviar reproducción solo si se terminó la canción
+                const formData = new FormData();
+                formData.append('__RequestVerificationToken', token);
+                formData.append('id', id);
+
+                fetch('/Canciones/ActualizarReproducciones', {
+                    method: 'POST',
+                    body: formData
+                }).then(res => {
+                    if (res.ok) {
+                        mostrarMensaje(`✅ Reproducción registrada para ID ${id}`);
+                    } else {
+                        console.error('❌ Error al registrar reproducción');
+                        mostrarMensaje(`❌ Error al registrar reproducción`, true);
+                    }
+                });
+            });
+        });
+
+
+</script>
+
+

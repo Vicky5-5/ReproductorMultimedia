@@ -1,0 +1,41 @@
+// Sin espacio entre columnas
+$grid-gutter-width: 0;
+
+// Contenedor con ancho 100%
+$container-max-widths: ( sm: 100%, md: 100%, lg: 100%, xl: 100%, xxl: 100% );
+
+// Importar Bootstrap completo con grid
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+
+@media (min-width: 992px) {
+    .container, .container-lg, .container-md, .container-sm {
+        max-width: 100%;
+    }
+}
+#carouselEjemplo {
+    width: auto;
+    max-width: 100%;
+}
+
+#carouselEjemplo img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-weight: 700;
+    text-align: center;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+
+    h2 {
+        font-size: 3rem;
+        margin: 0;
+    }
+}

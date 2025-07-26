@@ -38,6 +38,7 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
+    background-color: #DBDBDB !important;
 }
 main {
     flex: 1;

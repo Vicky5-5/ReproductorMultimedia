@@ -46,7 +46,7 @@ namespace Logica.Managers
             {
                 //Comprobamos si existe
                 var canciones = db.Canciones.FirstOrDefault(a => a.idCancion == id);
-                
+
                 if (canciones != null)
                 {
                     canciones.Titulo = titulo;
@@ -56,7 +56,7 @@ namespace Logica.Managers
                     canciones.NumeroReproducciones = reproducciones;
                     canciones.NumeroLikes = likes;
                     canciones.RutaArchivo = ruta;
-                    canciones.Genero= genero;
+                    canciones.Genero = genero;
                     canciones.Year = year;
                     canciones.RutaCaratulaAlbum = rutaCaratula;
                     db.SaveChanges();
@@ -134,6 +134,18 @@ namespace Logica.Managers
                 if (cancion != null)
                 {
                     cancion.NumeroReproducciones++;
+                    db.SaveChanges();
+                }
+            }
+        }
+        public static void ActualizarLikes(int id)
+        {
+            using (var db = new Conexion())
+            {
+                var cancion = db.Canciones.FirstOrDefault(a => a.idCancion == id);
+                if (cancion != null)
+                {
+                    cancion.NumeroLikes++;
                     db.SaveChanges();
                 }
             }

@@ -51,7 +51,7 @@ namespace ReproductorMultimedia.Controllers
                     }
 
                     TempData["Usuario"] = usuario.Nombre;
-                    return RedirectToAction("Index", "Canciones");
+                    return RedirectToAction("Home", "VistaUsuario");
                 }
 
                 TempData["Error"] = "Correo electrónico o contraseña incorrectos.";

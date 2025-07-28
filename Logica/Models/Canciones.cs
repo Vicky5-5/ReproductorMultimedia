@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Identity.Client;
 
 namespace Logica.Models
 {
@@ -33,6 +34,7 @@ namespace Logica.Models
         public IFormFile ArchivoCancion { get; set; }
         public string RutaArchivo { get; set; } // Ruta del archivo
         public string RutaCaratulaAlbum { get; set; }
+        public bool UsuarioDioLike { get; set; }=false;
         [NotMapped]
         public IFormFile CaratulaAlbum { get; set; }
         public virtual ICollection<ListaReproduccion> ListaReproduccion { get; set; }

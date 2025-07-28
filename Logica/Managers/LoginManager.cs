@@ -46,7 +46,6 @@ namespace Logica.Managers
             var login = UsuariosManager.Login(email, password);
             var hash = UsuariosManager.HashPassword(password);
 
-            // Almacenamos los intentos de inicio de sesión
             int intentosFallidos = session.GetInt32("IntentosFallidos") ?? 0;
 
             if (login == null)
@@ -59,6 +58,7 @@ namespace Logica.Managers
             {
                 currentUser = login.Nombre;
                 session.SetString("Bienvenida", $"Bienvenido/a: {login.Nombre}");
+                session.SetInt32("idUsuario", login.idUsuario); // ✅ Guarda el ID del usuario
                 session.SetInt32("IntentosFallidos", 0); // Reinicia intentos
                 return login; // Login exitoso
             }
@@ -78,17 +78,22 @@ namespace Logica.Managers
 
             return null; // Login fallido
         }
-
+        //Obtenemos el nombre del usuario actual
         public string GetCurrentUser()
         {
             return currentUser;
+        }
+        // Para saber si el usuario está logueado
+        public int? GetCurrentUserId()
+        {
+            return _contextAccessor.HttpContext.Session.GetInt32("idUsuario");
         }
 
         public void Logout()
         {
             var session = _contextAccessor.HttpContext.Session;
             session.Clear();
-            currentUser = null; // Reinicia el usuario actual
+            currentUser = null;
         }
     }
 }

@@ -1,30 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Logica.Models
 {
     public class ListaReproduccion
     {
         [Key]
-        public int idLista { get; set; }
-        [NotMapped]
+        public Guid idLista { get; set; }
+
+        [Required]
         public string NombreLista { get; set; }
 
-        public DateTime fechaCreacion { get; set; }
-        //Clave foranea
-        [NotMapped]
-
+        public DateTime fechaCreacion { get; set; } = DateTime.Now; // Fecha de creación de la lista
+        public DateTime cancionAnadida { get; set; } = DateTime.Now; // Fecha en que se añadió la canción a la lista
+        // Claves foráneas
+        [ForeignKey("idCancion")]
         public int idCancion { get; set; }
-        [NotMapped]
 
+        [ForeignKey("idUsuario")]
         public int idUsuario { get; set; }
+
+        // Propiedades de navegación
         public virtual Usuario Usuario { get; set; }
         public virtual Canciones Cancion { get; set; }
-
     }
 }

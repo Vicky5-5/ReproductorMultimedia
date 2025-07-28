@@ -62,6 +62,9 @@ namespace Logica.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("UsuarioDioLike")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Year")
                         .HasColumnType("int");
 
@@ -78,11 +81,8 @@ namespace Logica.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("idFavorita"));
 
-                    b.Property<int>("CancionidCancion")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioidUsuario")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("fecharAnadidaFavorita")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("idCancion")
                         .HasColumnType("int");
@@ -92,29 +92,40 @@ namespace Logica.Migrations
 
                     b.HasKey("idFavorita");
 
-                    b.HasIndex("CancionidCancion");
+                    b.HasIndex("idCancion");
 
-                    b.HasIndex("UsuarioidUsuario");
+                    b.HasIndex("idUsuario");
 
                     b.ToTable("Favoritas");
                 });
 
             modelBuilder.Entity("Logica.Models.ListaReproduccion", b =>
                 {
-                    b.Property<int>("idLista")
+                    b.Property<Guid>("idLista")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("idLista"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("CancionidCancion")
                         .HasColumnType("int");
 
+                    b.Property<string>("NombreLista")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("UsuarioidUsuario")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("cancionAnadida")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("fechaCreacion")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("idCancion")
+                        .HasColumnType("int");
+
+                    b.Property<int>("idUsuario")
+                        .HasColumnType("int");
 
                     b.HasKey("idLista");
 
@@ -167,13 +178,13 @@ namespace Logica.Migrations
                 {
                     b.HasOne("Logica.Models.Canciones", "Cancion")
                         .WithMany()
-                        .HasForeignKey("CancionidCancion")
+                        .HasForeignKey("idCancion")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Logica.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("UsuarioidUsuario")
+                        .HasForeignKey("idUsuario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

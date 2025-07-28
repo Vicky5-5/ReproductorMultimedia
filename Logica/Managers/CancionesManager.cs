@@ -138,17 +138,64 @@ namespace Logica.Managers
                 }
             }
         }
-        public static void ActualizarLikes(int id)
+
+        public static bool AlternarLike(int idUsuario, int idCancion)
         {
             using (var db = new Conexion())
             {
-                var cancion = db.Canciones.FirstOrDefault(a => a.idCancion == id);
+                // Vemos si el usuario ya ha dado like a la canción
+                var favoritoExistente = db.Favoritas
+                    .FirstOrDefault(cf => cf.idUsuario == idUsuario && cf.idCancion == idCancion);
+
+                var cancion = db.Canciones.FirstOrDefault(c => c.idCancion == idCancion);
+
+                if (cancion == null)
+                    return false; // Canción no encontrada
+
+                if (favoritoExistente != null)
+                {
+                    // Si ya dio like → eliminar favorito
+                    db.Favoritas.Remove(favoritoExistente);
+
+                    if (cancion.NumeroLikes > 0)
+                        cancion.NumeroLikes--;
+                    return false; // Like eliminado
+                }
+                else
+                {
+                    // No dio like → añadir favorito
+                    var nuevoFavorito = new CancionesFavoritas
+                    {
+                        idUsuario = idUsuario,
+                        idCancion = idCancion,
+                        fecharAnadidaFavorita = DateTime.Now
+                    };
+
+                    db.Favoritas.Add(nuevoFavorito);
+                    cancion.NumeroLikes++;
+                }
+
+                db.SaveChanges();
+                return true; // Like añadido
+            }
+        }
+
+        public static int ActualizarLikes(int id)
+        {
+            using (var db = new Conexion())
+            {
+                var cancion = db.Canciones.FirstOrDefault(c => c.idCancion == id);
                 if (cancion != null)
                 {
                     cancion.NumeroLikes++;
                     db.SaveChanges();
+                    return cancion.NumeroLikes;
                 }
+
+                return -1; // Devuelve -1 si la canción no se encuentra
             }
         }
+
+
     }
 }

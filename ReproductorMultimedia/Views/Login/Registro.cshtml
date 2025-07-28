@@ -19,7 +19,7 @@
 
                 <div class="form-group">
                     <label><strong>Nombre</strong></label>
-                    @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Nombre Usuario" } })
+                    @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Nombre Usuario"} })
                     @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
                 </div>
 
@@ -40,8 +40,8 @@
                     </div>
                 </div>
 
-                <div class="form-group text-center mt-4">
-                    <input id="boton" type="submit" value="Crear" class="btn btn-dark" />
+                <div class="boton form-group text-center mt-4">
+                    <input type="submit" value="Crear" class="btn btn-dark" />
                 </div>
 
                 <div class="form-group text-center">
@@ -53,11 +53,10 @@
 </div>
 
 <style>
-    #boton {
-        border-radius: 5px;
-        background-color: black;
+    .boton button:hover {
+        background-color: #0056b3;
         color: white;
-        width: 5vw;
+        transition: background-color 0.3s ease;
     }
 
     #fila {
@@ -67,6 +66,7 @@
     #card {
         justify-content: center;
         margin-left: 8vw;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     #texto {

@@ -30,6 +30,8 @@ namespace Logica.ViewModels
         public IFormFile ArchivoCancion { get; set; }
         public string RutaArchivo { get; set; } // Ruta del archivo
         public string RutaCaratulaAlbum { get; set; }
+        public bool UsuarioDioLike { get; set; }=false;
+
         public IFormFile CaratulaAlbum { get; set; }
         public Genero Genero { get; set; }
 
@@ -50,7 +52,7 @@ namespace Logica.ViewModels
             this.Year = canciones.Year;
             this.RutaCaratulaAlbum = canciones.RutaCaratulaAlbum;
             this.CaratulaAlbum = canciones.CaratulaAlbum;
-
+            this.UsuarioDioLike = canciones.UsuarioDioLike;
         }        
         public CancionesViewModel()
         {
@@ -106,9 +108,20 @@ namespace Logica.ViewModels
         {
             CancionesManager.ActualizarReproducciones(id);
         }
-        public static void UpdateLikes(int id)
+        public static int UpdateLikes(int id)
         {
-            CancionesManager.ActualizarLikes(id);
+            var likes=CancionesManager.ActualizarLikes(id);
+            return likes;
+        }
+        public static bool LikeDislike(int idUsuario, int idCancion)
+        {
+            if (idCancion != 0 && idUsuario != 0)
+            {
+                CancionesManager.AlternarLike(idUsuario, idCancion);
+                return true;
+            }
+            return false;
+
         }
     }
 }

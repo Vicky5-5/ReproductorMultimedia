@@ -6,7 +6,7 @@
 }
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-<h1>Usuario:</h1>
+<h1>Usuario: @ViewBag.NombreUsuario</h1>
 
 <h1>Listado de Canciones</h1>
 
@@ -78,14 +78,20 @@
                     @Html.DisplayFor(modelItem => item.NumeroLikes)
                 </td>
                 <td>
-
                     <a class="icono" href="@Url.Action("Details", new { id = item.idCancion })">
                         <i style="color: green; font-size: 21px;" class="fa-regular fa-file-lines"></i>
                     </a>
-                    <a class="like" href="@Url.Action("Likes", new { id = item.idCancion })">
-                        <i style="color:grey" class="fa-solid fa-heart"></i>
-                    </a>
+
+                    <button class="like-btn @(item.UsuarioDioLike ? "like-activo" : "")"
+                            data-idcancion="@item.idCancion"
+                            onclick="toggleLike(@item.idCancion)"
+                            style="background: none; border: none;">
+                        <i class="fa-solid fa-heart"></i>
+                    </button>
+
+                    <span id="contadorLikes-@item.idCancion">@item.NumeroLikes</span>
                 </td>
+
             </tr>
         }
     </tbody>
@@ -139,28 +145,12 @@
             z-index: 1;
         }
 
-    keyframes girar {
-        from
-
-    {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-
-    }
-
-    .girando {
-        animation: girar 4s linear infinite;
-    }
 
 </style>
 <form id="tokenForm" method="post">
     @Html.AntiForgeryToken()
 </form>
-<script src="https://example.com/script.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
@@ -199,8 +189,40 @@
                 });
             });
         });
+            
+    function toggleLike(idCancion) {
+        fetch('/VistaUsuario/LikeAlternar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ idCancion: idCancion })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const btn = document.querySelector(`button[data-idcancion='${idCancion}']`);
+                const contador = document.getElementById(`contadorLikes-${idCancion}`);
 
+                // Alternar clase visual
+                btn.classList.toggle('like-activo');
 
+                // Actualizar contador
+                contador.textContent = data.likesTotales;
+
+                // Opcional: mostrar mensaje
+                console.log(data.mensaje);
+            } else {
+                alert(data.mensaje);
+            }
+        })
+        .catch(error => {
+            console.error('Error al alternar el like:', error);
+        });
+    }
 </script>
+
+    
+
 
 

@@ -78,18 +78,12 @@
                     @Html.DisplayFor(modelItem => item.NumeroLikes)
                 </td>
                 <td>
-                    <a class="icono" href="@Url.Action("Details", new { id = item.idCancion })">
-                        <i style="color: green; font-size: 21px;" class="fa-regular fa-file-lines"></i>
-                    </a>
-
                     <button class="like-btn @(item.UsuarioDioLike ? "like-activo" : "")"
                             data-idcancion="@item.idCancion"
                             onclick="toggleLike(@item.idCancion)"
                             style="background: none; border: none;">
                         <i class="fa-solid fa-heart"></i>
                     </button>
-
-                    <span id="contadorLikes-@item.idCancion">@item.NumeroLikes</span>
                 </td>
 
             </tr>

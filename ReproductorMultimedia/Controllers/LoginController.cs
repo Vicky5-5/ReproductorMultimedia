@@ -29,7 +29,7 @@ namespace ReproductorMultimedia.Controllers
 
 
         [HttpPost]
-        public ActionResult Entrar(string email, string password)
+        public ActionResult Entrar(string email, string password, bool? estado)
         {
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
@@ -48,6 +48,11 @@ namespace ReproductorMultimedia.Controllers
                     if (usuario.Administrador)
                     {
                         return RedirectToAction("Administrador", "Usuario");
+                    }
+                    if (estado==false)
+                    {
+                        TempData["Error"] = "Tu cuenta está inactiva. Por favor, contacta al administrador.";
+                        return RedirectToAction("Login", "Login");
                     }
 
                     TempData["Usuario"] = usuario.Nombre;

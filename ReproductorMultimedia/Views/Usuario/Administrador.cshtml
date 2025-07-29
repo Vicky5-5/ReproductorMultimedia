@@ -1,137 +1,178 @@
 ﻿@model IEnumerable<Logica.ViewModels.UsuarioViewModel>
 
 @{
-	ViewData["Title"] = "Administrador";
+    ViewData["Title"] = "Administrador";
 }
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
 <h1>Administrador: @ViewBag.NombreUsuario</h1>
 <p>
-<a id="boton" style="background-color:mediumpurple;" href="@Url.Action("ListaCanciones", "Canciones")" class="btn btn-link">
-	<i class="fa-solid fa-music me-2" style="color:black;"></i> Escuchar Canciones
-</a>
+    <a id="boton" style="background-color:mediumpurple;" href="@Url.Action("ListaCanciones", "Canciones")" class="btn btn-link">
+        <i class="fa-solid fa-music me-2" style="color:black;"></i> Escuchar Canciones
+    </a>
 
 
-	<a id="botonCrear" href="@Url.Action("AgregarCancion", "Canciones")" class="btn btn-link">
-		<i class="fa-solid fa-upload" style="color:black;"></i> Subir Canciones
-</a>
+    <a id="botonCrear" href="@Url.Action("AgregarCancion", "Canciones")" class="btn btn-link">
+        <i class="fa-solid fa-upload" style="color:black;"></i> Subir Canciones
+    </a>
+
+    <a id="botonCrearUsuario" href="@Url.Action("Create", "Usuario")" class="btn btn-link">
+        <i class="fa-solid fa-user" style="color:black;"></i> Crear Usuario
+    </a>
 </p>
 <table class="table">
-	<thead>
-		<tr>
-			<th>
-				@Html.DisplayNameFor(model => model.Nombre)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Email)
-			</th>
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
 
-			<th>
-				Fecha de Baja
-			</th>
-			<th>
-				Administrador
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model)
-		{
-			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.Nombre)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Email)
-				</td>
+            <th>
+                Fecha de Baja
+            </th>
+            <th>
+                Fecha de Registro
+            </th>
+            <th>
+                Administrador
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
 
-				<td>
-					@Html.DisplayFor(modelItem => item.fechaBaja)
-				</td>
-				<td>
-					@(item.Administrador ? "Sí" : "No")
-				</td>
-				<td>
-					<a href="@Url.Action("Edit", new { id = item.idUsuario })">
-						<i id="icono" style="color: #e8d15e; font-size: 21px;" class="fa-solid fa-pen-to-square"></i>
-					</a> |
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaBaja)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaRegistro)
+                </td>
+                <td>
+                    @(item.Administrador ? "Sí" : "No")
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = item.idUsuario })">
+                        <i id="icono" style="color: #e8d15e; font-size: 21px;" class="fa-solid fa-pen-to-square"></i>
+                    </a> |
 
-					<a id="icono" href="@Url.Action("Details", new { id = item.idUsuario })">
-						<i style="color: green; font-size: 21px;" class="fa-regular fa-file-lines"></i>
-					</a>
-					|
-					<a id="icono" href="@Url.Action("Detele", new { id = item.idUsuario })">
-						<i style="color: red; font-size: 21px;" class="fas fa-trash-alt"></i>
-					</a>
-				</td>
-			</tr>
-		}
-	</tbody>
+                    <a id="icono" href="@Url.Action("Details", new { id = item.idUsuario })">
+                        <i style="color: green; font-size: 21px;" class="fa-regular fa-file-lines"></i>
+                    </a>
+                    |
+                    <a id="icono" href="@Url.Action("Detele", new { id = item.idUsuario })">
+                        <i style="color: red; font-size: 21px;" class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
 
 
 </table>
 
 <style>
+    .table{
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+    }
+    #boton {
+        display: inline-block;
+        background-color: mediumpurple;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+    }
 
-	#boton {
-		display: inline-block;
-		background-color: mediumpurple;
-		color: white;
-		padding: 10px 20px;
-		border-radius: 30px;
-		text-decoration: none;
-		font-weight: bold;
-		box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-		transition: all 0.3s ease;
-	}
+        #boton i {
+            margin-right: 8px;
+            transition: transform 0.4s ease;
+        }
 
-		#boton i {
-			margin-right: 8px;
-			transition: transform 0.4s ease;
-		}
+        #boton:hover {
+            background-color: #7b3fd0;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            text-decoration: none;
+        }
 
-		#boton:hover {
-			background-color: #7b3fd0;
-			transform: scale(1.05);
-			box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-			text-decoration: none;
-		}
+            #boton:hover i {
+                transform: rotate(20deg);
+            }
 
-			#boton:hover i {
-				transform: rotate(20deg);
-			}
+    #botonCrear {
+        display: inline-block;
+        background-color: #63e78f;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+    }
 
-	#botonCrear {
-		display: inline-block;
-		background-color: #63e78f;
-		color: white;
-		padding: 10px 20px;
-		border-radius: 30px;
-		text-decoration: none;
-		font-weight: bold;
-		box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-		transition: all 0.3s ease;
-	}
+        #botonCrear i {
+            margin-right: 8px;
+            transition: transform 0.4s ease;
+        }
 
-		#botonCrear i {
-			margin-right: 8px;
-			transition: transform 0.4s ease;
-		}
+        #botonCrear:hover {
+            background-color: #63e78f;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            text-decoration: none;
+        }
 
-		#botonCrear:hover {
-			background-color: #63e78f;
-			transform: scale(1.05);
-			box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-			text-decoration: none;
-		}
+            #botonCrear:hover i {
+                transform: rotate(20deg);
+            }
 
-			#botonCrear:hover i {
-				transform: rotate(20deg);
-			}
+    #botonCrearUsuario {
+        display: inline-block;
+        background-color: #5ACCCC;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+    }
 
-	#icono {
-		text-decoration: none !important;
-		margin: 0 10px;
-	}
+        #botonCrearUsuario i {
+            margin-right: 8px;
+            transition: transform 0.4s ease;
+        }
+
+        #botonCrearUsuario:hover {
+            background-color: #5ACCCC;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            text-decoration: none;
+        }
+
+            #botonCrearUsuario:hover i {
+                transform: rotate(20deg);
+            }
+
+    #icono {
+        text-decoration: none !important;
+        margin: 0 10px;
+    }
 </style>

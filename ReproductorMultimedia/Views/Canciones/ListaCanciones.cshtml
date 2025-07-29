@@ -7,6 +7,10 @@
 
 <h1>Listado de Canciones</h1>
 
+<a id="boton" style="background-color:mediumpurple;" href="@Url.Action("Administrador", "Usuario")" class="btn btn-link">
+	<i class="fa-solid fa-arrow-left me-2" style="color:black;"></i> Volver a la administración de usuarios
+</a>
+<br />
 
 <table class="table">
 	<thead>
@@ -89,6 +93,9 @@
 	</tbody>
 </table>
 <style>
+	.table{
+        background-color: white;
+	}
 	.icono {
 		margin: 0 10px;
 		font-size: 22px;
@@ -101,6 +108,34 @@
 			transform: scale(1.2);
 		}
 
+	#boton {
+		display: inline-block;
+		background-color: mediumpurple;
+		color: white;
+		padding: 10px 20px;
+		border-radius: 30px;
+		text-decoration: none;
+		font-weight: bold;
+		box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+		transition: all 0.3s ease;
+        margin-bottom: 20px;
+	}
+
+		#boton i {
+			margin-right: 8px;
+			transition: transform 0.4s ease;
+		}
+
+		#boton:hover {
+			background-color: #7b3fd0;
+			transform: scale(1.05);
+			box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+			text-decoration: none;
+		}
+
+			#boton:hover i {
+				transform: rotate(20deg);
+			}
 	.disco {
 		width: 120px;
 		height: 120px;

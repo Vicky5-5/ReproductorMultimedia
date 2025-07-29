@@ -27,17 +27,13 @@ namespace Logica.Models
         public bool Estado { get; set; }
         [DataType(DataType.Date)]
         [Required]
-        public DateTime fechaRegistro { get; set; }
+        public DateTime fechaRegistro { get; set; } = DateTime.Now;
         [DataType(DataType.Date)]
 
         public DateTime? fechaBaja { get; set; }
         public bool Administrador { get; set; }
         public virtual ICollection<ListaReproduccion> ListasReproduccion { get; set; }
-
-        public Usuario()
-        {
-            fechaRegistro = DateTime.Now;
-        }
+               
     }
 
 }

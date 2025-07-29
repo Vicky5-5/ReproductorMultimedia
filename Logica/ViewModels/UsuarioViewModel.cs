@@ -29,6 +29,7 @@ namespace Logica.ViewModels
 
         [DataType(DataType.Date)]
         public DateTime? fechaBaja { get; set; }
+        public DateTime fechaRegistro { get; set; } = DateTime.Now;
 
         public bool Administrador { get; set; }
         [NotMapped]
@@ -42,6 +43,7 @@ namespace Logica.ViewModels
             this.Password = usuario.Password;
             this.fechaBaja = usuario.fechaBaja;
             this.Administrador = usuario.Administrador;
+            this.fechaRegistro = DateTime.Now; 
         }
         //PARA REGISTAR A UN USUARIO
         public UsuarioViewModel(int id, string nombre, string email, string password)

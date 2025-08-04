@@ -74,16 +74,20 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.NumeroReproducciones)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumeroLikes)
+                
+                <td id="contadorLikes-@item.idCancion">
+                    @item.NumeroLikes
                 </td>
+
                 <td>
-                    <button class="like-btn @(item.UsuarioDioLike ? "like-activo" : "")"
+                    <button class="like @(item.UsuarioDioLike ? "like-activo" : "")"
                             data-idcancion="@item.idCancion"
-                            onclick="toggleLike(@item.idCancion)"
+                            onclick="toggleLike(this)"
                             style="background: none; border: none;">
                         <i class="fa-solid fa-heart"></i>
                     </button>
+
+
                 </td>
 
             </tr>
@@ -144,77 +148,83 @@
 <form id="tokenForm" method="post">
     @Html.AntiForgeryToken()
 </form>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
-        const token = tokenInput ? tokenInput.value : '';
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        document.querySelectorAll('audio').forEach(audio => {
-            const id = audio.id.split('-')[1];
-            const disco = document.getElementById('disco-' + id);
+    <script>
+        // Función global para alternar likes
+                function toggleLike(button) {
+            const idCancion = parseInt(button.getAttribute('data-idcancion'));
 
-            audio.addEventListener('playing', () => {
-                disco.classList.add('girando');
+            if (!idCancion || idCancion <= 0) {
+                console.error("ID de canción inválido:", idCancion);
+                return;
+            }
+
+            fetch('/VistaUsuario/LikeAlternar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(idCancion) // si usas [FromBody] int
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Actualiza el botón visualmente
+                    button.classList.toggle('like-activo', data.dioLike);
+                    // Opcional: mostrar mensaje o actualizar contador
+                    console.log(data.mensaje, "Likes totales:", data.likesTotales);
+                } else {
+                    alert(data.mensaje);
+                }
+            })
+            .catch(error => {
+                console.error("Error al alternar like:", error);
             });
+        }
 
-            audio.addEventListener('pause', () => {
-                disco.classList.remove('girando');
-            });
 
-            audio.addEventListener('ended', () => {
-                disco.classList.remove('girando');
+        // Función para animar discos y registrar reproducciones
+        document.addEventListener('DOMContentLoaded', () => {
+            const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+            const token = tokenInput ? tokenInput.value : '';
 
-                // ✅ Enviar reproducción solo si se terminó la canción
-                const formData = new FormData();
-                formData.append('__RequestVerificationToken', token);
-                formData.append('id', id);
+            document.querySelectorAll('audio').forEach(audio => {
+                const id = audio.id.split('-')[1];
+                const disco = document.getElementById('disco-' + id);
 
-                fetch('/Canciones/ActualizarReproducciones', {
-                    method: 'POST',
-                    body: formData
-                }).then(res => {
-                    if (res.ok) {
-                        mostrarMensaje(`✅ Reproducción registrada para ID ${id}`);
-                    } else {
-                        console.error('❌ Error al registrar reproducción');
-                        mostrarMensaje(`❌ Error al registrar reproducción`, true);
-                    }
+                audio.addEventListener('playing', () => {
+                    disco.classList.add('girando');
+                });
+
+                audio.addEventListener('pause', () => {
+                    disco.classList.remove('girando');
+                });
+
+                audio.addEventListener('ended', () => {
+                    disco.classList.remove('girando');
+
+                    const formData = new FormData();
+                    formData.append('__RequestVerificationToken', token);
+                    formData.append('id', id);
+
+                    fetch('/Canciones/ActualizarReproducciones', {
+                        method: 'POST',
+                        body: formData
+                    }).then(res => {
+                        if (res.ok) {
+                            console.log(`✅ Reproducción registrada para ID ${id}`);
+                        } else {
+                            console.error('❌ Error al registrar reproducción');
+                        }
+                    });
                 });
             });
         });
-            
-    function toggleLike(idCancion) {
-        fetch('/VistaUsuario/LikeAlternar', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ idCancion: idCancion })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const btn = document.querySelector(`button[data-idcancion='${idCancion}']`);
-                const contador = document.getElementById(`contadorLikes-${idCancion}`);
+    </script>
+}
 
-                // Alternar clase visual
-                btn.classList.toggle('like-activo');
-
-                // Actualizar contador
-                contador.textContent = data.likesTotales;
-
-                // Opcional: mostrar mensaje
-                console.log(data.mensaje);
-            } else {
-                alert(data.mensaje);
-            }
-        })
-        .catch(error => {
-            console.error('Error al alternar el like:', error);
-        });
-    }
-</script>
 
     
 

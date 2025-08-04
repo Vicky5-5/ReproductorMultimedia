@@ -2,30 +2,28 @@
 using Logica.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Plugins;
 
 namespace ReproductorMultimedia.Controllers
 {
     public class VistaUsuarioController : Controller
     {
-        private readonly IHttpContextAccessor _contextAccessor; //Se almacenará el contexto HTTP para acceder a la sesión y otros datos del usuario.
-        //Constructor que recibe IHttpContextAccessor para acceder al contexto HTTP
-        public VistaUsuarioController(IHttpContextAccessor contextAccessor)
+        private readonly LoginManager _loginManager; 
+
+        public VistaUsuarioController(LoginManager loginManager)
         {
-            _contextAccessor = contextAccessor;
+            _loginManager = loginManager;
         }
 
         // GET: VistaUsuarioController
         public IActionResult Home()
         {
-          
-            var loginManager = LoginManager.Instance(_contextAccessor);
-            string nombreUsuario = loginManager.GetCurrentUser();
-
-            ViewBag.NombreUsuario = nombreUsuario;
+            string nombreUsuario = _loginManager.GetCurrentUser();
 
             var lista = CancionesViewModel.ListSongs();
-            return View(lista);        
 
+            ViewBag.NombreUsuario = nombreUsuario;
+            return View(lista);
         }
 
         // GET: VistaUsuarioController/Details/5
@@ -43,11 +41,9 @@ namespace ReproductorMultimedia.Controllers
             return View("Home", canciones);
         }
         [HttpPost]
-        public IActionResult LikeAlternar(int idCancion)
+        public IActionResult LikeAlternar([FromBody] int idCancion)
         {
-            // Verificar si el usuario ha iniciado sesión
-            var loginManager = LoginManager.Instance(_contextAccessor);
-            int? idUsuario = loginManager.GetCurrentUserId();
+            int? idUsuario = _loginManager.GetCurrentUserId();
 
             if (idUsuario == null)
             {
@@ -57,12 +53,9 @@ namespace ReproductorMultimedia.Controllers
                     mensaje = "Debes iniciar sesión para dar like."
                 });
             }
-            //Llamamos al metodo para alternar el like
-            bool dioLike = CancionesViewModel.LikeDislike(idUsuario.Value, idCancion);
-            // Actualizamos el total de likes de la canción
-            var likesTotales = CancionesViewModel.UpdateLikes(idCancion);
 
-            //Delvolvermos un JSON con la respuesta al usuario
+            bool dioLike = CancionesViewModel.LikeDislike(idUsuario.Value, idCancion);
+            var likesTotales = CancionesViewModel.UpdateLikes(idCancion);
 
             return Json(new
             {
@@ -71,6 +64,19 @@ namespace ReproductorMultimedia.Controllers
                 mensaje = dioLike ? "Like agregado" : "Like quitado",
                 likesTotales = likesTotales
             });
+        }
+
+        public IActionResult MisFavoritas()
+        {
+            int? idUsuario = _loginManager.GetCurrentUserId();
+
+            if (!idUsuario.HasValue)
+                return RedirectToAction("Login", "Auth");
+
+            var favoritas = CancionesViewModel.ListarFavoritasPorUsuario(idUsuario.Value);
+
+            ViewBag.NombreUsuario = _loginManager.GetCurrentUser();
+            return View(favoritas);
         }
 
 

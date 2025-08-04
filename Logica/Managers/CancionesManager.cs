@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Logica.Contexto;
 using Logica.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace Logica.Managers
 {
@@ -37,6 +38,19 @@ namespace Logica.Managers
             {
                 List<Canciones> productos = db.Canciones.ToList();
                 return productos;
+            }
+        }
+        public static List<Canciones> ListarFavoritasPorUsuario(int idUsuario)
+        {
+            using (var db = new Conexion())
+            {
+                var favoritas = db.Favoritas
+                    .Where(f => f.idUsuario == idUsuario)
+                    .Include(f => f.Cancion) // Asegura que se cargue la canción
+                    .Select(f => f.Cancion)
+                    .ToList();
+
+                return favoritas;
             }
         }
 
@@ -143,27 +157,29 @@ namespace Logica.Managers
         {
             using (var db = new Conexion())
             {
-                // Vemos si el usuario ya ha dado like a la canción
+                //Buscamos si la canción está en sus favoritas
                 var favoritoExistente = db.Favoritas
                     .FirstOrDefault(cf => cf.idUsuario == idUsuario && cf.idCancion == idCancion);
-
+                //Buscamos la canción
                 var cancion = db.Canciones.FirstOrDefault(c => c.idCancion == idCancion);
-
+                //Si no existe la canción, no se puede hacer nada
                 if (cancion == null)
-                    return false; // Canción no encontrada
-
+                    return false;
+                //Si like no es null, significa que ya existe un favorito
                 if (favoritoExistente != null)
                 {
-                    // Si ya dio like → eliminar favorito
+                    //Por lo que eliminamos la canción de sus favoritos
                     db.Favoritas.Remove(favoritoExistente);
 
                     if (cancion.NumeroLikes > 0)
                         cancion.NumeroLikes--;
-                    return false; // Like eliminado
+
+                    db.SaveChanges();
+                    return false;
                 }
                 else
                 {
-                    // No dio like → añadir favorito
+                    //Pero si el like está vacío, significa que no existe un favorito. Por lo tanto, lo añadimos a favoritos del usuario
                     var nuevoFavorito = new CancionesFavoritas
                     {
                         idUsuario = idUsuario,
@@ -173,12 +189,13 @@ namespace Logica.Managers
 
                     db.Favoritas.Add(nuevoFavorito);
                     cancion.NumeroLikes++;
-                }
 
-                db.SaveChanges();
-                return true; // Like añadido
+                    db.SaveChanges();
+                    return true;
+                }
             }
         }
+
 
         public static int ActualizarLikes(int id)
         {

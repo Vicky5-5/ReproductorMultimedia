@@ -81,7 +81,7 @@ namespace Logica.Managers
         //Obtenemos el nombre del usuario actual
         public string GetCurrentUser()
         {
-            return currentUser;
+            return _contextAccessor.HttpContext.Session.GetString("Nombre");
         }
         // Para saber si el usuario está logueado
         public int? GetCurrentUserId()

@@ -1,114 +1,95 @@
 ﻿@model Logica.ViewModels.UsuarioViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar";
 }
 
-<h1>Edit</h1>
 
-<h4>Usuario</h4>
 <br />
-<div class="card">
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<div class="d-flex justify-content-center align-items-center min-vh-100">
 
-        <div class="form-horizontal">
-            <h4 id="fila" class="p-3"><strong>Usuario</strong></h4>
+    <div class="card p-4 shadow" style="max-width: 700px;">
+        <h1>Editar Usuario</h1>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.idUsuario)
+
+            <h4 class="mb-3"><strong>Información del Usuario</strong></h4>
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.HiddenFor(model => model.idUsuario)
-            <div class="row" id="fila">
+
+            <div class="form-row">
                 <div class="form-group col-md-6">
-                    <h6><strong>Nombre</strong></h6>
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Nombre" } })
-                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    <label><strong>Nombre</strong></label>
+                    @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Nombre" } })
+                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label><strong>Email</strong></label>
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Email" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label><strong>Contraseña</strong></label>
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", type = "password", id = "myInput", placeholder = "Contraseña" } })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+
+                    <div class="mt-2">
+                        <input type="checkbox" id="toggle" class="offscreen" onclick="myFunction()" />
+                        <label for="toggle" class="switch"></label> <span class="ml-2">Mostrar contraseña</span>
                     </div>
                 </div>
 
                 <div class="form-group col-md-6">
-                    <h6><strong>Email</strong></h6>
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Email" } })
-                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            </div>
-            <br />
-            <div class="row" id="fila">
-                <div class="form-group col-md-6">
-                    <h6><strong>Contraseña</strong></h6>
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", type = "password", id = "myInput", placeholder = "Contraseña" } })
-                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-
-                        <input type="checkbox" id="toggle" class="offscreen" onclick="myFunction()">
-                        <label for="toggle" class="switch">
-
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <h6><strong>Estado</strong></h6>
-                    <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.Estado, new List<SelectListItem>()
-                        {
-                            new SelectListItem() { Text = "Activo", Value = "True" },
-                                        new SelectListItem() { Text = "Inactivo", Value = "False" }
-                                        }, "Selecciona", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
-
-                </div>
-
+                    <label><strong>Estado</strong></label>
+                    @Html.DropDownListFor(model => model.Estado, new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "Activo", Value = "True" },
+                                new SelectListItem { Text = "Inactivo", Value = "False" }
+                                }, "Selecciona", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
             </div>
         </div>
-        <br />
-        <div class="row" id="fila">
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label><strong>Fecha de Baja</strong></label>
+                @Html.EditorFor(model => model.fechaBaja, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.fechaBaja, "", new { @class = "text-danger" })
+            </div>
 
             <div class="form-group col-md-6">
-                <h6><strong>Fecha de Baja</strong></h6>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.fechaBaja, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.fechaBaja, "", new { @class = "text-danger" })
-                </div>
-            </div>           
-        </div>
-        <br />
-        <div class="row" id="fila">
-
-            <div class="form-group col-md-6">
-                <h6><strong>¿Es Administrador?</strong></h6>
-                <div class="col-md-10">
-
-                    @Html.DropDownListFor(model => model.Administrador, new List<SelectListItem>()
-                                        {
-                            new SelectListItem() { Text = "Sí", Value = "True" },
-                                        new SelectListItem() { Text = "No", Value = "False" }
-                                        }, "Selecciona", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Administrador, "", new { @class = "text-danger" })
-                </div>
+                <label><strong>¿Es Administrador?</strong></label>
+                @Html.DropDownListFor(model => model.Administrador, new List<SelectListItem>
+                                {
+                        new SelectListItem { Text = "Sí", Value = "True" },
+                                new SelectListItem { Text = "No", Value = "False" }
+                                }, "Selecciona", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Administrador, "", new { @class = "text-danger" })
             </div>
         </div>
-        <br />
-        <div class="row" id="fila">
-            <div class="form-group col-md-6">
-                <div class="col-md-offset-2 col-md-10">
-                    <input id="boton" type="submit" value="Guardar" class="btn btn-default" />
-                </div>
 
+        <div class="form-row mt-4">
+            <div class="col-md-6">
+                <button id="boton" type="submit" class="btn btn-success btn-block">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
             </div>
             <div class="col-md-6">
-                @Html.ActionLink("Volver", "Administrador")
+                @Html.ActionLink("Volver", "Administrador", null, new { @class = "btn btn-secondary btn-block" })
             </div>
         </div>
-        <br />
+                }
     </div>
-    }
 </div>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+<!-- Scripts -->
 <script>
     function myFunction() {
         var x = document.getElementById("myInput");
@@ -118,24 +99,13 @@
             x.type = "password";
         }
     }
-
-
-
 </script>
+
+<!-- Estilos -->
 <style>
-    #boton {
-        border-radius: 5px;
-        background-color: black;
-        color: white;
-        width: 10vw;
-    }
-
-    #fila {
-        margin-left: 10vw;
-    }
-
-    #texto {
-        color: grey;
+    .card {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
     }
 
     .switch {
@@ -146,6 +116,7 @@
         background-color: rgba(0, 0, 0, 0.25);
         border-radius: 22px;
         transition: all 0.3s;
+        cursor: pointer;
     }
 
         .switch::after {
@@ -155,13 +126,13 @@
             height: 11px;
             border-radius: 22px;
             background-color: white;
-            top: 1px;
-            left: 1px;
+            top: 2px;
+            left: 2px;
             transition: all 0.3s;
         }
 
     input[type='checkbox']:checked + .switch::after {
-        transform: translateX(20px);
+        transform: translateX(18px);
     }
 
     input[type='checkbox']:checked + .switch {
@@ -171,5 +142,12 @@
     .offscreen {
         position: absolute;
         left: -9999px;
+    }
+
+    #boton {
+        border-radius: 5px;
+        background-color: green;
+        color: white;
+        width: 100%;
     }
 </style>

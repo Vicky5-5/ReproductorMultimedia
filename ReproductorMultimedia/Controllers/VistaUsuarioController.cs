@@ -45,6 +45,15 @@ namespace ReproductorMultimedia.Controllers
         {
             int? idUsuario = _loginManager.GetCurrentUserId();
 
+            if (idCancion <= 0)
+            {
+                return Json(new
+                {
+                    success = false,
+                    mensaje = "ID de canción inválido."
+                });
+            }
+
             if (idUsuario == null)
             {
                 return Json(new
@@ -66,14 +75,14 @@ namespace ReproductorMultimedia.Controllers
             });
         }
 
-        public IActionResult MisFavoritas()
+        public IActionResult FavoritasUsuario()
         {
             int? idUsuario = _loginManager.GetCurrentUserId();
 
             if (!idUsuario.HasValue)
                 return RedirectToAction("Login", "Auth");
 
-            var favoritas = CancionesViewModel.ListarFavoritasPorUsuario(idUsuario.Value);
+            var favoritas = CancionesFavoritasViewModel.ListarFavoritasPorUsuario(idUsuario.Value);
 
             ViewBag.NombreUsuario = _loginManager.GetCurrentUser();
             return View(favoritas);

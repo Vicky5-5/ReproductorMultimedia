@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Logica.Contexto;
+using Logica.Models;
+using Logica.ViewModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Logica.Contexto;
-using Logica.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace Logica.Managers
 {
@@ -40,19 +41,21 @@ namespace Logica.Managers
                 return productos;
             }
         }
-        public static List<Canciones> ListarFavoritasPorUsuario(int idUsuario)
+        public static List<CancionesFavoritas> ListarFavoritasPorUsuario(int idUsuario)
         {
             using (var db = new Conexion())
             {
                 var favoritas = db.Favoritas
                     .Where(f => f.idUsuario == idUsuario)
-                    .Include(f => f.Cancion) // Asegura que se cargue la canción
-                    .Select(f => f.Cancion)
+                    .Include(f => f.Cancion)
+                    .Include(f => f.Usuario)
                     .ToList();
 
                 return favoritas;
             }
         }
+
+
 
         public static Canciones GuardarCancion(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion, Genero genero, int year, IFormFile caratula, string rutaCaratula)
         {

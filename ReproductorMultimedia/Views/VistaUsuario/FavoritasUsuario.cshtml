@@ -1,100 +1,88 @@
-﻿@using Logica.Managers
-@model IEnumerable<Logica.ViewModels.CancionesViewModel>
+﻿@model IEnumerable<Logica.ViewModels.CancionesFavoritasViewModel>
 
 @{
-    ViewData["Title"] = "ListaCanciones";
+    ViewData["Title"] = "FavoritasUsuario";
 }
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-<h1>Usuario: @ViewBag.NombreUsuario</h1>
-
-<h1>Listado de Canciones</h1>
+<h1>FavoritasUsuario</h1>
 
 <p>
-    <a href="@Url.Action("FavoritasUsuario","VistaUsuario")" class="btn btn-link"></a>
+    <a asp-action="Create">Create New</a>
 </p>
-
 <table class="table">
     <thead>
         <tr>
-            <th>Carátula</th>
+            <th>
+                Carátula
+            </th>
             <th>Reproducir</th>
+
             <th>
-                @Html.DisplayNameFor(model => model.Titulo)
+                @Html.DisplayNameFor(model => model.Cancion.Titulo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Artista)
+                @Html.DisplayNameFor(model => model.Cancion.Artista)
+            </th>
+         
+            <th>
+                @Html.DisplayNameFor(model => model.Cancion.Album)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Album)
+                @Html.DisplayNameFor(model => model.Cancion.Duracion)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.fecharAnadidaFavorita)
             </th>
             <th>
-                <i class="fa-solid fa-clock"></i>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genero)
-            </th>
-            <th>
-                Reproducciones
-            </th>
-            <th>
-                Likes
+                @Html.DisplayNameFor(model => model.Cancion.UsuarioDioLike)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
+@foreach (var item in Model) {
+        <tr>
                 <td>
                     <div class="disco" id="disco-@item.idCancion">
-                        <img src="@item.RutaCaratulaAlbum" alt="Carátula" />
+                        <img src="@item.Cancion.RutaCaratulaAlbum" alt="Carátula" />
                     </div>
                 </td>
                 <td>
                     <audio controls id="audio-@item.idCancion" style="width: 250px;">
-                        <source src="@item.RutaArchivo" type="audio/mpeg" />
+                        <source src="@item.Cancion.RutaArchivo" type="audio/mpeg" />
                         Tu navegador no soporta la reproducción de audio.
                     </audio>
                 </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Titulo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Artista)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Album)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Duracion)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Genero)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumeroReproducciones)
-                </td>
-                
-                <td id="contadorLikes-@item.idCancion">
-                    @item.NumeroLikes
-                </td>
-
-                <td>
-                    <button class="like @(item.UsuarioDioLike ? "like-activo" : "")"
+            <td>
+                @Html.DisplayFor(modelItem => item.Cancion.Titulo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cancion.Artista)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cancion.Album)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cancion.Duracion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fecharAnadidaFavorita)
+            </td>
+           
+            <td>
+                @Html.DisplayFor(modelItem => item.Cancion.UsuarioDioLike)
+            </td>
+            <td>
+                    <button class="like @(item.Cancion.UsuarioDioLike ? "like-activo" : "")"
                             data-idcancion="@item.idCancion"
                             onclick="toggleLike(this)"
                             style="background: none; border: none;">
                         <i class="fa-solid fa-heart"></i>
                     </button>
-
-
-                </td>
-
-            </tr>
-        }
+            </td>
+        </tr>
+}
     </tbody>
 </table>
 <style>
@@ -109,7 +97,8 @@
         .icono:hover {
             transform: scale(1.2);
         }
-        .like{
+
+    .like {
         margin: 0 10px;
         font-size: 22px;
         text-decoration: none;
@@ -118,14 +107,15 @@
         color: grey;
     }
 
-    .like:hover {
-        transform: scale(1.2);
-        color: #C73636;
-    }
+        .like:hover {
+            transform: scale(1.2);
+            color: #C73636;
+        }
 
     .like-activo i {
         color: #C73636;
     }
+
     .disco {
         width: 120px;
         height: 120px;
@@ -145,7 +135,6 @@
             object-fit: cover;
             z-index: 1;
         }
-
 
 </style>
 <form id="tokenForm" method="post">
@@ -231,9 +220,3 @@
         });
     </script>
 }
-
-
-    
-
-
-

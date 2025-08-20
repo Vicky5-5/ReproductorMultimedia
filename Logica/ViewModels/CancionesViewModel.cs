@@ -117,22 +117,21 @@ namespace Logica.ViewModels
         {
             if (idCancion != 0 && idUsuario != 0)
             {
-                CancionesManager.AlternarLike(idUsuario, idCancion);
-                return true;
+                return CancionesManager.AlternarLike(idUsuario, idCancion);
             }
             return false;
+        }
 
-        }
-        public static List<CancionesViewModel> ListarFavoritasPorUsuario(int idUsuario)
-        {
-            var favoritas = CancionesManager.ListarFavoritasPorUsuario(idUsuario);
-            List<CancionesViewModel> lista = new List<CancionesViewModel>();
-            foreach (var item in favoritas)
-            {
-                CancionesViewModel model = new CancionesViewModel(item);
-                lista.Add(model);
-            }
-            return lista;
-        }
+        //public static List<CancionesViewModel> ListarFavoritasPorUsuario(int idUsuario)
+        //{
+        //    var favoritas = CancionesManager.ListarFavoritasPorUsuario(idUsuario);
+        //    List<CancionesViewModel> lista = new List<CancionesViewModel>();
+        //    foreach (var item in favoritas)
+        //    {
+        //        CancionesViewModel model = new CancionesViewModel(item);
+        //        lista.Add(model);
+        //    }
+        //    return lista;
+        //}
     }
 }

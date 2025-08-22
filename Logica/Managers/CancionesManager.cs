@@ -198,24 +198,16 @@ namespace Logica.Managers
                 }
             }
         }
-
-
         public static int ActualizarLikes(int id)
         {
             using (var db = new Conexion())
             {
-                var cancion = db.Canciones.FirstOrDefault(c => c.idCancion == id);
-                if (cancion != null)
-                {
-                    cancion.NumeroLikes++;
-                    db.SaveChanges();
-                    return cancion.NumeroLikes;
-                }
-
-                return -1; // Devuelve -1 si la canción no se encuentra
+                return db.Canciones
+                         .Where(c => c.idCancion == id)
+                         .Select(c => c.NumeroLikes)
+                         .FirstOrDefault();
             }
         }
-
 
     }
 }

@@ -91,6 +91,12 @@ namespace Logica.ViewModels
 
         }
 
+        public static List<CancionesViewModel> ListarFavoritasComoCanciones(int? idUsuario)
+        {
+            return CancionesManager.ListSongsConLikes(idUsuario);
+
+        }
+
         public static CancionesViewModel AddSong(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion,Genero genero, int year, IFormFile caratula, string rutaCaratula)
         {
             var guardado = CancionesManager.GuardarCancion(id, titulo, artista, album, duracion, reproducciones, likes, ruta, cancion,genero,year,caratula,rutaCaratula);

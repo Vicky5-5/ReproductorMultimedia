@@ -55,6 +55,19 @@ namespace Logica.Managers
             }
         }
 
+        public static List<CancionesFavoritasViewModel> ObtenerFavoritasConCancion(int idUsuario)
+        {
+            using (var db = new Conexion())
+            {
+                var favoritas = db.Favoritas
+                    .Where(f => f.idUsuario == idUsuario)
+                    .Include(f => f.Cancion)                     
+                    .ToList();
+
+                var lista = favoritas.Select(f => new CancionesFavoritasViewModel(f)).ToList();
+                return lista;
+            }
+        }
 
 
         public static Canciones GuardarCancion(int id, string titulo, string artista, string album, TimeSpan duracion, int reproducciones, int likes, string ruta, IFormFile cancion, Genero genero, int year, IFormFile caratula, string rutaCaratula)
@@ -153,6 +166,38 @@ namespace Logica.Managers
                     cancion.NumeroReproducciones++;
                     db.SaveChanges();
                 }
+            }
+        }
+        public static List<CancionesViewModel> ListSongsConLikes(int? idUsuario)
+        {
+            using (var db = new Conexion())
+            {
+                //Listamos todas las canciones
+                var canciones = db.Canciones.ToList();
+                //Si el idUsuario es distinto de null, obtenemos las canciones favoritas de ese usuario
+                var favoritas = idUsuario != null
+                    ? db.Favoritas
+                        .Where(f => f.idUsuario == idUsuario.Value)
+                        .Select(f => f.idCancion)
+                        .ToHashSet()
+                    : new HashSet<int>();
+                //Creamos la lista de canciones con la información de si el usuario ha dado like o no
+                var lista = canciones.Select(c => new CancionesViewModel
+                {
+                    idCancion = c.idCancion,
+                    Titulo = c.Titulo,
+                    Artista = c.Artista,
+                    Album = c.Album,
+                    Duracion = c.Duracion,
+                    Genero = c.Genero,
+                    NumeroReproducciones = c.NumeroReproducciones,
+                    NumeroLikes = c.NumeroLikes,
+                    RutaArchivo = c.RutaArchivo,
+                    RutaCaratulaAlbum = c.RutaCaratulaAlbum,
+                    UsuarioDioLike = favoritas.Contains(c.idCancion)
+                }).ToList();
+
+                return lista;
             }
         }
 

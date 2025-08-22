@@ -19,8 +19,10 @@ namespace ReproductorMultimedia.Controllers
         public IActionResult Home()
         {
             string nombreUsuario = _loginManager.GetCurrentUser();
+            int? idUsuario = _loginManager.GetCurrentUserId();
 
-            var lista = CancionesViewModel.ListSongs();
+            // Llama a la versión correcta que incluye los corazones rojos
+            var lista = CancionesViewModel.ListarFavoritasComoCanciones(idUsuario);
 
             ViewBag.NombreUsuario = nombreUsuario;
             return View(lista);
@@ -64,7 +66,7 @@ namespace ReproductorMultimedia.Controllers
             }
 
             bool dioLike = CancionesViewModel.LikeDislike(idUsuario.Value, idCancion);
-            var likesTotales = CancionesViewModel.UpdateLikes(idCancion);
+            int likesTotales = CancionesViewModel.UpdateLikes(idCancion);
 
             return Json(new
             {
@@ -87,7 +89,7 @@ namespace ReproductorMultimedia.Controllers
             ViewBag.NombreUsuario = _loginManager.GetCurrentUser();
             return View(favoritas);
         }
-
+      
 
     }
 }

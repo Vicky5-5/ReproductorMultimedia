@@ -23,7 +23,7 @@ namespace Logica.ViewModels
 
         public virtual Canciones Cancion { get; set; }
 
-        
+
         public CancionesFavoritasViewModel(CancionesFavoritas favoritas)
         {
             this.idFavorita = favoritas.idFavorita;
@@ -32,7 +32,7 @@ namespace Logica.ViewModels
             this.Usuario = favoritas.Usuario;
             this.idCancion = favoritas.idCancion;
             this.Cancion = favoritas.Cancion;
-        }       
+        }
         public CancionesFavoritasViewModel() { }
         public static List<CancionesFavoritasViewModel> ListarFavoritasPorUsuario(int idUsuario)
         {
@@ -45,5 +45,6 @@ namespace Logica.ViewModels
             }
             return lista;
         }
+
     }
 }

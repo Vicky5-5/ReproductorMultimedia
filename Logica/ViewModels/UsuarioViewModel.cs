@@ -143,6 +143,11 @@ namespace Logica.ViewModels
 
             return model;
         }
+
+        public static void BajaVoluntaria(int idUsuario)
+        {
+           UsuariosManager.DadaDeBaja(idUsuario);
+        }
     }
 }
 #endregion

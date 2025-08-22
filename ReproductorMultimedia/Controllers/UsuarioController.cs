@@ -2,16 +2,24 @@
 using Logica.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System.Net.Mail;
+using System.Text;
 
 namespace ReproductorMultimedia.Controllers
 {
     public class UsuarioController : Controller
     {
+        private readonly CorreoService _correoService;
+        public UsuarioController(CorreoService correoService)
+        {
+            _correoService = correoService;
+        }
+
         // GET: UsuarioController
         public ActionResult Administrador()
         {
             var nombreUsuario = HttpContext.Session.GetString("Nombre");
-            Console.WriteLine($"Nombre del usuario en sesión: {nombreUsuario}"); // Para depuración
             ViewBag.NombreUsuario = nombreUsuario;
 
             List<UsuarioViewModel> lista = new List<UsuarioViewModel>();
@@ -49,9 +57,10 @@ namespace ReproductorMultimedia.Controllers
                 {
 
                     var model = UsuarioViewModel.AddUsuario(usu.idUsuario, usu.Nombre, usu.Email, usu.Password, usu.Estado, usu.fechaBaja, usu.Administrador);
+                    _correoService.EnviarCorreoAlta(model.Email);
+
                     return RedirectToAction("Administrador");
 
-                    //EnviarCorreoBienvenida(model.Email);
                 }
                 catch (Exception ex)
                 {

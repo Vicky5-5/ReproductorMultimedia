@@ -155,6 +155,20 @@ namespace Logica.Managers
 
             }
         }
+        public static Usuario DadaDeBaja(int idUsuario)
+        {
+            using (var db = new Conexion())
+            {
+                var usuario = db.Usuarios.FirstOrDefault(a => a.idUsuario == idUsuario);
+                if (usuario != null)
+                {
+                    usuario.Estado = false;
+                    usuario.fechaBaja = DateTime.Now;
+                    db.SaveChanges();
+                }
+                return usuario;
+            }
+        }
 
     }
 }

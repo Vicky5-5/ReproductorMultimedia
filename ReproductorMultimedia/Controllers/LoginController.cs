@@ -7,7 +7,13 @@ namespace ReproductorMultimedia.Controllers
     public class LoginController : Controller
     {
         private readonly LoginManager _loginManager;
+        //Para enviar el correo
+        private readonly CorreoService _correoService;
 
+        public LoginController(CorreoService correoService)
+        {
+            _correoService = correoService;
+        }
         public LoginController(LoginManager loginManager)
         {
             _loginManager = loginManager;
@@ -89,6 +95,8 @@ namespace ReproductorMultimedia.Controllers
                 try
                 {
                     var login = UsuarioViewModel.RegistroUsuarioNuevo(model.idUsuario, model.Nombre, model.Email, model.Password);
+                    _correoService.EnviarCorreoAlta(model.Email);
+
                     // Redirigir a Login después de un registro exitoso
                     return RedirectToAction("Login", "Login");
                 }

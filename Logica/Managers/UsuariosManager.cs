@@ -127,7 +127,6 @@ namespace Logica.Managers
             {
                 Usuario usuario = new Usuario();
 
-                usuario = db.Usuarios.FirstOrDefault(a => a.idUsuario == id);
                 var pEncript = HashPassword(password);
 
                 usuario = new Usuario()

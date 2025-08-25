@@ -89,6 +89,12 @@ namespace ReproductorMultimedia.Controllers
             ViewBag.NombreUsuario = _loginManager.GetCurrentUser();
             return View(favoritas);
         }
+
+        public IActionResult dadaBaja()
+        {
+
+            return View();
+        }
       
 
     }

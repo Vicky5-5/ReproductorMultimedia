@@ -10,14 +10,12 @@ namespace ReproductorMultimedia.Controllers
         //Para enviar el correo
         private readonly CorreoService _correoService;
 
-        public LoginController(CorreoService correoService)
-        {
-            _correoService = correoService;
-        }
-        public LoginController(LoginManager loginManager)
+        public LoginController(LoginManager loginManager, CorreoService correoService)
         {
             _loginManager = loginManager;
+            _correoService = correoService;
         }
+
 
         // GET: Login
         public ActionResult Login()
@@ -35,7 +33,7 @@ namespace ReproductorMultimedia.Controllers
 
 
         [HttpPost]
-        public ActionResult Entrar(string email, string password, bool? estado)
+        public ActionResult Entrar(string email, string password)
         {
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
@@ -48,18 +46,16 @@ namespace ReproductorMultimedia.Controllers
                 var usuario = _loginManager.Login(email, password);
                 if (usuario != null)
                 {
-                    // Almacenar el nombre del usuario en la sesión
+                    if (!usuario.Estado)
+                    {
+                        TempData["Error"] = "Tu cuenta está inactiva. Por favor, contacta al administrador.";
+                        return RedirectToAction("Login");
+                    }
+
                     HttpContext.Session.SetString("Nombre", usuario.Nombre);
 
                     if (usuario.Administrador)
-                    {
                         return RedirectToAction("Administrador", "Usuario");
-                    }
-                    if (estado==false)
-                    {
-                        TempData["Error"] = "Tu cuenta está inactiva. Por favor, contacta al administrador.";
-                        return RedirectToAction("Login", "Login");
-                    }
 
                     TempData["Usuario"] = usuario.Nombre;
                     return RedirectToAction("Home", "VistaUsuario");
@@ -87,7 +83,7 @@ namespace ReproductorMultimedia.Controllers
             return View();
         }
 
-        [HttpPost, ActionName("Registrar")]
+        [HttpPost, ActionName("Registro")]
         public ActionResult Registro(UsuarioViewModel model)
         {
             if (ModelState.IsValid)

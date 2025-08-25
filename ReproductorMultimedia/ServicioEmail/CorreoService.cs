@@ -36,6 +36,7 @@ public class CorreoService
         {
             client.Send(mail);
         }
+        //Para regitrar el error en un fichero de texto
         catch (Exception ex)
         {
             string mensajeError = $"[{DateTime.Now}] Error al enviar correo a {emailNuevoUsuario}: {ex.Message}";

@@ -19,6 +19,7 @@ builder.Services.AddHttpContextAccessor();// Permite el acceso a HttpContext
 //Se registra con un servicio inyectable en el contenedor de dependenica
 //Para que pueda ser inyectada en culaquier controlado o servicio. El patrón Sinleton es una instancia GLOBAL
 builder.Services.AddScoped<LoginManager>();
+builder.Services.AddScoped<CorreoService>(); //Para que el servicio de correo pueda ser inyectado
 
 builder.Services.AddSession(options =>
 {

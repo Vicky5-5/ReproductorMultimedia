@@ -1,7 +1,8 @@
-using System;
 using Logica.Contexto;
 using Logica.Managers;
+using Logica.Servicios;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,8 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.Secure = CookieSecurePolicy.Always;
 });
 
+builder.Services.Configure<SmtpConfiguracion>(
+    builder.Configuration.GetSection("SmtpConfiguracion"));
 
 var app = builder.Build();
 

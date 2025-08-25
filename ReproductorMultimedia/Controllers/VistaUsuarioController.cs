@@ -8,7 +8,7 @@ namespace ReproductorMultimedia.Controllers
 {
     public class VistaUsuarioController : Controller
     {
-        private readonly LoginManager _loginManager; 
+        private readonly LoginManager _loginManager;
 
         public VistaUsuarioController(LoginManager loginManager)
         {
@@ -82,7 +82,7 @@ namespace ReproductorMultimedia.Controllers
             int? idUsuario = _loginManager.GetCurrentUserId();
 
             if (!idUsuario.HasValue)
-                return RedirectToAction("Login", "Auth");
+                return RedirectToAction("Login", "Login");
 
             var favoritas = CancionesFavoritasViewModel.ListarFavoritasPorUsuario(idUsuario.Value);
 
@@ -90,12 +90,27 @@ namespace ReproductorMultimedia.Controllers
             return View(favoritas);
         }
 
-        public IActionResult dadaBaja()
+        public IActionResult DarseBaja()
         {
 
             return View();
         }
-      
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DarseBajaAccion()
+        {
+            int? idUsuario = _loginManager.GetCurrentUserId();
+
+            if (!idUsuario.HasValue)
+                return RedirectToAction("Login", "Login");
+
+            UsuarioViewModel.BajaVoluntaria(idUsuario.Value);
+
+            
+            return RedirectToAction("Index");
+        }
+
+
 
     }
 }

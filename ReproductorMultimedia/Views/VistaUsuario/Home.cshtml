@@ -5,14 +5,20 @@
     ViewData["Title"] = "ListaCanciones";
 }
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<!--He añadido una nueva libreria llamada MediaElement.js para la personalización de la barra de reproducción y un mejor manejo-->
+<!-- CSS de MediaElement.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.16/mediaelementplayer.min.css">
+
+<!-- JS de MediaElement.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.16/mediaelement-and-player.min.js"></script>
 
 <h1>Usuario: @ViewBag.NombreUsuario</h1>
 
 <h1>Listado de Canciones</h1>
 
-<p>
-    <a href="@Url.Action("FavoritasUsuario","VistaUsuario")" class="btn btn-link"></a>
-</p>
+<a href="@Url.Action("FavoritasUsuario", "VistaUsuario")" class="btn btn-outline-success">
+    <i class="fa-solid fa-heart"></i> Favoritas
+</a>
 
 <table class="table">
     <thead>
@@ -53,11 +59,13 @@
                     </div>
                 </td>
                 <td>
-                    <audio controls id="audio-@item.idCancion" style="width: 250px;">
-                        <source src="@item.RutaArchivo" type="audio/mpeg" />
-                        Tu navegador no soporta la reproducción de audio.
+                    <!--Cambiamos el estadar de Visual Studio por el de MediaElement.js-->
+                    <audio class="mejs-player" controls preload="none"> <!--El preload="none" evita cargar el audio automáticamente hasta que el usuario interactúe con él-->
+                        <source src="@item.RutaArchivo" type="audio/mp3" />
                     </audio>
+
                 </td>
+
 
                 <td>
                     @Html.DisplayFor(modelItem => item.Titulo)
@@ -97,7 +105,18 @@
         }
     </tbody>
 </table>
+<a href="@Url.Action("DarseBaja", "VistaUsuario")" class="btn btn-outline-danger">
+    <i class="fa-solid fa-user-slash"></i> Darse de baja
+</a>
+
+<!-- #region Estilos -->
+
 <style>
+    .table{
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
     .icono {
         margin: 0 10px;
         font-size: 22px;
@@ -145,9 +164,33 @@
             object-fit: cover;
             z-index: 1;
         }
+    <!-- Aquí se personaliza la barra de audio-->
+    .mejs__container {
+        background-color: #171717;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+    }
+
+    .mejs__time-current {
+        background: #C73636 !important;
+    }
+
+    .mejs__time-loaded {
+        background: #bbb;
+    }
+
+    .mejs__button > button {
+        color: #C73636;
+    }
 
 
 </style>
+<!-- #endregion -->
+
+
+
+<!-- #region JavaScript -->
+
 <form id="tokenForm" method="post">
     @Html.AntiForgeryToken()
 </form>
@@ -189,8 +232,16 @@
                 button.disabled = false; // Reactiva el botón
             });
         }
-
-
+        // Inicializamos el MediaElement.js en el Script 
+        document.addEventListener('DOMContentLoaded', function () {
+            const players = document.querySelectorAll('audio'); // Selecciona todos los elementos audio y los guarda en la constante de 'player'
+            players.forEach(function (player) { // Recorre todos los elementos audio
+                new MediaElementPlayer(player, { // Aqui es donde se inicializa el MediaElement.js
+                    features: ['playpause', 'progress', 'current', 'duration', 'volume'], //Controla los botones de play,pause
+                    audioVolume: 'horizontal' // Controla el volumen y está configurado para que esté en horizontal
+                });
+            });
+        });
 
         // Función para animar discos y registrar reproducciones
         document.addEventListener('DOMContentLoaded', () => {
@@ -231,3 +282,4 @@
         });
     </script>
 }
+<!-- #endregion -->

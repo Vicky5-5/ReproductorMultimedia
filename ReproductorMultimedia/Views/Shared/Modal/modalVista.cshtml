@@ -1,0 +1,23 @@
+<!--El fade le añade un efecto  de desvanecimineto-->
+<!--Ponemos un id único para mostrar y esconder el modal. El tabinex hace que el modal no sea accesible con tabulación cuando está oculto.-->
+<!---->
+<div class="modal fade" id="modalConfirmacion" tabindex="-1" role="dialog" aria-labelledby="tituloModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tituloModal">Confirmación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="mensajeModal">
+                ¿Estás seguro?
+            </div>
+            <!--Este el el footer del modal, que están los botones de cancelar y aceptar-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmarModal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>

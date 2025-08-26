@@ -58,17 +58,55 @@
         </dd>
     </dl>
 
-    @using (Html.BeginForm("DeleteConfirmed", "Usuario", FormMethod.Post))
+    @using (Html.BeginForm("DeleteConfirmed", "Usuario", FormMethod.Post, new { name = "formEliminarUsuario" }))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.idUsuario)
 
         <div class="form-group mt-3">
-            <button type="submit" class="btn btn-danger">
+            <button type="button" class="btn btn-danger" onclick="mostrarModalEliminar()">
                 <i class="fa-solid fa-trash"></i> Eliminar
             </button>
+
             @Html.ActionLink("Cancelar", "Administrador", null, new { @class = "btn btn-secondary ml-2" })
         </div>
     }
+    @await Html.PartialAsync("Modal/modalVista")
+
 </div>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<script>
+    function myFunction() {
+        var x = document.getElementById("myInput");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
+    // Función para mostrar el modal de confirmación antes de crear el usuario. Llama a la función mostrarModalConfirmacion con los parámetros adecuados.
+    function mostrarModalEliminar() {
+        mostrarModalConfirmacion(
+            "Confirmar borrado de usuario",
+            "¿Estás seguro de que deseas borrar este usuario?",
+            "Sí",
+            function () {
+                document.forms["formEliminarUsuario"].submit();
+            }
+        );
+    }
+
+    function mostrarModalConfirmacion(titulo, mensaje, textoBoton, accionCallback) {
+        $('#tituloModal').text(titulo);
+        $('#mensajeModal').text(mensaje);
+        $('#btnConfirmarModal').text(textoBoton);
+        $('#btnConfirmarModal').off('click');
+        $('#btnConfirmarModal').on('click', function () {
+            $('#modalConfirmacion').modal('hide');
+            if (typeof accionCallback === 'function') {
+                accionCallback();
+            }
+        });
+        $('#modalConfirmacion').modal('show');
+    }
+</script>

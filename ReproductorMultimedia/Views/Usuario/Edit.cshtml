@@ -11,7 +11,7 @@
     <div class="card p-4 shadow" style="max-width: 700px;">
         <h1>Editar Usuario</h1>
 
-        @using (Html.BeginForm())
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "formEditarUsuario" }))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.idUsuario)
@@ -77,9 +77,10 @@
 
         <div class="form-row mt-4">
             <div class="col-md-6">
-                <button id="boton" type="submit" class="btn btn-success btn-block">
+                <button id="boton" type="button" class="btn btn-success btn-block" onclick="mostrarModalGuardar()">
                     <i class="fas fa-save"></i> Guardar
                 </button>
+
             </div>
             <div class="col-md-6">
                 @Html.ActionLink("Volver", "Administrador", null, new { @class = "btn btn-secondary btn-block" })
@@ -87,6 +88,8 @@
         </div>
                 }
     </div>
+    @await Html.PartialAsync("Modal/modalVista")
+
 </div>
 
 <!-- Scripts -->
@@ -99,6 +102,30 @@
             x.type = "password";
         }
     }
+        function mostrarModalGuardar() {
+        mostrarModalConfirmacion(
+            "Confirmar edición",
+            "¿Estás seguro de que deseas guardar los cambios?",
+            "Sí, guardar",
+            function () {
+                document.forms["formEditarUsuario"].submit();
+            }
+        );
+    }
+        function mostrarModalConfirmacion(titulo, mensaje, textoBoton, accionCallback) {
+        $('#tituloModal').text(titulo);
+        $('#mensajeModal').text(mensaje);
+        $('#btnConfirmarModal').text(textoBoton);
+        $('#btnConfirmarModal').off('click');
+        $('#btnConfirmarModal').on('click', function () {
+            $('#modalConfirmacion').modal('hide');
+            if (typeof accionCallback === 'function') {
+                accionCallback();
+            }
+        });
+        $('#modalConfirmacion').modal('show');
+    }
+
 </script>
 
 <!-- Estilos -->

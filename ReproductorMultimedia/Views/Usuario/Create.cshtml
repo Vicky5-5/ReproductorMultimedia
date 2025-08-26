@@ -8,7 +8,7 @@
 
 <div class="container d-flex justify-content-center">
     <div class="card p-4 shadow" style="width: 700px;">
-        @using (Html.BeginForm("Create", "Usuario", FormMethod.Post, new { autocomplete = "off" })) //El autocomplete off desactiva el autocompletado para mayor seguridad
+        @using (Html.BeginForm("Create", "Usuario", FormMethod.Post, new {@name = "formCrearUsuario",autocomplete = "off" })) //El autocomplete off desactiva el autocompletado para mayor seguridad
         {
             @Html.AntiForgeryToken()
 
@@ -48,11 +48,13 @@
         </div>
 
         <div class="d-flex justify-content-between mt-4">
-            <input type="submit" value="Crear" class="btn btn-dark boton-crear" />
+            <button type="button" class="btn btn-dark boton-crear" onclick="mostrarModalCrear()">Crear</button>
             @Html.ActionLink("Volver", "Administrador", null, new { @class = "btn btn-outline-secondary" })
         </div>
                 }
     </div>
+    @await Html.PartialAsync("Modal/modalVista")
+
 </div>
 
 <style>
@@ -119,5 +121,30 @@
         } else {
             x.type = "password";
         }
+    }
+    // Función para mostrar el modal de confirmación antes de crear el usuario. Llama a la función mostrarModalConfirmacion con los parámetros adecuados.
+    function mostrarModalCrear() {
+        mostrarModalConfirmacion(
+            "Confirmar creación",
+            "¿Estás seguro de que deseas crear este usuario?",
+            "Sí, crear",
+            function () {
+                document.forms["formCrearUsuario"].submit();
+            }
+        );
+    }
+
+    function mostrarModalConfirmacion(titulo, mensaje, textoBoton, accionCallback) {
+        $('#tituloModal').text(titulo);
+        $('#mensajeModal').text(mensaje);
+        $('#btnConfirmarModal').text(textoBoton);
+        $('#btnConfirmarModal').off('click');
+        $('#btnConfirmarModal').on('click', function () {
+            $('#modalConfirmacion').modal('hide');
+            if (typeof accionCallback === 'function') {
+                accionCallback();
+            }
+        });
+        $('#modalConfirmacion').modal('show');
     }
 </script>

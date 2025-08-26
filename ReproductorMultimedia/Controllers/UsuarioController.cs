@@ -57,7 +57,7 @@ namespace ReproductorMultimedia.Controllers
                 {
 
                     var model = UsuarioViewModel.AddUsuario(usu.idUsuario, usu.Nombre, usu.Email, usu.Password, usu.Estado, usu.fechaBaja, usu.Administrador);
-                    _correoService.EnviarCorreoAlta(model.Email);
+                   // _correoService.EnviarCorreoAlta(model.Email);
 
                     return RedirectToAction("Administrador");
 

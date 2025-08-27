@@ -7,7 +7,7 @@
 <h1>Agregar Canción</h1>
 
 <div class="card p-4">
-@using (Html.BeginForm("AgregarCancion", "Canciones", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    @using (Html.BeginForm("AgregarCancion", "Canciones", FormMethod.Post, new { @name = "formSubirCancion", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
@@ -84,9 +84,8 @@
 </div>
         <div class="row" id="fila">
             <div class="form-group col-md-6">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Subir" class="btn btn-primary" />
-                </div>
+            <button type="button" class="btn btn-dark boton-subir" onclick="mostrarModalSubir()">Crear</button>
+
             </div>
             <br />
 
@@ -95,6 +94,8 @@
             </div>
         </div>
     }
+    @await Html.PartialAsync("Modal/modalVista")
+
 </div>
 
 <!--Vemos la vista previa de la carátula para asegurarnos que es la que queremos subir-->
@@ -113,4 +114,29 @@
             reader.readAsDataURL(file);
         }
     });
+    // Función para mostrar el modal de confirmación antes de crear el usuario. Llama a la función mostrarModalConfirmacion con los parámetros adecuados.
+    function formSubirCancion() {
+        mostrarModalConfirmacion(
+            "Confirmar subida",
+            "¿Estás seguro de que deseas subir esta canción?",
+            "Sí",
+            function () {
+                document.forms["formCrearUsuario"].submit();
+            }
+        );
+    }
+
+    function mostrarModalSubir(titulo, mensaje, textoBoton, accionCallback) {
+        $('#tituloModal').text(titulo);
+        $('#mensajeModal').text(mensaje);
+        $('#btnConfirmarModal').text(textoBoton);
+        $('#btnConfirmarModal').off('click');
+        $('#btnConfirmarModal').on('click', function () {
+            $('#modalConfirmacion').modal('hide');
+            if (typeof accionCallback === 'function') {
+                accionCallback();
+            }
+        });
+        $('#modalConfirmacion').modal('show');
+    }
 </script>

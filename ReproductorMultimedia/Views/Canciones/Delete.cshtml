@@ -52,7 +52,35 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="idCancion" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <button type="button" class="btn btn-danger" onclick="mostrarModalEliminar()">
+            Delete
+        </button>
+
         <a asp-action="Index">Back to List</a>
     </form>
+    @await Html.PartialAsync("Modal/modalVista")
+
 </div>
+<script>
+    function mostrarModalEliminar() {
+        mostrarModalConfirmacion(
+            "Confirmar eliminación de canción",
+            "¿Estás seguro de que deseas eliminar esta canción?",
+            "Sí",
+            function () {
+                document.forms[0].submit();
+            }
+        );
+    }
+    function mostrarModalConfirmacion(titulo, mensaje, textoBoton, accionCallback) {
+        $('#tituloModal').text(titulo);
+        $('#mensajeModal').text(mensaje);
+        $('#btnConfirmarModal').text(textoBoton);
+        $('#btnConfirmarModal').off('click');
+        $('#btnConfirmarModal').on('click', function () {
+            $('#modalConfirmacion').modal('hide');
+            accionCallback();
+        });
+        $('#modalConfirmacion').modal('show');
+    }
+</script>

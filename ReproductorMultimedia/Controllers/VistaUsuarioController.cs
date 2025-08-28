@@ -89,12 +89,22 @@ namespace ReproductorMultimedia.Controllers
             ViewBag.NombreUsuario = _loginManager.GetCurrentUser();
             return View(favoritas);
         }
-
+        [HttpGet]
         public IActionResult DarseBaja()
         {
+            int? idUsuario = _loginManager.GetCurrentUserId();
 
-            return View();
+            if (!idUsuario.HasValue)
+                return RedirectToAction("Login", "Login");
+
+            var usuario = UsuarioViewModel.DatosUnUsuario(idUsuario.Value);
+
+            if (usuario == null)
+                return NotFound();
+
+            return View(usuario);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DarseBajaAccion()
@@ -106,8 +116,8 @@ namespace ReproductorMultimedia.Controllers
 
             UsuarioViewModel.BajaVoluntaria(idUsuario.Value);
 
-            
-            return RedirectToAction("Index");
+
+            return RedirectToAction("Login", "Login");
         }
 
 

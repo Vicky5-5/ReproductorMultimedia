@@ -1,0 +1,38 @@
+﻿@model Logica.ViewModels.UsuarioViewModel
+
+@{
+    ViewData["Title"] = "DarseBaja";
+}
+
+<h1>Confirmación de baja</h1>
+
+<div>
+    <h4>¿Estás seguro de que deseas darte de baja?</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Estado)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Estado)
+        </dd>
+    </dl>
+
+    <form asp-action="DarseBajaAccion" method="post">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-danger">Sí, darme de baja</button>
+        <a asp-action="Home" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

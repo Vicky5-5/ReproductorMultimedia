@@ -158,7 +158,7 @@ namespace Logica.Managers
         {
             using (var db = new Conexion())
             {
-                var usuario = db.Usuarios.FirstOrDefault(a => a.idUsuario == idUsuario);
+                var usuario = db.Usuarios.SingleOrDefault(a => a.idUsuario == idUsuario);
                 if (usuario != null)
                 {
                     usuario.Estado = false;

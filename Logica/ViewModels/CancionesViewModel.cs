@@ -110,10 +110,19 @@ namespace Logica.ViewModels
             CancionesManager.EliminarCancion(id);
         }
 
-        public static void UpdateSong(int id)
+        public static CancionesViewModel UpdateSong(int id)
         {
-            CancionesManager.ActualizarReproducciones(id);
+            var cancion = CancionesManager.ObtenerCancion(id);
+
+            if (cancion != null)
+            {
+                CancionesManager.ActualizarReproducciones(id);
+                return new CancionesViewModel(cancion);
+            }
+
+            return null;
         }
+
         public static int UpdateLikes(int id)
         {
             var likes=CancionesManager.ActualizarLikes(id);

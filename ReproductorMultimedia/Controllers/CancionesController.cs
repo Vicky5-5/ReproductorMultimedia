@@ -135,17 +135,21 @@ namespace ReproductorMultimedia.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ActualizarReproducciones(int id)
         {
-            try
+            var cancionActualizada = CancionesViewModel.UpdateSong(id);
+            if (cancionActualizada != null)
             {
-                CancionesViewModel.UpdateSong(id);
-                return Ok(new { success = true });
+                return Json(new
+                {
+                    success = true,
+                    idCancion = cancionActualizada.idCancion,
+                    reproduccionesTotales = cancionActualizada.NumeroReproducciones
+                });
             }
-            catch (Exception ex)
-            {
-                return BadRequest(new { success = false, error = ex.Message });
-            }
+
+            return Json(new { success = false, mensaje = "Canción no encontrada" });
         }
-      
+
+
 
 
     }

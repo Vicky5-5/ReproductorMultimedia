@@ -16,10 +16,11 @@
 
 <h1>Listado de Canciones</h1>
 
-<a href="@Url.Action("FavoritasUsuario", "VistaUsuario")" class="btn btn-outline-success">
-    <i class="fa-solid fa-heart"></i> Favoritas
+<a href="@Url.Action("FavoritasUsuario", "VistaUsuario")" class="btn-favoritas mb-4">
+    <i class="fa-solid fa-heart"></i> Ver favoritas
 </a>
 
+<br />
 <table class="table">
     <thead>
         <tr>
@@ -60,7 +61,8 @@
                 </td>
                 <td>
                     <!--Cambiamos el estadar de Visual Studio por el de MediaElement.js-->
-                    <audio class="mejs-player" controls preload="none"> <!--El preload="none" evita cargar el audio automáticamente hasta que el usuario interactúe con él-->
+                    <audio id="audio-@item.idCancion" class="mejs-player" controls preload="none">
+                        <!--El preload="none" evita cargar el audio automáticamente hasta que el usuario interactúe con él-->
                         <source src="@item.RutaArchivo" type="audio/mp3" />
                     </audio>
 
@@ -82,10 +84,11 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Genero)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumeroReproducciones)
+                <td id="reproducciones-@item.idCancion">
+                    @item.NumeroReproducciones
                 </td>
-                
+
+
                 <td id="contadorLikes-@item.idCancion">
                     @item.NumeroLikes
                 </td>
@@ -112,7 +115,7 @@
 <!-- #region Estilos -->
 
 <style>
-    .table{
+    .table {
         background-color: #f8f9fa;
         border-radius: 8px;
     }
@@ -128,7 +131,8 @@
         .icono:hover {
             transform: scale(1.2);
         }
-        .like{
+
+    .like {
         margin: 0 10px;
         font-size: 22px;
         text-decoration: none;
@@ -137,14 +141,15 @@
         color: grey;
     }
 
-    .like:hover {
-        transform: scale(1.2);
-        color: #C73636;
-    }
+        .like:hover {
+            transform: scale(1.2);
+            color: #C73636;
+        }
 
     .like-activo i {
         color: #C73636;
     }
+
     .disco {
         width: 120px;
         height: 120px;
@@ -164,7 +169,7 @@
             object-fit: cover;
             z-index: 1;
         }
-    <!-- Aquí se personaliza la barra de audio-->
+    <!-- Aquí se personaliza la barra de audio-- >
     .mejs__container {
         background-color: #171717;
         border: 1px solid #ddd;
@@ -183,12 +188,39 @@
         color: #C73636;
     }
 
+    .btn-favoritas {
+        display: inline-block;
+        background-color: #ff4b5c;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        box-shadow: 0 4px 10px rgba(199, 54, 54, 0.3);
+    }
+
+        .btn-favoritas i {
+            margin-right: 8px;
+            transition: transform 0.4s ease;
+        }
+
+        .btn-favoritas:hover {
+            background-color: #c73636; /* tono más oscuro */
+            transform: scale(1.05);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+            text-decoration: none;
+            color: white;
+        }
+
+            .btn-favoritas:hover i {
+                transform: rotate(15deg);
+            }
 
 </style>
 <!-- #endregion -->
-
-
-
 <!-- #region JavaScript -->
 
 <form id="tokenForm" method="post">
@@ -199,7 +231,7 @@
 
     <script>
         // Función global para alternar likes
-            function toggleLike(button) {
+        function toggleLike(button) {
             if (button.disabled) return; // Evita clics múltiples
 
             button.disabled = true;
@@ -232,28 +264,63 @@
                 button.disabled = false; // Reactiva el botón
             });
         }
-        // Inicializamos el MediaElement.js en el Script 
+
+        // Inicializa MediaElement.js
         document.addEventListener('DOMContentLoaded', function () {
-            const players = document.querySelectorAll('audio'); // Selecciona todos los elementos audio y los guarda en la constante de 'player'
-            players.forEach(function (player) { // Recorre todos los elementos audio
-                new MediaElementPlayer(player, { // Aqui es donde se inicializa el MediaElement.js
-                    features: ['playpause', 'progress', 'current', 'duration', 'volume'], //Controla los botones de play,pause
-                    audioVolume: 'horizontal' // Controla el volumen y está configurado para que esté en horizontal
+            const players = document.querySelectorAll('audio');
+            players.forEach(function (player) {
+                new MediaElementPlayer(player, {
+                    features: ['playpause', 'progress', 'current', 'duration', 'volume'],
+                    audioVolume: 'horizontal'
                 });
             });
-        });
 
-        // Función para animar discos y registrar reproducciones
-        document.addEventListener('DOMContentLoaded', () => {
+            // Animación de discos y conteo de reproducciones
             const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
             const token = tokenInput ? tokenInput.value : '';
+
+            const actualizarReproduccionesUrl = '@Url.Action("ActualizarReproducciones", "Canciones")';
 
             document.querySelectorAll('audio').forEach(audio => {
                 const id = audio.id.split('-')[1];
                 const disco = document.getElementById('disco-' + id);
+                
+                if (!disco) return; 
+
+
+                let reproduccionContada = false;
 
                 audio.addEventListener('playing', () => {
                     disco.classList.add('girando');
+
+                    if (!reproduccionContada) {
+                        reproduccionContada = true;
+
+                        const formData = new FormData();
+                        formData.append('__RequestVerificationToken', token);
+                        formData.append('id', id);
+
+                        fetch(actualizarReproduccionesUrl, {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'same-origin'
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                const contador = document.querySelector(`#reproducciones-${data.idCancion}`);
+                                if (contador) {
+                                    contador.textContent = data.reproduccionesTotales;
+                                }
+                            } else {
+                                console.error('❌ Error en el servidor:', data.mensaje);
+                            }
+                        })
+                        .catch(err => {
+                            console.error('❌ Error en fetch:', err);
+                        });
+
+                    }
                 });
 
                 audio.addEventListener('pause', () => {
@@ -262,24 +329,11 @@
 
                 audio.addEventListener('ended', () => {
                     disco.classList.remove('girando');
-
-                    const formData = new FormData();
-                    formData.append('__RequestVerificationToken', token);
-                    formData.append('id', id);
-
-                    fetch('/Canciones/ActualizarReproducciones', {
-                        method: 'POST',
-                        body: formData
-                    }).then(res => {
-                        if (res.ok) {
-                            console.log(`✅ Reproducción registrada para ID ${id}`);
-                        } else {
-                            console.error('❌ Error al registrar reproducción');
-                        }
-                    });
+                    reproduccionContada = false; // Permitir contar una nueva reproducción si se vuelve a reproducir desde el principio
                 });
             });
         });
     </script>
 }
+
 <!-- #endregion -->

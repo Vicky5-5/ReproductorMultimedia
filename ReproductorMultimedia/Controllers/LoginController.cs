@@ -33,12 +33,20 @@ namespace ReproductorMultimedia.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Entrar(string email, string password)
         {
+          
+            var viewModel = new UsuarioViewModel
+            {
+                Email = email,
+                Password = password
+            };
+
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
-                TempData["Error"] = "Por favor, ingrese su correo electrónico y contraseña.";
-                return RedirectToAction("Login");
+                ModelState.AddModelError("", "Por favor, ingrese su correo electrónico y contraseña.");
+                return View("Login", viewModel);
             }
 
             try
@@ -48,8 +56,8 @@ namespace ReproductorMultimedia.Controllers
                 {
                     if (!usuario.Estado)
                     {
-                        TempData["Error"] = "Tu cuenta está inactiva. Por favor, contacta al administrador.";
-                        return RedirectToAction("Login");
+                        ModelState.AddModelError("", "Tu cuenta está inactiva. Por favor, contacta al administrador.");
+                        return View("Login", viewModel);
                     }
 
                     HttpContext.Session.SetString("Nombre", usuario.Nombre);
@@ -61,15 +69,16 @@ namespace ReproductorMultimedia.Controllers
                     return RedirectToAction("Home", "VistaUsuario");
                 }
 
-                TempData["Error"] = "Correo electrónico o contraseña incorrectos.";
+                ModelState.AddModelError("", "Correo electrónico o contraseña incorrectos.");
             }
             catch (Exception ex)
             {
-                TempData["Error"] = $"Error al iniciar sesión: {ex.Message}";
+                ModelState.AddModelError("", $"Error al iniciar sesión: {ex.Message}");
             }
 
-            return RedirectToAction("Login");
+            return View("Login", viewModel);
         }
+
 
 
         [HttpGet, ActionName("VerUsuarios")]

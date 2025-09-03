@@ -29,61 +29,62 @@
             <th>
                 @Html.DisplayNameFor(model => model.Cancion.Artista)
             </th>
-         
+
             <th>
                 @Html.DisplayNameFor(model => model.Cancion.Album)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Cancion.Duracion)
+                <i class="fa-solid fa-clock"></i>
             </th>
-            
+
             <th>
-                @Html.DisplayNameFor(model => model.fecharAnadidaFavorita)
+                Fecha en la que se añadió
             </th>
-           
+
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
+        @foreach (var item in Model)
+        {
+            <tr>
                 <td>
                     <div class="disco" id="disco-@item.idCancion">
                         <img src="@item.Cancion.RutaCaratulaAlbum" alt="Carátula" />
                     </div>
                 </td>
                 <td>
-                    <audio controls id="audio-@item.idCancion" style="width: 250px;">
+                    <audio controls id="audio-@item.idCancion">
                         <source src="@item.Cancion.RutaArchivo" type="audio/mpeg" />
                         Tu navegador no soporta la reproducción de audio.
                     </audio>
                 </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cancion.Titulo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cancion.Artista)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cancion.Album)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cancion.Duracion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.fecharAnadidaFavorita)
-            </td>
-           
-            <td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cancion.Titulo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cancion.Artista)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cancion.Album)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cancion.Duracion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fecharAnadidaFavorita)
+                </td>
+
+                <td>
                     <button class="like @(item.Cancion.UsuarioDioLike ? "like-activo" : "")"
                             data-idcancion="@item.idCancion"
                             onclick="toggleLike(this)"
                             style="background: none; border: none;">
                         <i class="fa-solid fa-heart"></i>
                     </button>
-            </td>
-        </tr>
-}
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 <style>
@@ -141,7 +142,7 @@
             object-fit: cover;
             z-index: 1;
         }
-    <!-- Aquí se personaliza la barra de audio-- >
+
     .mejs__container {
         background-color: #171717;
         border: 1px solid #ddd;
@@ -159,6 +160,7 @@
     .mejs__button > button {
         color: #C73636;
     }
+
 
 </style>
 <!-- #endregion -->
@@ -275,5 +277,4 @@
             });
         });
     </script>
-}
 }

@@ -9,7 +9,7 @@
 <!-- CSS de MediaElement.js -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.16/mediaelementplayer.min.css">
 
-<!-- JS de MediaElement.js -->
+<!--JS de MediaElement.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.16/mediaelement-and-player.min.js"></script>
 
 <h1>Usuario: @ViewBag.NombreUsuario</h1>
@@ -19,6 +19,20 @@
 <a href="@Url.Action("FavoritasUsuario", "VistaUsuario")" class="btn-favoritas mb-4">
     <i class="fa-solid fa-heart"></i> Ver favoritas
 </a>
+<!-- Para crear una barra de búsqueda. Esta barra solo busca el nombre de las canciones -->
+<form id="formularioBusqueda" class="busqueda-container">
+    <!-- Contenedor que incluye el input de búsqueda y el botón con la lupa -->
+    <div class="input-con-lupa">
+        <input type="text" id="barraBusqueda" placeholder="Introduce el nombre de la canción">
+        <!-- Separador visual entre el input y la lupa -->
+        <div class="separador"></div>
+        <!-- Botón de búsqueda con icono de lupa -->
+        <button type="submit" class="lupa">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</form>
+
 
 <br />
 <table class="table">
@@ -60,9 +74,9 @@
                     </div>
                 </td>
                 <td>
-                    <!--Cambiamos el estadar de Visual Studio por el de MediaElement.js-->
+                    <!-- Cambiamos el estadar de Visual Studio por el de MediaElement.js -->
                     <audio id="audio-@item.idCancion" class="mejs-player" controls preload="none">
-                        <!--El preload="none" evita cargar el audio automáticamente hasta que el usuario interactúe con él-->
+                        <!-- El preload="none" evita cargar el audio automáticamente hasta que el usuario interactúe con él -->
                         <source src="@item.RutaArchivo" type="audio/mp3" />
                     </audio>
 
@@ -218,7 +232,57 @@
             .btn-favoritas:hover i {
                 transform: rotate(15deg);
             }
+    /*Estilos de la barra de búsqueda*/
+    .lupa {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #333;
+        font-size: 18px;
+        transition: color 0.3s ease;
+    }
 
+    .busqueda-container {
+        max-width: 400px;
+        margin-bottom: 20px;
+    }
+
+    .input-con-lupa {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow: hidden;
+        background-color: white;
+    }
+
+        .input-con-lupa input {
+            flex: 1;
+            padding: 10px 12px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .input-con-lupa .separador {
+            width: 1px;
+            height: 60%;
+            background-color: #ccc;
+            margin: 0 10px;
+        }
+
+        .input-con-lupa .lupa {
+            background: none;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #333;
+        }
+
+            .input-con-lupa .lupa:hover {
+                color: #007bff;
+            }
 </style>
 <!-- #endregion -->
 <!-- #region JavaScript -->
@@ -284,8 +348,8 @@
             document.querySelectorAll('audio').forEach(audio => {
                 const id = audio.id.split('-')[1];
                 const disco = document.getElementById('disco-' + id);
-                
-                if (!disco) return; 
+
+                if (!disco) return;
 
 
                 let reproduccionContada = false;
@@ -333,6 +397,27 @@
                 });
             });
         });
+        // Funcionalidad de búsqueda de forma dinamica
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputBusqueda = document.getElementById("barraBusqueda");
+            const filas = document.querySelectorAll("table.table tbody tr");
+
+            inputBusqueda.addEventListener("input", function () {
+                const filtro = inputBusqueda.value.toLowerCase();
+
+                filas.forEach(fila => {
+                    const titulo = fila.querySelector("td:nth-child(3)").textContent.toLowerCase();
+
+                    if (titulo.includes(filtro)) {
+                        fila.style.display = "";
+                    } else {
+                        fila.style.display = "none";
+                    }
+                });
+            });
+        });
+
     </script>
 }
 

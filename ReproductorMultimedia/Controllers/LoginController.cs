@@ -69,11 +69,12 @@ namespace ReproductorMultimedia.Controllers
                     return RedirectToAction("Home", "VistaUsuario");
                 }
 
-                ModelState.AddModelError("", "Correo electrónico o contraseña incorrectos.");
+                HttpContext.Session.SetString("MensajeError", "Correo o contraseña incorrectos.");
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", $"Error al iniciar sesión: {ex.Message}");
+                ModelState.AddModelError("", $"Error al iniciar sesión: {ex.Message}"); 
+
             }
 
             return View("Login", viewModel);
@@ -100,7 +101,7 @@ namespace ReproductorMultimedia.Controllers
                 try
                 {
                     var login = UsuarioViewModel.RegistroUsuarioNuevo(model.idUsuario, model.Nombre, model.Email, model.Password);
-                    _correoService.EnviarCorreoAlta(model.Email);
+                    //_correoService.EnviarCorreoAlta(model.Email);
 
                     // Redirigir a Login después de un registro exitoso
                     return RedirectToAction("Login", "Login");

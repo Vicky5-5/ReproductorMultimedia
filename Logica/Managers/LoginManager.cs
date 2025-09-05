@@ -29,7 +29,7 @@ namespace Logica.Managers
 
         public Usuario Login(string email, string password)
         {
-            var session = _contextAccessor.HttpContext.Session;
+            var session = _contextAccessor.HttpContext.Session; //Usamos la sesión actual para guardar los datos del usuario
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
@@ -37,7 +37,12 @@ namespace Logica.Managers
                 return null;
             }
 
-            if (bloqueo && tiempoBloqueo.HasValue && DateTime.Now < tiempoBloqueo.Value)
+            // Verificar si el usuario está bloqueado por tiempo
+            var tiempoBloqueoString = session.GetString("TiempoBloqueo");
+
+            if (!string.IsNullOrEmpty(tiempoBloqueoString) &&
+                DateTime.TryParse(tiempoBloqueoString, out DateTime tiempoBloqueo) &&
+                DateTime.Now < tiempoBloqueo)
             {
                 session.SetString("Mensaje", "Cuenta bloqueada. Inténtelo nuevamente después de 10 minutos.");
                 return null;
@@ -48,36 +53,35 @@ namespace Logica.Managers
 
             int intentosFallidos = session.GetInt32("IntentosFallidos") ?? 0;
 
-            if (login == null)
+            if (login == null || hash != login.Password || email != login.Email || !login.Estado)
             {
-                session.SetString("MensajeError", "Error. Usuario o contraseña incorrecto.");
+                intentosFallidos++;
+                session.SetInt32("IntentosFallidos", intentosFallidos);
+
+                if (intentosFallidos >= 3)
+                {
+                    // Bloqueo por 10 minutos
+                    session.SetString("TiempoBloqueo", DateTime.Now.AddMinutes(10).ToString());
+                    session.SetString("Mensaje", "Se ha superado el número de intentos. Inténtelo de nuevo en 10 minutos.");
+                }
+                else
+                {
+                    session.SetString("MensajeError", "Usuario o contraseña incorrecto.");
+                }
+
                 return null;
             }
 
-            if (hash == login.Password && email == login.Email && login.Estado)
-            {
-                currentUser = login.Nombre;
-                session.SetString("Bienvenida", $"Bienvenido/a: {login.Nombre}");
-                session.SetInt32("idUsuario", login.idUsuario); // ✅ Guarda el ID del usuario
-                session.SetInt32("IntentosFallidos", 0); // Reinicia intentos
-                return login; // Login exitoso
-            }
-            else
-            {
-                intentosFallidos++;
-                session.SetString("Incorrecto", "La contraseña o el email están incorrectos. Inténtalo de nuevo.");
-                session.SetInt32("IntentosFallidos", intentosFallidos);
-            }
+            // Si llega aquí, login correcto
+            session.SetString("Bienvenida", $"Bienvenido/a: {login.Nombre}");
+            session.SetInt32("idUsuario", login.idUsuario);
+            session.SetInt32("IntentosFallidos", 0); // Reinicia intentos
+            session.Remove("TiempoBloqueo"); // Quita el bloqueo si lo había
 
-            if (intentosFallidos >= 3)
-            {
-                bloqueo = true;
-                tiempoBloqueo = DateTime.Now.AddMinutes(10);
-                session.SetString("Mensaje", "Se ha superado el número de intentos. Inténtelo de nuevo en 10 minutos.");
-            }
-
-            return null; // Login fallido
+            currentUser = login.Nombre;
+            return login;
         }
+
         //Obtenemos el nombre del usuario actual
         public string GetCurrentUser()
         {

@@ -11,7 +11,7 @@
 <div class="card justify-content-center">
     <br />
 
-    @using (Html.BeginForm("Entrar", "Login", FormMethod.Post, new { autocomplete = "off" }))
+    @using (Html.BeginForm("Entrar", "Login", FormMethod.Post, new { @name = "formLogin", autocomplete = "off" }))
     {
         @Html.AntiForgeryToken()
 
@@ -42,6 +42,8 @@
                 <button type="submit" class="btn btn-dark">Entrar</button>
             </div>
         </div>
+        @await Html.PartialAsync("Modal/modalVista")
+
     }
 </div>
 <style>
@@ -177,4 +179,31 @@
 
     draw(); //Iniciamos la animación
 
+
+    /*Modal que muestra los intentos y cuando estás bloqueado*/
+    // Función para mostrar el modal de confirmación antes de crear el usuario. Llama a la función mostrarModalConfirmacion con los parámetros adecuados.
+    function mostrarModalCrear() {
+        mostrarModalConfirmacion(
+            "Numero de intentos",
+            "La contraseña o el correo electrónico está erróneo. Inténtalo de nuevp",
+            "Sí, crear",
+            function () {
+                document.forms["formLogin"].submit();
+            }
+        );
+    }
+
+    function mostrarModalConfirmacion(titulo, mensaje, textoBoton, accionCallback) {
+        $('#tituloModal').text(titulo);
+        $('#mensajeModal').text(mensaje);
+        $('#btnConfirmarModal').text(textoBoton);
+        $('#btnConfirmarModal').off('click');
+        $('#btnConfirmarModal').on('click', function () {
+            $('#modalConfirmacion').modal('hide');
+            if (typeof accionCallback === 'function') {
+                accionCallback();
+            }
+        });
+        $('#modalConfirmacion').modal('show');
+    }
 </script>

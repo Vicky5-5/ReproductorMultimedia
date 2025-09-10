@@ -207,3 +207,19 @@
         $('#modalConfirmacion').modal('show');
     }
 </script>
+<!--Para que funcione el modal e informárte de que el usuario se equivocó en el usuario o contraseña-->
+@if (ViewBag.MostrarModal != null && (bool)ViewBag.MostrarModal)
+{
+    <script>
+        $(document).ready(function () {
+            mostrarModalConfirmacion(
+                @Html.Raw(Json.Serialize(ViewBag.ModalTitulo)), /*Usamos Json.Serialize para evitar problemas con comillas*/
+                @Html.Raw(Json.Serialize(ViewBag.ModalMensaje)),
+                @Html.Raw(Json.Serialize(ViewBag.ModalBoton)),
+                function () {
+                }
+            );
+        });
+    </script>
+}
+

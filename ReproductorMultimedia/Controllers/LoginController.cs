@@ -36,7 +36,6 @@ namespace ReproductorMultimedia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Entrar(string email, string password)
         {
-          
             var viewModel = new UsuarioViewModel
             {
                 Email = email,
@@ -45,7 +44,10 @@ namespace ReproductorMultimedia.Controllers
 
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
-                ModelState.AddModelError("", "Por favor, ingrese su correo electrónico y contraseña.");
+                ViewBag.ModalTitulo = "Campos requeridos";
+                ViewBag.ModalMensaje = "Por favor, ingrese su correo electrónico y contraseña.";
+                ViewBag.ModalBoton = "Cerrar";
+                ViewBag.MostrarModal = true;
                 return View("Login", viewModel);
             }
 
@@ -56,7 +58,10 @@ namespace ReproductorMultimedia.Controllers
                 {
                     if (!usuario.Estado)
                     {
-                        ModelState.AddModelError("", "Tu cuenta está inactiva. Por favor, contacta al administrador.");
+                        ViewBag.ModalTitulo = "Cuenta inactiva";
+                        ViewBag.ModalMensaje = "Tu cuenta está inactiva. Por favor, contacta al administrador.";
+                        ViewBag.ModalBoton = "Cerrar";
+                        ViewBag.MostrarModal = true;
                         return View("Login", viewModel);
                     }
 
@@ -69,17 +74,23 @@ namespace ReproductorMultimedia.Controllers
                     return RedirectToAction("Home", "VistaUsuario");
                 }
 
-                HttpContext.Session.SetString("MensajeError", "Correo o contraseña incorrectos.");
+                var mensajeError = HttpContext.Session.GetString("Mensaje") ?? HttpContext.Session.GetString("MensajeError");
+
+                ViewBag.ModalTitulo = "Error de inicio de sesión";
+                ViewBag.ModalMensaje = mensajeError ?? "Correo o contraseña incorrectos.";
+                ViewBag.ModalBoton = "Cerrar";
+                ViewBag.MostrarModal = true;
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", $"Error al iniciar sesión: {ex.Message}"); 
-
+                ViewBag.ModalTitulo = "Error inesperado";
+                ViewBag.ModalMensaje = $"Error al iniciar sesión: {ex.Message}";
+                ViewBag.ModalBoton = "Cerrar";
+                ViewBag.MostrarModal = true;
             }
 
             return View("Login", viewModel);
         }
-
 
 
         [HttpGet, ActionName("VerUsuarios")]

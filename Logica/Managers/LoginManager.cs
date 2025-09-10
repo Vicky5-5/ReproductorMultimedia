@@ -12,7 +12,7 @@ namespace Logica.Managers
         private bool bloqueo = false;
         private DateTime? tiempoBloqueo = null;
 
-        // Constructor privado para evitar instanciación externa
+        // Constructor privado para evitar instanciación externa. Este es el patrón Singleton
         public LoginManager(IHttpContextAccessor contextAccessor)
         {
             _contextAccessor = contextAccessor;
@@ -37,31 +37,38 @@ namespace Logica.Managers
                 return null;
             }
 
-            // Verificar si el usuario está bloqueado por tiempo
-            var tiempoBloqueoString = session.GetString("TiempoBloqueo");
-
+            // Verificar si el usuario está bloqueado por tiempo (por email)
+            var tiempoBloqueoString = session.GetString($"TiempoBloqueo_{email}");
             if (!string.IsNullOrEmpty(tiempoBloqueoString) &&
-                DateTime.TryParse(tiempoBloqueoString, out DateTime tiempoBloqueo) &&
-                DateTime.Now < tiempoBloqueo)
+                DateTime.TryParse(tiempoBloqueoString, out DateTime tiempoBloqueoStored))
             {
-                session.SetString("Mensaje", "Cuenta bloqueada. Inténtelo nuevamente después de 10 minutos.");
-                return null;
+                if (DateTime.Now < tiempoBloqueoStored)
+                {
+                    session.SetString("Mensaje", "Cuenta bloqueada. Inténtelo nuevamente después de 10 minutos.");
+                    return null;
+                }
+                else
+                {
+                    // El tiempo de bloqueo ha expirado, limpiamos
+                    session.Remove($"TiempoBloqueo_{email}");
+                    session.SetInt32($"IntentosFallidos_{email}", 0);
+                }
             }
 
             var login = UsuariosManager.Login(email, password);
             var hash = UsuariosManager.HashPassword(password);
 
-            int intentosFallidos = session.GetInt32("IntentosFallidos") ?? 0;
+            int intentosFallidos = session.GetInt32($"IntentosFallidos_{email}") ?? 0;
 
             if (login == null || hash != login.Password || email != login.Email || !login.Estado)
             {
                 intentosFallidos++;
-                session.SetInt32("IntentosFallidos", intentosFallidos);
+                session.SetInt32($"IntentosFallidos_{email}", intentosFallidos);
 
                 if (intentosFallidos >= 3)
                 {
-                    // Bloqueo por 10 minutos
-                    session.SetString("TiempoBloqueo", DateTime.Now.AddMinutes(10).ToString());
+                    var bloqueoHasta = DateTime.Now.AddMinutes(10);
+                    session.SetString($"TiempoBloqueo_{email}", bloqueoHasta.ToString("o")); // formato ISO 8601
                     session.SetString("Mensaje", "Se ha superado el número de intentos. Inténtelo de nuevo en 10 minutos.");
                 }
                 else
@@ -75,8 +82,9 @@ namespace Logica.Managers
             // Si llega aquí, login correcto
             session.SetString("Bienvenida", $"Bienvenido/a: {login.Nombre}");
             session.SetInt32("idUsuario", login.idUsuario);
-            session.SetInt32("IntentosFallidos", 0); // Reinicia intentos
-            session.Remove("TiempoBloqueo"); // Quita el bloqueo si lo había
+            session.SetString("Nombre", login.Nombre); // Guardar nombre en sesión
+            session.SetInt32($"IntentosFallidos_{email}", 0); // Reinicia intentos
+            session.Remove($"TiempoBloqueo_{email}"); // Quita el bloqueo si lo había
 
             currentUser = login.Nombre;
             return login;

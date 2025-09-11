@@ -18,7 +18,7 @@ public class CorreoService
         if (string.IsNullOrWhiteSpace(_smtpSettings.EmailFrom))
             throw new InvalidOperationException("El campo 'EmailFrom' no está configurado.");
 
-        var remitente = new MailAddress(_smtpSettings.EmailFrom, "Reproductor Música"); // 👈 Aquí
+        var remitente = new MailAddress(_smtpSettings.EmailFrom, "Reproductor Música");
         var mail = new MailMessage
         {
             From = remitente,
@@ -64,5 +64,10 @@ public class CorreoService
         string cuerpo = "Te has dado de baja correctamente. Contacta con el administrador si deseas volver a darte de alta.";
         EnviarCorreo(emailNuevoUsuario, asunto, cuerpo);
     }
-
+    public void EnviarCorreoContacto(string nombre, string email, string asunto, string mensaje)
+    {
+        string asuntoCompleto = $"Contacto desde la web: {asunto}";
+        string cuerpo = $"Nombre: {nombre}\nEmail: {email}\n\nMensaje:\n{mensaje}";
+        EnviarCorreo(_smtpSettings.EmailFrom, asuntoCompleto, cuerpo); //Enviamos al email del administrador para que lo gestione
+    }
 }

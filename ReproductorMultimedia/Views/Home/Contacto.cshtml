@@ -1,5 +1,44 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<div class="container-fluid py-5 px-5 mt-4 bg-white">
+    <h1>Contacto</h1>
+    <form action="/Contacto/FormularioContacto" method="post">
+        <div class="mb-3">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" class="form-control nombre" required />
+        </div>
+        <div class="mb-3">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" class="form-control email" required />
+        </div>
+        <div class="mb-3">
+            <label for="asunto">Asunto</label>
+            <input type="text" id="asunto" name="asunto" class="form-control asunto" required />
+        </div>
+        <div class="mb-3">
+            <label for="mensaje">Mensaje</label>
+            <textarea id="mensaje" name="mensaje" class="form-control mensaje" rows="5" required></textarea>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary shadow-sm">
+                <i class="fa fa-paper-plane me-2"></i> Enviar
+            </button>
+
+        </div>
+    </form>
+</div>
+<style>
+    .nombre,
+    .email,
+    .asunto,
+    .mensaje {
+        background-color: #f0f0f0;
+    }
+
+    input, textarea {
+        color: #333;
+    }
+
+</style>

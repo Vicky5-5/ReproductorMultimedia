@@ -1,10 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<div class="container-fluid p-0">
+<div class="container-fluid content-wrapper" style="min-height: 100vh; position: relative; z-index: 1;">
     <div class="row g-0">
         <div class="col-12 p-0">
-            <div id="carrusel" class="carousel slide fullscreen-carousel carousel-shadow" data-bs-ride="carousel">
+            <div id="carrusel" class="carousel slide carousel-background" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <img src="/ImagenesCarrusel/pop.jpg" class="d-block w-100 h-100" alt="Pop" />
@@ -90,4 +90,23 @@
             font-size: 3rem;
             margin: 0;
         }
+
+    .carousel-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1; /* Lo manda al fondo */
+        overflow: hidden;
+    }
+
+        .carousel-background .carousel-inner,
+        .carousel-background .carousel-item,
+        .carousel-background .carousel-item img {
+            height: 100vh;
+            width: 100vw;
+            object-fit: cover;
+        }
+
 </style>

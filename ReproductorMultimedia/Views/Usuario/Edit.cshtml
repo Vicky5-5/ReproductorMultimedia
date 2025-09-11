@@ -3,12 +3,13 @@
 @{
     ViewData["Title"] = "Editar";
 }
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
 
 <br />
-<div class="d-flex justify-content-center align-items-center min-vh-100">
+<div class="container-fluid py-5">
 
-    <div class="card p-4 shadow" style="max-width: 700px;">
+    <div class="card p-4 shadow w-100">
         <h1>Editar Usuario</h1>
 
         @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "formEditarUsuario" }))
@@ -76,15 +77,19 @@
         </div>
 
         <div class="form-row mt-4">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <button id="boton" type="button" class="btn btn-success btn-block" onclick="mostrarModalGuardar()">
                     <i class="fas fa-save"></i> Guardar
                 </button>
 
             </div>
-            <div class="col-md-6">
-                @Html.ActionLink("Volver", "Administrador", null, new { @class = "btn btn-secondary btn-block" })
+            <div class="col-md-3">
+                <a href="@Url.Action("Administrador", "Usuario")" class="btn btn-secondary btn-block">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
             </div>
+
+
         </div>
                 }
     </div>

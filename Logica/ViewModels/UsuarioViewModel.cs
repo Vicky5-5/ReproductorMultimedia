@@ -44,6 +44,7 @@ namespace Logica.ViewModels
             this.fechaBaja = usuario.fechaBaja;
             this.Administrador = usuario.Administrador;
             this.fechaRegistro = usuario.fechaRegistro;
+            this.Estado = usuario.Estado;
         }
         //PARA REGISTAR A UN USUARIO
         public UsuarioViewModel(int id, string nombre, string email, string password)

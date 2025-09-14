@@ -3,57 +3,63 @@
     ViewBag.Title = "Registro";
 }
 
-<h2 class="text-center">Registro</h2>
 
 <br />
 <div class="container d-flex justify-content-center">
-    <div class="card p-4" style="width: 600px;">
+    <div class="card p-4 shadow" style="max-width: 600px; width: 100%;">
         @using (Html.BeginForm("Registro", "Login", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
 
-            <div class="form-horizontal">
-                <h4 class="mb-4"><strong>Usuario</strong></h4>
-                <hr />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <h4 class="mb-4 text-center"><strong>Registro</strong></h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                <div class="form-group">
+            <div class="form-row">
+                <div class="form-group col-md-6">
                     <label><strong>Nombre</strong></label>
-                    @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Nombre Usuario"} })
+                    @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Nombre" } })
                     @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group">
+                <div class="form-group col-md-6">
                     <label><strong>Email</strong></label>
                     @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Email" } })
                     @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label><strong>Contraseña</strong></label>
-                    <div class="position-relative">
-                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", type = "password", id = "myInput", placeholder = "Contraseña" } })
-                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <label><strong>Contraseña</strong></label>
+                <div class="position-relative">
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", type = "password", id = "myInput", placeholder = "Contraseña" } })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
 
-                        <input type="checkbox" id="toggle" class="offscreen" onclick="myFunction()">
-                        <label for="toggle" class="switch mt-2"></label>
-                    </div>
+                    <span class="position-absolute" style="top: 10px; right: 10px; cursor: pointer;" onclick="togglePassword()">
+                        <i id="eyeIcon" class="fa fa-eye"></i>
+                    </span>
                 </div>
+            </div>
 
-                <div class="boton form-group text-center mt-4">
-                    <button type="submit" class="btn btn-dark">Crear</button>
+            <div class="form-row mt-4">
+                <div class="col text-center">
+                    <button type="submit" class="btn btn-dark boton-registrar">Crear</button>
                 </div>
-
-                <div class="form-group text-center">
-                    @Html.ActionLink("Volver", "Login")
+                <div class="col text-center">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary shadow-sm">
+                        <i class="fa-solid fa-arrow-left me-2"></i> Volver
+                    </a>
                 </div>
+                
             </div>
         }
     </div>
 </div>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
 
 <style>
-    .boton button:hover {
+    .boton-registrar button:hover {
         background-color: #0056b3;
         color: white;
         transition: background-color 0.3s ease;
@@ -116,14 +122,20 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-    function myFunction() {
-        var x = document.getElementById("myInput");
-        if (x.type === "password") {
-            x.type = "text";
+    function togglePassword() {
+        var input = document.getElementById("myInput");
+        var icon = document.getElementById("eyeIcon");
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
         } else {
-            x.type = "password";
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
         }
     }
 </script>
+
 
 

@@ -4,11 +4,13 @@
     ViewData["Title"] = "Create";
 }
 
-<h1 class="text-center mb-4">Crear Usuario</h1>
 
 <div class="container d-flex justify-content-center">
-    <div class="card p-4 shadow" style="width: 700px;">
-        @using (Html.BeginForm("Create", "Usuario", FormMethod.Post, new {@name = "formCrearUsuario",autocomplete = "off" })) //El autocomplete off desactiva el autocompletado para mayor seguridad
+
+    <div class="card p-4 shadow mt-5" style="width: 700px;">
+        <h1 class="text-center mb-4">Crear Usuario</h1>
+
+        @using (Html.BeginForm("Create", "Usuario", FormMethod.Post, new { @name = "formCrearUsuario", autocomplete = "off" })) //El autocomplete off desactiva el autocompletado para mayor seguridad
         {
             @Html.AntiForgeryToken()
 
@@ -31,8 +33,9 @@
                         @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", type = "password", id = "myInput", placeholder = "Contraseña", autocomplete = "off" } })
                         @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
 
-                        <input type="checkbox" id="toggle" class="offscreen" onclick="myFunction()">
-                        <label for="toggle" class="switch mt-2"></label>
+                        <span class="position-absolute" style="top: 8px; right: 18px; cursor: pointer;" onclick="togglePassword()">
+                            <i id="eyeIcon" class="fa fa-eye"></i>
+                        </span>
                     </div>
                 </div>
 
@@ -48,9 +51,15 @@
         </div>
 
         <div class="d-flex justify-content-between mt-4">
-            <button type="button" class="btn btn-dark boton-crear" onclick="mostrarModalCrear()">Crear</button>
-            @Html.ActionLink("Volver", "Administrador", null, new { @class = "btn btn-outline-secondary" })
+            <button type="button" class="btn btn-success boton-crear" onclick="mostrarModalCrear()"><i class="fas fa-user-plus pe-2"></i>Crear</button>
+
+            <div class="col-md-3">
+                <a href="@Url.Action("Administrador", "Usuario")" class="btn btn-secondary btn-block">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
         </div>
+
                 }
     </div>
     @await Html.PartialAsync("Modal/modalVista")
@@ -64,7 +73,7 @@
     }
 
     .boton-crear:hover {
-        background-color: #0056b3;
+        background-color: #287538;
         color: white;
         transition: background-color 0.3s ease;
     }
@@ -114,12 +123,17 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-    function myFunction() {
-        var x = document.getElementById("myInput");
-        if (x.type === "password") {
-            x.type = "text";
+       function togglePassword() {
+        var input = document.getElementById("myInput");
+        var icon = document.getElementById("eyeIcon");
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
         } else {
-            x.type = "password";
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
         }
     }
     // Función para mostrar el modal de confirmación antes de crear el usuario. Llama a la función mostrarModalConfirmacion con los parámetros adecuados.

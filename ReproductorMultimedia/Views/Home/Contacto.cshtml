@@ -4,6 +4,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <div class="container-fluid py-5 px-5 mt-4 bg-white">
     <h1>Contacto</h1>
+    <p>Para cualquier duda o comentario, puedes contactarnos a través del siguiente formulario. Te responderemos lo antes posible.</p>
+
     <form action="/Contacto/FormularioContacto" method="post">
         <div class="mb-3">
             <label for="nombre">Nombre</label>
@@ -23,12 +25,15 @@
         </div>
         <div>
             <button type="submit" class="btn btn-primary shadow-sm">
-                <i class="fa fa-paper-plane me-2"></i> Enviar
+                <i class="fa fa-paper-plane me-2 avion-hover"></i> Enviar
             </button>
+
 
         </div>
     </form>
 </div>
+<link rel="stylesheet" href="~/css/site.css" />
+
 <style>
     .nombre,
     .email,
@@ -39,6 +44,17 @@
 
     input, textarea {
         color: #333;
+    }
+
+    .container-fluid {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    
+
+    button:hover .avion-hover {
+        transform: translate(5px, -5px) scale(0.8);
+        transition: transform 0.3s ease;
     }
 
 </style>

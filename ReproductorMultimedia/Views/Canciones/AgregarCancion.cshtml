@@ -31,69 +31,73 @@
                 @Html.ValidationMessageFor(m => m.Album, "", new { @class = "text-danger" })
             </div>
             <div class="form-group col-md-6">
-                   <label>Duración (mm:ss)</label>
-        @Html.TextBoxFor(m => m.DuracionTexto, new { @class = "form-control", placeholder = "Ej: 03:30" })
-        @Html.ValidationMessageFor(m => m.DuracionTexto, "", new { @class = "text-danger" })
-   
+                <label>Duración (mm:ss)</label>
+                @Html.TextBoxFor(m => m.DuracionTexto, new { @class = "form-control", placeholder = "Ej: 03:30" })
+                @Html.ValidationMessageFor(m => m.DuracionTexto, "", new { @class = "text-danger" })
+
             </div>
         </div>
         <div class="row" id="fila">
-               
-                <div class="form-group col-md-6">
 
-                    <h6><strong>Género</strong></h6>
-                    <div class="col-md-6">
-
-                        @Html.DropDownListFor(model => model.Genero, 
-                        new SelectList(Enum.GetValues(typeof(Logica.Models.Genero))), 
-                        "-- Selecciona género --", 
-                        new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.Genero, "", new { @class = "text-danger" })
-
-                    </div>
-
-                </div>
-                <div class="form-group col-md-6">
-
-                    <h6><strong>Año</strong></h6>
-                    <div class="col-md-6">
-
-                        @Html.EditorFor(m => m.Year, new { htmlAttributes = new { @class = "form-control", placeholder = "Año" } })
-                        @Html.ValidationMessageFor(model => model.Year, "", new { @class = "text-danger" })
-
-                    </div>
-
-                </div>
-            </div>
-        <div class="row" id="fila">
-                <div class="form-group col-md-6">
-                <label>Archivo MP3</label>
-        <input type="file" name="archivo" class="form-control-file" accept=".mp3" />
-        @Html.ValidationMessageFor(m => m.ArchivoCancion, "", new { @class = "text-danger" })
-   
-        </div>
-                <div class="form-group col-md-6">
-                <label>Carátula</label>
-        <input type="file" name="caratula" class="form-control-file" accept="image/*" />
-        @Html.ValidationMessageFor(m => m.CaratulaAlbum, "", new { @class = "text-danger" })
-   
-        </div>
-        </div>
-        <div class="form-group">
-    @Html.HiddenFor(m => m.idCancion)
-</div>
-        <div class="row" id="fila">
             <div class="form-group col-md-6">
-            <button type="button" class="btn btn-dark boton-subir" onclick="mostrarModalSubir()">Crear</button>
+
+                <h6><strong>Género</strong></h6>
+                <div class="col-md-6">
+
+                    @Html.DropDownListFor(model => model.Genero,
+                    new SelectList(Enum.GetValues(typeof(Logica.Models.Genero))),
+                                "-- Selecciona género --",
+                                new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Genero, "", new { @class = "text-danger" })
 
             </div>
-            <br />
 
-            <div class="col-md-6">
-                @Html.ActionLink("Volver", "Administrador","Usuario")
-            </div>
         </div>
-    }
+        <div class="form-group col-md-6">
+
+            <h6><strong>Año</strong></h6>
+            <div class="col-md-6">
+
+                @Html.EditorFor(m => m.Year, new { htmlAttributes = new { @class = "form-control", placeholder = "Año" } })
+                @Html.ValidationMessageFor(model => model.Year, "", new { @class = "text-danger" })
+
+            </div>
+
+        </div>
+    </div>
+    <div class="row" id="fila">
+        <div class="form-group col-md-6">
+            <label>Archivo MP3</label>
+            <input type="file" name="archivo" class="form-control-file" accept=".mp3" />
+            @Html.ValidationMessageFor(m => m.ArchivoCancion, "", new { @class = "text-danger" })
+
+        </div>
+        <div class="form-group col-md-6">
+            <label>Carátula</label>
+            <input type="file" name="caratula" class="form-control-file" accept="image/*" />
+            @Html.ValidationMessageFor(m => m.CaratulaAlbum, "", new { @class = "text-danger" })
+
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.HiddenFor(m => m.idCancion)
+    </div>
+    <div class="row" id="fila">
+        <div class="form-group col-md-6">
+            <a id="botonCrear" href="@Url.Action("AgregarCancion", "Canciones")" class="btn btn-link">
+                <i class="fa-solid fa-upload" style="color:white;"></i> Subir Canción
+            </a>
+
+        </div>
+        <br />
+
+        <div class="col-md-3">
+            <a href="@Url.Action("Administrador", "Usuario")" class="btn btn-secondary btn-block">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+        }
     @await Html.PartialAsync("Modal/modalVista")
 
 </div>
@@ -101,6 +105,21 @@
 <!--Vemos la vista previa de la carátula para asegurarnos que es la que queremos subir-->
 <img id="previewCaratula" src="#" style="display:none; width: 120px; height: 120px; object-fit:cover;" />
 
+<style>
+    #botonCrear {
+        display: inline-block;
+        background-color: #3EB054;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        #botonCrear:hover {
+            background-color: #338F44;
+            text-decoration: none;
+        }
+</style>
 <script>
     document.querySelector("input[name='caratula']").addEventListener("change", function (e) {
         const file = e.target.files[0];

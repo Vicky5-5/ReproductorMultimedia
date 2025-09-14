@@ -4,12 +4,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Login</h1>
-<br />
 <canvas id="mouseTrailCanvas"></canvas> <!--Añadimos un canvas al fondo para la animación-->
 
-<div class="card justify-content-center">
-    <br />
+<div class="card justify-content-center mt-5">
+    <h1>Login</h1>
+
+    <hr />
 
     @using (Html.BeginForm("Entrar", "Login", FormMethod.Post, new { @name = "formLogin", autocomplete = "off" }))
     {
@@ -28,19 +28,21 @@
                 <div class="col-md-12">
                     @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Contraseña", type = "password", id = "myInput", autocomplete = "off" } })
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-                    <br />
-                    <input type="checkbox" id="toggle" class="offscreen" onclick="myFunction()">
-                    <label for="toggle" class="switch">
-
-                    </label>
+                    <span class="position-absolute" style="top: 10px; right: 30px; cursor: pointer;" onclick="togglePassword()">
+                        <i id="eyeIcon" class="fa fa-eye"></i>
+                    </span>
                 </div>
             </div>
-            <h6>¿No tienes cuenta? </h6>@Html.ActionLink("Regístrate", "Registro", "Login")
+            <h6 class="ms-5">¿No tienes cuenta? </h6><span class="ms-5">@Html.ActionLink("Regístrate", "Registro", "Login")</span>
 
 
-            <div class="boton form-group col-md-12 text-center mt-3">
-                <button type="submit" class="btn btn-dark">Entrar</button>
+            <div class="boton form-group col-md-12 text-left mt-3 ms-5">
+                <button type="submit" class="btn btn-dark shadow-sm">
+                    <i class="fa fa-sign-in" aria-hidden="true"></i>
+                    Entrar
+                </button>
             </div>
+
         </div>
         @await Html.PartialAsync("Modal/modalVista")
 
@@ -113,12 +115,18 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-    function myFunction() {
-        var x = document.getElementById("myInput");
-        if (x.type === "password") {
-            x.type = "text";
+    //Función para mostrar u ocultar la contraseña
+       function togglePassword() {
+        var input = document.getElementById("myInput");
+        var icon = document.getElementById("eyeIcon");
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
         } else {
-            x.type = "password";
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
         }
     }
     //Obtenemos el canvas y su contexto

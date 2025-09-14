@@ -4,76 +4,88 @@
     ViewData["Title"] = "Delete";
 }
 
-<h1>Eliminar Usuario</h1>
-<h3>¿Está seguro de que desea eliminar este usuario?</h3>
+<div class="container d-flex justify-content-center">
+    <div class="card p-4 shadow mt-5" style="width: 700px;">
 
-<div class="mt-4">
-    <h4>Información del Usuario</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
+    <h1>Eliminar Usuario</h1>
+    <h3>¿Está seguro de que desea eliminar este usuario?</h3>
 
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
+        <h4>Información del Usuario</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Nombre)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Nombre)
+            </dd>
 
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-        <dd class="col-sm-9">
-            @{
-                var passwordLength = Model?.Password?.Length ?? 0;
-                var maskedPassword = passwordLength > 0 ? new string('*', passwordLength) : "(Sin contraseña)";
-            }
-            @maskedPassword
-        </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
 
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
-        <dd class="col-sm-9">
-            @(Model.Estado ? "Activo" : "Inactivo")
-        </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Password)
+            </dt>
+            <dd class="col-sm-9">
+                @{
+                    var passwordLength = Model?.Password?.Length ?? 0;
+                    var maskedPassword = passwordLength > 0 ? new string('*', passwordLength) : "(Sin contraseña)";
+                }
+                @maskedPassword
+            </dd>
 
-        <dt class="col-sm-3">
-            Fecha de Baja
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.fechaBaja)
-        </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Estado)
+            </dt>
+            <dd class="col-sm-9">
+                @(Model.Estado ? "Activo" : "Inactivo")
+            </dd>
 
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.Administrador)
-        </dt>
-        <dd class="col-sm-9">
-            @(Model.Administrador ? "Sí" : "No")
-        </dd>
-    </dl>
+            <dt class="col-sm-3">
+                Fecha de Baja
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.fechaBaja)
+            </dd>
 
-    @using (Html.BeginForm("DeleteConfirmed", "Usuario", FormMethod.Post, new { name = "formEliminarUsuario" }))
-    {
-        @Html.AntiForgeryToken()
-        @Html.HiddenFor(model => model.idUsuario)
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Administrador)
+            </dt>
+            <dd class="col-sm-9">
+                @(Model.Administrador ? "Sí" : "No")
+            </dd>
+        </dl>
 
-        <div class="form-group mt-3">
-            <button type="button" class="btn btn-danger" onclick="mostrarModalEliminar()">
-                <i class="fa-solid fa-trash"></i> Eliminar
-            </button>
+        @using (Html.BeginForm("DeleteConfirmed", "Usuario", FormMethod.Post, new { name = "formEliminarUsuario" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.idUsuario)
 
-            @Html.ActionLink("Cancelar", "Administrador", null, new { @class = "btn btn-secondary ml-2" })
-        </div>
-    }
-    @await Html.PartialAsync("Modal/modalVista")
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-danger" onclick="mostrarModalEliminar()">
+                    <i class="fa-solid fa-trash"></i> Eliminar
+                </button>
 
+                <div class="col-md-3">
+                    <a href="@Url.Action("Administrador", "Usuario")" class="btn btn-secondary btn-block">
+                        <i class="fa-solid fa-x"></i> Cancelar
+                    </a>
+                </div>
+            </div>
+        }
+        @await Html.PartialAsync("Modal/modalVista")
+    </div>
 </div>
+<style>
+    .card {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+    }
+</style>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <script>
     function myFunction() {

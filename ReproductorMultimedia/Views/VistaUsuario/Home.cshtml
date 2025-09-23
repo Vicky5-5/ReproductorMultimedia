@@ -19,6 +19,17 @@
 <a href="@Url.Action("FavoritasUsuario", "VistaUsuario")" class="btn-favoritas mb-4">
     <i class="fa-solid fa-heart"></i> Ver favoritas
 </a>
+<button class="btn-lista mb-4" data-bs-toggle="modal" data-bs-target="#crearListaReproduccion">
+    <i class="fa-solid fa-plus"></i> Crear Lista Personalizada
+</button>
+@* <button class="btn-ver-lista" data-bs-toggle="modal" data-bs-target="#crearListaReproduccion">
+    <i class="fa-solid fa-music	"></i> Ver Listas Personalizadas
+</button> *@
+<a href="@Url.Action("VerTodasLasListas", "VistaUsuario")" class="btn-ver-lista mb-4">
+    <i class="fa-solid fa-music"></i> Ver Listas Personalizadas
+</a>
+
+
 <!-- Para crear una barra de búsqueda. Esta barra solo busca el nombre de las canciones -->
 <form id="formularioBusqueda" class="busqueda-container">
     <!-- Contenedor que incluye el input de búsqueda y el botón con la lupa -->
@@ -115,12 +126,13 @@
                         <i class="fa-solid fa-heart"></i>
                     </button>
 
-
                 </td>
+
 
             </tr>
         }
     </tbody>
+
 </table>
 <a href="@Url.Action("DarseBaja", "VistaUsuario")" class="btn btn-outline-danger">
     <i class="fa-solid fa-user-slash"></i> Darse de baja
@@ -164,6 +176,22 @@
         color: #C73636;
     }
 
+    .lista {
+        margin: 0 10px;
+        font-size: 22px;
+        text-decoration: none;
+        transition: transform 0.2s ease;
+        display: inline-block;
+        color: grey;
+    }
+
+        .lista:hover {
+            transform: scale(1.2);
+            color: #72E877;
+        }
+
+
+
     .disco {
         width: 120px;
         height: 120px;
@@ -183,7 +211,8 @@
             object-fit: cover;
             z-index: 1;
         }
-    <!-- Aquí se personaliza la barra de audio-- >
+    /* Aquí se personaliza la barra de audio*/
+
     .mejs__container {
         background-color: #171717;
         border: 1px solid #ddd;
@@ -232,6 +261,69 @@
             .btn-favoritas:hover i {
                 transform: rotate(15deg);
             }
+
+    .btn-lista {
+        display: inline-block;
+        background-color: #7BBD3E;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        box-shadow: 0 4px 10px rgba(38, 92, 19, 0.3);
+    }
+
+        .btn-lista i {
+            margin-right: 8px;
+            transition: transform 0.4s ease;
+        }
+
+        .btn-lista:hover {
+            background-color: #7BBD3E; /* tono más oscuro */
+            transform: scale(1.05);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+            text-decoration: none;
+            color: white;
+        }
+
+            .btn-lista:hover i {
+                transform: rotate(15deg);
+            }
+
+    .btn-ver-lista {
+        display: inline-block;
+        background-color: #3DB6BF;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        box-shadow: 0 4px 10px rgba(25, 69, 74, 0.3);
+    }
+
+        .btn-ver-lista i {
+            margin-right: 8px;
+            transition: transform 0.4s ease;
+        }
+
+        .btn-ver-lista:hover {
+            background-color: #2E878F; /* tono más oscuro al pasar el ratón */
+            transform: scale(1.05);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            color: white;
+        }
+
+            .btn-ver-lista:hover i {
+                transform: rotate(15deg);
+            }
+
     /*Estilos de la barra de búsqueda*/
     .lupa {
         background: none;
@@ -290,6 +382,8 @@
 <form id="tokenForm" method="post">
     @Html.AntiForgeryToken()
 </form>
+@await Html.PartialAsync("Modal/crearListaReproduccion", Model)
+
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -416,6 +510,51 @@
                     }
                 });
             });
+        });
+
+        // Para añadir canciones a una lista personalizada
+            document.addEventListener("DOMContentLoaded", function () {
+                /*Buscamos el formulario por el id*/
+            const form = document.getElementById("formCrearLista");
+            /*Comprobamos que eiste el formulario*/
+            if (form) {
+                /*Añadimos el evento submit al formulario*/
+                form.addEventListener("submit", function (e) {
+                    e.preventDefault();
+
+                    const nombreLista = document.getElementById("nombreLista").value;
+                    const select = document.getElementById("cancionesSeleccionadas");
+                    const idsCanciones = Array.from(select.selectedOptions).map(opt => parseInt(opt.value));
+
+                    /*Enviamos los datos al servidor*/
+
+                    fetch('/VistaUsuario/CrearLista', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                                body: JSON.stringify({
+                                nombreLista: nombreLista,
+                                idsCanciones: idsCanciones
+                        })
+
+                    })
+                    /*Se procesa la respuesta*/
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.mensaje);
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('crearListaReproduccion')); /*Llamamos al modal que creamos para crear la lista de reproducción*/
+                            modal.hide();
+                        } else {
+                            alert(data.mensaje);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error al crear la lista:", error);
+                    });
+                });
+            }
         });
 
     </script>

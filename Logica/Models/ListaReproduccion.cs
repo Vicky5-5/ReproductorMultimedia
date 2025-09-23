@@ -7,6 +7,7 @@ namespace Logica.Models
     public class ListaReproduccion
     {
         [Key]
+        public int idListaNoGuid { get; set; }
         public Guid idLista { get; set; }
 
         [Required]

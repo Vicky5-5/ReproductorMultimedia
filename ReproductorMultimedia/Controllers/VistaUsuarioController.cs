@@ -1,4 +1,7 @@
-﻿using Logica.Managers;
+﻿using Logica.Contexto;
+using Logica.Managers;
+using Logica.Modelos_Auxiliares;
+using Logica.Models;
 using Logica.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -120,7 +123,84 @@ namespace ReproductorMultimedia.Controllers
             return RedirectToAction("Login", "Login");
         }
 
+        public ActionResult ListaPropia()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CrearListaNueva(string nombreLista, List<int> idsCanciones)
+        {
+            int? idUsuario = _loginManager.GetCurrentUserId();
+            if (!idUsuario.HasValue)
+                return RedirectToAction("Login", "Login");
 
+            if (string.IsNullOrEmpty(nombreLista) || idsCanciones == null || !idsCanciones.Any())
+            {
+                ViewBag.Error = "Nombre de lista y canciones son obligatorios.";
+                return View("Home");
+            }
+
+            try
+            {
+                var listaVM = ListaReproduccionViewModel.CrearLista(idUsuario.Value, nombreLista, idsCanciones);
+                ViewBag.Mensaje = "Lista creada con éxito.";
+                return View("ListaPropia", listaVM);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = $"Error al crear lista: {ex.Message}";
+                return View("CrearLista");
+            }
+        }
+        public IActionResult VerListaReproduccion()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult VerTodasLasListas()
+        {
+            int? idUsuario = _loginManager.GetCurrentUserId();
+            if (!idUsuario.HasValue)
+                return RedirectToAction("Login", "Login");
+
+            var listas = ListaReproduccionViewModel.ObtenerListasPorUsuario(idUsuario.Value);
+            return View("ListaPropia", listas);
+        }
+
+
+        [HttpPost]
+        // Se usa [FromBody] para que ASP.NET Core deserialice automáticamente los datos JSON enviados desde el cliente.
+        // Usamos un objeto auxiliar para agrupar varios datos en una sola estructura, evitando múltiples parámetros y una URL sobrecargada.
+        public IActionResult CrearLista([FromBody] ListaReproduccionAuxiliar auxiliar)
+        {
+            int? idUsuario = _loginManager.GetCurrentUserId();
+            //Comprobamos que el usuario esté logueado
+            if (!idUsuario.HasValue)
+                return Json(new { success = false, mensaje = "Usuario no autorizado." });
+            //Comprobamos que los datos estén completos
+            if (string.IsNullOrWhiteSpace(auxiliar.nombreLista) || auxiliar.idsCanciones == null || !auxiliar.idsCanciones.Any())
+                return Json(new { success = false, mensaje = "Datos incompletos." });
+
+            try
+            {
+                //Creamos la lista
+                var listaVM = ListaReproduccionViewModel.CrearLista(idUsuario.Value, auxiliar.nombreLista, auxiliar.idsCanciones);
+                return View("ListaPropia");
+            }
+            catch (Exception ex)
+            {
+                return View("Home");
+            }
+        }
+        [HttpPost]
+        public IActionResult BorrarLista(Guid idLista)
+        {
+            var usuario = UsuarioViewModel.GetUsuario(_loginManager.GetCurrentUserId() ?? 0);
+            ListaReproduccionViewModel.BorrarLista(usuario.idUsuario, idLista);
+            return View("Home");
+        }
 
     }
 }

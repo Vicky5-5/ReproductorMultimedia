@@ -1,0 +1,31 @@
+@model IEnumerable<Logica.ViewModels.CancionesViewModel>
+<div class="modal fade" id="crearListaReproduccion" tabindex="-1" aria-labelledby="crearListaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formCrearLista">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="crearListaLabel">Crear nueva lista</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombreLista" class="form-label">Nombre de la lista</label>
+                        <input type="text" class="form-control" id="nombreLista" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="cancionesSeleccionadas" class="form-label">Canciones</label>
+                        <select multiple class="form-select" id="cancionesSeleccionadas">
+                            @foreach (var item in Model)
+                            {
+                                <option value="@item.idCancion">@item.Titulo - @item.Artista</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Crear lista</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

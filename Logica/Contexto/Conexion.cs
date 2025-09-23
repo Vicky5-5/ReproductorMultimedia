@@ -25,6 +25,22 @@ namespace Logica.Contexto
                 optionsBuilder.UseSqlServer(connectionString);
             }
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ListaReproduccion>()
+                .HasOne(l => l.Cancion)
+                .WithMany()
+                .HasForeignKey(l => l.idCancion)
+                .HasConstraintName("FK_ListaReproduccion_Canciones_idCancion");
+
+            modelBuilder.Entity<ListaReproduccion>()
+                .HasOne(l => l.Usuario)
+                .WithMany()
+                .HasForeignKey(l => l.idUsuario)
+                .HasConstraintName("FK_ListaReproduccion_Usuarios_idUsuario");
+        }
+
+
 
 
     }

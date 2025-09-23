@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Logica.ViewModels.ListaReproduccionViewModel>
+
+@{
+    ViewData["Title"] = "VerListaReproduccion";
+}
+
+<h1>Ver Listas</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.idLista)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreLista)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaCreacion)
+            </th>           
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.idLista)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreLista)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fechaCreacion)
+            </td>          
+            <td>
+                    <a id="icono" href="@Url.Action("Delete", new { id = item.idLista })">
+                        <i style="color: red; font-size: 21px;" class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+        </tr>
+}
+    </tbody>
+</table>

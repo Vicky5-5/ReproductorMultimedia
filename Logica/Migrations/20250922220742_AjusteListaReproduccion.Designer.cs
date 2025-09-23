@@ -4,6 +4,7 @@ using Logica.Contexto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Logica.Migrations
 {
     [DbContext(typeof(Conexion))]
-    partial class ConexionModelSnapshot : ModelSnapshot
+    [Migration("20250922220742_AjusteListaReproduccion")]
+    partial class AjusteListaReproduccion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,14 +110,14 @@ namespace Logica.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("idListaNoGuid"));
 
-                    b.Property<int?>("CancionesidCancion")
+                    b.Property<int>("CancionidCancion")
                         .HasColumnType("int");
 
                     b.Property<string>("NombreLista")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UsuarioidUsuario")
+                    b.Property<int>("UsuarioidUsuario")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("cancionAnadida")
@@ -134,13 +137,9 @@ namespace Logica.Migrations
 
                     b.HasKey("idListaNoGuid");
 
-                    b.HasIndex("CancionesidCancion");
+                    b.HasIndex("CancionidCancion");
 
                     b.HasIndex("UsuarioidUsuario");
-
-                    b.HasIndex("idCancion");
-
-                    b.HasIndex("idUsuario");
 
                     b.ToTable("ListaReproduccion");
                 });
@@ -204,27 +203,17 @@ namespace Logica.Migrations
 
             modelBuilder.Entity("Logica.Models.ListaReproduccion", b =>
                 {
-                    b.HasOne("Logica.Models.Canciones", null)
-                        .WithMany("ListaReproduccion")
-                        .HasForeignKey("CancionesidCancion");
-
-                    b.HasOne("Logica.Models.Usuario", null)
-                        .WithMany("ListasReproduccion")
-                        .HasForeignKey("UsuarioidUsuario");
-
                     b.HasOne("Logica.Models.Canciones", "Cancion")
-                        .WithMany()
-                        .HasForeignKey("idCancion")
+                        .WithMany("ListaReproduccion")
+                        .HasForeignKey("CancionidCancion")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_ListaReproduccion_Canciones_idCancion");
+                        .IsRequired();
 
                     b.HasOne("Logica.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("idUsuario")
+                        .WithMany("ListasReproduccion")
+                        .HasForeignKey("UsuarioidUsuario")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_ListaReproduccion_Usuarios_idUsuario");
+                        .IsRequired();
 
                     b.Navigation("Cancion");
 

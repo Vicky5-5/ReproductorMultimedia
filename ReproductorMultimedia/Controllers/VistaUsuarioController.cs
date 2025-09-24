@@ -124,7 +124,7 @@ namespace ReproductorMultimedia.Controllers
         }
 
         public ActionResult ListaPropia()
-        {
+        {            
             return View();
         }
         [HttpPost]
@@ -202,5 +202,25 @@ namespace ReproductorMultimedia.Controllers
             return View("Home");
         }
 
+        //public IActionResult VerContenidoListaReproduccion()
+        //{
+        //               return View();
+        //}
+        [HttpGet]
+        public IActionResult VerContenidoListaReproduccion(Guid idLista)
+        {
+            int? idUsuario = _loginManager.GetCurrentUserId();
+            //Validamos antes idUsuario para que no sea null
+            if (!idUsuario.HasValue)
+                return RedirectToAction("Login", "Login");
+
+            var listado = ListaReproduccionViewModel.ListarCancionesDeUnaLista(idLista, idUsuario.Value);
+
+            string nombreLista = ListaReproduccionViewModel.ObtenerNombreLista(idLista, idUsuario.Value);
+
+            ViewBag.NombreLista = nombreLista;
+
+            return View(listado);
+        }
     }
 }

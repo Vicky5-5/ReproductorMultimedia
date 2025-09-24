@@ -24,7 +24,9 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.NombreLista)
+                    <a href="@Url.Action("VerContenidoListaReproduccion", "VistaUsuario", new { idLista = item.idLista })">
+                        @Html.DisplayFor(modelItem => item.NombreLista)
+                    </a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.fechaCreacion)

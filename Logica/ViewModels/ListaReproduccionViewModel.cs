@@ -87,8 +87,22 @@ namespace Logica.ViewModels
             ListasReproduccionManager.BorrarLista(idUsuario, idLista);
         }
 
+        public static List<CancionesViewModel> ListarCancionesDeUnaLista(Guid idLista, int idUsuario)
+        {
+            var listas = ListasReproduccionManager.ObtenerCancionesPorLista(idLista, idUsuario);
 
+            List<CancionesViewModel> listasVM = new List<CancionesViewModel>();
+            foreach (var lista in listas)
+            {
+                CancionesViewModel model = new CancionesViewModel(lista);
+                listasVM.Add(model);
+            }
+            return listasVM;
+        }
 
-
+        public static String ObtenerNombreLista(Guid idLista, int idUsuario)
+        {
+            return ListasReproduccionManager.ObtenerNombreLista(idLista, idUsuario);
+        }
     }
 }

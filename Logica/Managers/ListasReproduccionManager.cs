@@ -65,6 +65,27 @@ namespace Logica.Managers
                          .ToList();
             }
         }
+        public static List<Canciones> ObtenerCancionesPorLista(Guid idLista, int idUsuario)
+        {
+            using (var db = new Conexion())
+            {
+                return db.ListaReproduccion
+                         .Where(l => l.idLista == idLista && l.idUsuario == idUsuario)
+                         .Select(l => l.Cancion)
+                         .ToList();
+            }
+        }
+
+        public static String ObtenerNombreLista(Guid idLista, int idUsuario)
+        {
+            using (var db = new Conexion())
+            {
+                var lista = db.ListaReproduccion
+                              .FirstOrDefault(l => l.idLista == idLista && l.idUsuario == idUsuario);
+                return lista?.NombreLista;
+            }
+        }
+
 
         public static void BorrarLista(int idUsuario, Guid idLista)
         {

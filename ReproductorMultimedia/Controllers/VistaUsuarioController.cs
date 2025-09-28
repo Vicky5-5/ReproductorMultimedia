@@ -123,10 +123,6 @@ namespace ReproductorMultimedia.Controllers
             return RedirectToAction("Login", "Login");
         }
 
-        public ActionResult ListaPropia()
-        {            
-            return View();
-        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CrearListaNueva(string nombreLista, List<int> idsCanciones)
@@ -145,7 +141,7 @@ namespace ReproductorMultimedia.Controllers
             {
                 var listaVM = ListaReproduccionViewModel.CrearLista(idUsuario.Value, nombreLista, idsCanciones);
                 ViewBag.Mensaje = "Lista creada con éxito.";
-                return View("ListaPropia", listaVM);
+                return View("VerTodasLasListas", listaVM);
             }
             catch (Exception ex)
             {
@@ -166,7 +162,7 @@ namespace ReproductorMultimedia.Controllers
                 return RedirectToAction("Login", "Login");
 
             var listas = ListaReproduccionViewModel.ObtenerListasPorUsuario(idUsuario.Value);
-            return View("ListaPropia", listas);
+            return View("VerTodasLasListas", listas);
         }
 
 
@@ -187,7 +183,7 @@ namespace ReproductorMultimedia.Controllers
             {
                 //Creamos la lista
                 var listaVM = ListaReproduccionViewModel.CrearLista(idUsuario.Value, auxiliar.nombreLista, auxiliar.idsCanciones);
-                return View("ListaPropia");
+                return View("VerTodasLasListas");
             }
             catch (Exception ex)
             {

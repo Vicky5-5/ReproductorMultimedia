@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Logica.ViewModels.ListaReproduccionViewModel>
+
+@{
+    ViewData["Title"] = "ListaPropia";
+}
+
+<h1>@ViewBag.NombreLista</h1>
+
+<a id="boton" style="background-color:mediumpurple;" href="@Url.Action("Home", "VistaUsuario")" class="btn btn-link mb-2">
+    <i class="fa-solid fa-arrow-left me-2" style="color:white;"></i> Volver a ver las listas de reproducción
+</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre Lista</th>
+
+
+            <th>Fecha de Creación</th>
+
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="nombreListaFondo">
+                <td>
+                    <a id="nombreLista" href="@Url.Action("VerContenidoListaReproduccion", "VistaUsuario", new { idLista = item.idLista })">
+                        @Html.DisplayFor(modelItem => item.NombreLista)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaCreacion)
+                </td>
+                <td>
+                    <form method="post" action="@Url.Action("BorrarLista", "VistaUsuario", new { idLista = item.idLista })" style="display:inline;">
+                        <button type="submit" class="btn-icono" title="Borrar lista" onclick="return confirm('¿Estás seguro de que quieres borrar esta lista?');">
+                            <i class="fas fa-trash-alt" style="color: red; font-size: 21px;"></i>
+                        </button>
+                    </form>
+
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+<!--Como comparten estilos usaremos la que se usa en vistaUsuario-->
+<link href="~/css/HomeVistaUsuario/estilosHomeVistaUsuario.css" rel="stylesheet" />
+<style>
+    #boton {
+        display: inline-block;
+        background-color: mediumpurple;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+    }
+
+        #boton i {
+            margin-right: 8px;
+            transition: transform 0.4s ease;
+        }
+
+        #boton:hover {
+            background-color: #7b3fd0;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            text-decoration: none;
+        }
+
+            #boton:hover i {
+                transform: rotate(20deg);
+            }
+
+    #nombreLista {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .nombreListaFondo:hover {
+        text-decoration: none;
+        color: #333;
+        background-color: #9ECAFF;
+        transition: background-color 0.3s ease;
+    }
+</style>

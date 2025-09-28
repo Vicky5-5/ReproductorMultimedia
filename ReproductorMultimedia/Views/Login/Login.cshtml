@@ -48,70 +48,10 @@
 
     }
 </div>
-<style>
-    /*Nos aseguramos que el canva esté fijo, a pantalla completa y sin inteferir en el formulario*/
-    #mouseTrailCanvas {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: -1;
-        pointer-events: none;
-        display: block;
-    }
-
-    h1 {
-        text-align: center;
-        color: #333;
-    }
-
-    .boton button:hover {
-        background-color: #0056b3;
-        color: white;
-        transition: background-color 0.3s ease;
-    }
-
-    .card {
-        background-color: rgba(255, 255, 255, 0.8);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 35px;
-        height: 15px;
-        background-color: rgba(0, 0, 0, 0.25);
-        border-radius: 22px;
-        transition: all 0.3s;
-    }
-
-        .switch::after {
-            content: '';
-            position: absolute;
-            width: 11px;
-            height: 11px;
-            border-radius: 22px;
-            background-color: white;
-            top: 1px;
-            left: 1px;
-            transition: all 0.3s;
-        }
-
-    input[type='checkbox']:checked + .switch::after {
-        transform: translateX(20px);
-    }
-
-    input[type='checkbox']:checked + .switch {
-        background-color: #7983ff;
-    }
-
-    .offscreen {
-        position: absolute;
-        left: -9999px;
-    }
-</style>
+<link href="~/css/Login/estilosLogin.css" rel="stylesheet" />
+@section Scripts {
+    <script src="~/js/Canvas/mouseTrail.js"></script> <!--Añadimos el script del canvas-->
+}
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
@@ -129,63 +69,6 @@
             icon.classList.add("fa-eye");
         }
     }
-    //Obtenemos el canvas y su contexto
-    const canvas = document.getElementById("mouseTrailCanvas"); //Seleccionamos el id del canva
-    const ctx = canvas.getContext("2d"); //obtiene el contexto 2D para dibujar
-
-    //Ajustamos el tamaño del canvas al tamaño de la ventana
-    canvas.width = window.innerWidth; //ancho de la pantalla
-    canvas.height = window.innerHeight; //alto de la pantalla
-
-    //Redimensionamos el canvas si cambia el tamaño de la pantalla
-    window.addEventListener("resize", () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
-
-    //Creamos las partículas al mover el ratón
-    let particles = []; //Array que guarda cada partícula
-
-    document.addEventListener("mousemove", (e) => {
-        //Creamos varias partículas por movimiento para mayor efecto
-        for (let i = 0; i < 3; i++) {
-            particles.push({
-                x: e.clientX + Math.random() * 10 - 5, //Coordenada x con leve dispersión
-                y: e.clientY + Math.random() * 10 - 5, //Coordenada y con leve dispersión
-                radius: Math.random() * 5 + 2, //Para el radio aleatorio entre 2 y 7
-                alpha: 1, //La opacidad incial, que al principio es visible
-                color: `rgba(121, 131, 255, 1)` //color de las partículas
-            });
-        }
-    });
-
-    //Dibujamos las partículas
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height); //Limpia cada frame para evitar que las partículas se acumulen
-
-        //Recorremos cada partícula y la dibujamos (de atrás hacia adelante para evitar errores al eliminar)
-        for (let i = particles.length - 1; i >= 0; i--) {
-            const p = particles[i];
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            ctx.fillStyle = p.color.replace("1)", `${p.alpha})`); //Usa el color con la opacidad actual
-            ctx.fill();
-
-            //Animamos la desaparición de las partículas
-            p.alpha -= 0.02;
-            p.radius -= 0.1;
-
-            //Eliminamos la partícula si ya no es visible
-            if (p.alpha <= 0 || p.radius <= 0) {
-                particles.splice(i, 1);
-            }
-        }
-
-        //llama a draw() de nuevo en el siguiente frame
-        requestAnimationFrame(draw);
-    }
-
-    draw(); //Iniciamos la animación
 
 
     /*Modal que muestra los intentos y cuando estás bloqueado*/

@@ -156,7 +156,7 @@ namespace Logica.Managers
                 db.SaveChanges();
             }
         }
-        public static void ActualizarReproducciones(int id)
+        public static Canciones ActualizarReproducciones(int id)
         {
             using (var db = new Conexion())
             {
@@ -166,8 +166,10 @@ namespace Logica.Managers
                     cancion.NumeroReproducciones++;
                     db.SaveChanges();
                 }
+                return cancion;
             }
         }
+
         public static List<CancionesViewModel> ListSongsConLikes(int? idUsuario)
         {
             using (var db = new Conexion())

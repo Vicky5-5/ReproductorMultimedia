@@ -76,7 +76,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+            <tr>                
                 <td>
                     <div class="disco" id="disco-@item.idCancion">
                         <img src="@item.RutaCaratulaAlbum" alt="Carátula" />
@@ -136,10 +136,9 @@
     <i class="fa-solid fa-user-slash"></i> Darse de baja
 </a>
 
-<!-- #region Estilos -->
+
 <link href="~/css/HomeVistaUsuario/estilosHomeVistaUsuario.css" rel="stylesheet" />
-<!-- #endregion -->
-<!-- #region JavaScript -->
+
 
 <form id="tokenForm" method="post">
     @Html.AntiForgeryToken()
@@ -153,6 +152,41 @@
     <script src="~/js/HomeVistaUsuario/audio-player.js"></script>
     <script src="~/js/HomeVistaUsuario/busqueda.js"></script>
     <script src="~/js/HomeVistaUsuario/listas-personalizadas.js"></script>
+    
+    // Script para manejar la actualización de reproducciones vía AJAX
+    <script>
+    $(document).ready(function () {
+        // Seleccionamos todos los elementos de audio
+            $("audio").on("play", function () {
+                //Con el this cogemos el id de la cancion (audio-1, audio-2. depende de su ID)
+            const id = parseInt(this.id.split("-")[1], 10); //Dividimos la cadena en dos partes ("audio", "1"). El [1] toma el número y con el Parseint covertimos la cadena "1" en entero (int)
+            
+            //Busca el valor oculto que contiene el Token deanti-falsificación. El token es obligatorio para los post que modifican datos
+            const token = $('input[name="__RequestVerificationToken"]').val();
+            
+            //Lanzamos una solicitud de Ajax (que es un HTTP asíncrona) al servidor sin recargar la página
+                $.ajax({
+                    url: '/Canciones/ActualizarReproducciones', //Es la URl dónde enviamos la solicitud
+                    type: 'POST', //El tipo de solicitud en el controlador
+                    //Los datos que enviamos a la petición (el antiForfery y el idCancion)
+                    data: {
+                        __RequestVerificationToken: token,
+                        id: id
+                    },
+                    //Si la petición fue un éxito manda una petición exitosa
+                    success: function (response) {
+                            //Si es true cambia el texto visible de las reproducciones por int
+                        if (response.success) {
+                            $("#reproducciones-" + response.idCancion).text(response.reproduccionesTotales);
+                        } else {
+                            console.warn("No se pudo actualizar la reproducción:", response.mensaje);
+                        }
+                    },
+                    error: function () {
+                        console.error("Error al llamar al servidor.");
+                    }
+                });
+            });
+        });
+    </script>
 }
-
-<!-- #endregion -->

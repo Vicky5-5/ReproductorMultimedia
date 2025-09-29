@@ -59,7 +59,6 @@ namespace Logica.ViewModels
         }
         public static CancionesViewModel ObtenerCancionView(int id)
         {
-            //Se guarda el producto de la base de datos, del objeto producto y se retorna el producto entero
             var nuevo = CancionesManager.ObtenerCancion(id);
             CancionesViewModel model = new CancionesViewModel(nuevo);
 

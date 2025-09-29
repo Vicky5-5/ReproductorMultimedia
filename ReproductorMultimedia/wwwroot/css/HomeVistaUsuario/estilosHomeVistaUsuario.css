@@ -170,7 +170,7 @@
     }
 
     .btn-ver-lista:hover {
-        background-color: #2E878F; /* tono más oscuro al pasar el ratón */
+        background-color: #2E878F;
         transform: scale(1.05);
         box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
         text-decoration: none;

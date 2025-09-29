@@ -22,12 +22,15 @@ namespace Logica.Models
         [Required]
         public string Album { get; set; }
         [Required]
-        [RegularExpression(@"^([0-5]?\d):([0-5]\d)$", ErrorMessage = "Duración debe tener formato mm:ss")]
 
         public int Year { get; set; }
-        public TimeSpan Duracion { get; set; }
-        public Genero Genero { get; set; }
+        [Required]
+        [RegularExpression(@"^([0-5]?\d):([0-5]\d)$", ErrorMessage = "Duración debe tener formato mm:ss")]
 
+        public TimeSpan Duracion { get; set; }
+        [Required]
+        public Genero Genero { get; set; }
+        [Required]
         public int NumeroReproducciones { get; set; }=0;
         public int NumeroLikes { get; set; } = 0;
         [NotMapped]

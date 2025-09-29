@@ -1,0 +1,91 @@
+﻿@model Logica.ViewModels.CancionesViewModel
+
+@{
+    ViewData["Title"] = "Detalles";
+}
+
+<h1>Detalles</h1>
+
+<div class="card p-4 shadow w-100">
+    <h4>Canción</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-4">
+            Título
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Titulo)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Artista)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Artista)
+        </dd>
+        <dt class="col-sm-4">
+            Álbum
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Album)
+        </dd>
+        <dt class="col-sm-4">
+            Año
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+        <dt class="col-sm-4">
+            Duración
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Duracion)
+        </dd>
+        <dt class="col-sm-4">
+            Género
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Genero)
+        </dd>
+        <dt class="col-sm-4">
+            Número de Reproducciones
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NumeroReproducciones)
+        </dd>
+        <dt class="col-sm-4">
+            Número de likes
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NumeroLikes)
+        </dd>
+        <dt class="col-sm-4">
+            Carátula
+        </dt>
+        <dd class="col-sm-10">
+            <img src="@Model.RutaCaratulaAlbum" alt="Carátula" style="max-width: 200px;" />
+        </dd>
+
+
+
+    </dl>
+    <div class="mt-4 d-flex justify-content-start gap-3">
+        <a href="@Url.Action("Edit", new { id = Model.idCancion })" class="btn btn-warning shadow-sm">
+            <i class="fa-solid fa-pen-to-square me-2"></i> Editar
+        </a>
+        <a href="@Url.Action("Administrador", "Usuario")" class="btn btn-secondary shadow-sm">
+            <i class="fa-solid fa-arrow-left me-2"></i> Volver
+        </a>
+    </div>
+</div>
+
+<style>
+    .card {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+    }
+
+        .card dl {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+</style>

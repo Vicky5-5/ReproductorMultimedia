@@ -16,6 +16,16 @@ namespace ReproductorMultimedia.Controllers
             return View(lista);
         }
 
+        public IActionResult Detalles(int id)
+        {
+            var cancion = CancionesViewModel.ObtenerCancionView(id);
+            if (cancion == null)
+            {
+                return NotFound();
+            }
+            return View(cancion);
+        }
+
         // GET: Canciones/AgregarCancion
         public IActionResult AgregarCancion()
         {

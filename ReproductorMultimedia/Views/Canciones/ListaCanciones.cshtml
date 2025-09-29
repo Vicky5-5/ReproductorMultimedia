@@ -3,11 +3,15 @@
 @{
     ViewData["Title"] = "ListaCanciones";
 }
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<!--He añadido una nueva libreria llamada MediaElement.js para la personalización de la barra de reproducción y un mejor manejo-->
+<!-- CSS de MediaElement.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.16/mediaelementplayer.min.css">
 
+<!--JS de MediaElement.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.16/mediaelement-and-player.min.js"></script>
 <h1>Listado de Canciones</h1>
 
-<a id="boton" style="background-color:mediumpurple;" href="@Url.Action("Administrador", "Usuario")" class="btn btn-link">
+<a id="boton" href="@Url.Action("Administrador", "Usuario")" class="mb-4">
     <i class="fa-solid fa-arrow-left me-2" style="color:black;"></i> Volver a la administración de usuarios
 </a>
 <br />
@@ -46,27 +50,19 @@
         @foreach (var item in Model)
         {
             <tr>
-                <form id="form-reproduccion-@item.idCancion"
-                      asp-action="ActualizarReproducciones"
-                      asp-controller="Canciones"
-                      method="post"
-                      target="hiddenFrame"
-                      style="display: none;">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="id" value="@item.idCancion" />
-                </form>
-
-
+               
                 <td>
                     <div class="disco" id="disco-@item.idCancion">
                         <img src="@item.RutaCaratulaAlbum" alt="Carátula" />
                     </div>
                 </td>
                 <td>
-                    <audio controls id="audio-@item.idCancion" style="width: 250px;">
-                        <source src="@item.RutaArchivo" type="audio/mpeg" />
-                        Tu navegador no soporta la reproducción de audio.
+                    <!-- Cambiamos el estadar de Visual Studio por el de MediaElement.js -->
+                    <audio id="audio-@item.idCancion" class="mejs-player" controls preload="none">
+                        <!-- El preload="none" evita cargar el audio automáticamente hasta que el usuario interactúe con él -->
+                        <source src="@item.RutaArchivo" type="audio/mp3" />
                     </audio>
+
                 </td>
 
                 <td>
@@ -90,9 +86,8 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.NumeroLikes)
                 </td>
-                <td>
-
-                    <a class="icono" href="@Url.Action("Details", new { id = item.idCancion })">
+                <td style="white-space: nowrap;">
+                    <a class="icono" href="@Url.Action("Detalles", new { id = item.idCancion })" style="margin-right: 10px;">
                         <i style="color: green; font-size: 21px;" class="fa-regular fa-file-lines"></i>
                     </a>
                     |
@@ -100,11 +95,44 @@
                         <i style="color: red; font-size: 21px;" class="fas fa-trash-alt"></i>
                     </a>
                 </td>
+
             </tr>
         }
     </tbody>
 </table>
 
+<style>
+    #boton {
+        background-color: #82F5F3;
+        color: black;
+        padding: 10px 20px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s, color 0.3s, transform 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        #boton:hover {
+            background-color: #2E878F;
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+        }
+
+        #boton i {
+            transition: transform 0.4s ease;
+        }
+
+        #boton:hover i {
+            transform: rotate(15deg);
+        }
+
+        </style>
 
 <link href="~/css/HomeVistaUsuario/estilosHomeVistaUsuario.css" rel="stylesheet" />
 
@@ -117,21 +145,8 @@
 
     <script src="~/js/HomeVistaUsuario/audio-player.js"></script>
     <script src="~/js/HomeVistaUsuario/busqueda.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const audios = document.querySelectorAll("audio");
+    <script src="~/js/HomeVistaUsuario/actualizacionReproducciones.js"></script>
 
-            audios.forEach(audio => {
-                audio.addEventListener("play", function () {
-                    const id = this.id.split("-")[1]; // obtiene el idCancion
-                    const form = document.getElementById("form-reproduccion-" + id);
-                    if (form) {
-                        form.submit(); // envía el formulario POST
-                    }
-                });
-            });
-        });
-    </script>
 
 }
 

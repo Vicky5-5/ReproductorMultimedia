@@ -2,20 +2,24 @@
 using Logica.Managers;
 using Logica.Modelos_Auxiliares;
 using Logica.Models;
+using Logica.Spotify;
 using Logica.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using NuGet.Protocol.Plugins;
+using System.Net.Http.Headers;
 
 namespace ReproductorMultimedia.Controllers
 {
     public class VistaUsuarioController : Controller
     {
         private readonly LoginManager _loginManager;
-
-        public VistaUsuarioController(LoginManager loginManager)
+        private readonly IConfiguration _configuration;
+        public VistaUsuarioController(LoginManager loginManager, IConfiguration configuration)
         {
             _loginManager = loginManager;
+            _configuration = configuration;
         }
 
         // GET: VistaUsuarioController
@@ -198,10 +202,6 @@ namespace ReproductorMultimedia.Controllers
             return View("Home");
         }
 
-        //public IActionResult VerContenidoListaReproduccion()
-        //{
-        //               return View();
-        //}
         [HttpGet]
         public IActionResult VerContenidoListaReproduccion(Guid idLista)
         {
@@ -217,6 +217,126 @@ namespace ReproductorMultimedia.Controllers
             ViewBag.NombreLista = nombreLista;
 
             return View(listado);
+        }
+        public ActionResult ModoOnline()
+        {
+            return View();
+        }
+        public IActionResult PagoPayPal()
+        {
+            var paypalClientId = _configuration["PayPal:ClientId"];
+            ViewBag.PayPalClientId = paypalClientId;
+            return View();
+        }
+
+        // Inicia el proceso de autenticación con Spotify. El usuario autorizaes redireccionado a Spotify y luego de autorizar es redirigido a la URL de callback.
+        public IActionResult LoginSpotify()
+        {
+            // Leer configuración desde appsettings.json
+
+            var clientId = _configuration["Spotify:ClienteID"]; // Identificador del cliente
+            var redirectUri = "https://localhost:7231/callback"; // URL de redirección registrada en la aplicación de Spotify
+            var scopes = "user-read-private user-read-email user-read-playback-state user-modify-playback-state"; // Permisos solicitados
+
+            var url = $"https://accounts.spotify.com/authorize?client_id={clientId}" +
+                      $"&response_type=code" +
+                      $"&redirect_uri={Uri.EscapeDataString(redirectUri)}" +
+                      $"&scope={Uri.EscapeDataString(scopes)}";
+
+            return Redirect(url);
+        }
+        // Reicbe el código de autorización de Spotify y obtiene el token de acceso.
+        public ActionResult Callback(string code)
+        {
+            // Obtener configuración desde appsettings.json
+
+            var clientId = _configuration["Spotify:ClienteID"];
+            var clientSecret = _configuration["Spotify:ClienteSecret"];
+            var redirectUri = _configuration["Spotify:RedirectUri"];
+
+            // Creamos la solicitud HTTP para obtener el token
+
+            using var client = new HttpClient();
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://accounts.spotify.com/api/token");
+
+            // Configuramos los datos del formulario POST
+            var postData = new List<KeyValuePair<string, string>>
+    {
+        new("grant_type", "authorization_code"), // Tipo de autorización
+        new("code", code), // Código recibido de Spotify
+        new("redirect_uri", redirectUri), // Debe coincidir con el registrado
+        new("client_id", clientId), // ID del cliente
+        new("client_secret", clientSecret) // Código secreto del cliente
+    };
+            // Convertimos los datos a formato x-www-form-urlencoded
+
+            request.Content = new FormUrlEncodedContent(postData);
+
+            // Enviamos la solicitud y obtenemos la respuesta
+
+            var response = client.Send(request);
+            var content = response.Content.ReadAsStringAsync().Result;
+
+            // Deserializamos la respuesta JSON para obtener el token
+
+            var tokenResponse = JsonConvert.DeserializeObject<SpotifyTokenResponse>(content);
+
+            // Guardamos el token en la sesión para usarlo en futuras solicitudes a la API de Spotify
+            HttpContext.Session.SetString("SpotifyAccessToken", tokenResponse.access_token);
+
+            return RedirectToAction("ModoOnline");
+        }
+
+        public ActionResult PerfilSpotify()
+        {
+            // Usamos el token de acceso guardado en la sesión para hacer una solicitud a la API de Spotify
+            var token = HttpContext.Session.GetString("SpotifyAccessToken");
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = client.GetAsync("https://api.spotify.com/v1/me").Result;
+            var content = response.Content.ReadAsStringAsync().Result;
+
+            // Deserializamos la respuesta JSON para obtener los datos del perfil
+
+            var perfil = JsonConvert.DeserializeObject<SpotifyPerfilResponse>(content);
+
+            // Pasamos los datos del perfil a la vista usando ViewBag
+            ViewBag.Nombre = perfil.NombreVisible;
+
+            return View();
+        }
+
+        public ActionResult RenovarTokenSpotify()
+        {
+            // Usamos el refresh token guardado en la sesión para obtener un nuevo token de acceso
+            var refreshToken = HttpContext.Session.GetString("SpotifyRefreshToken");
+            var clientId = _configuration["Spotify:ClienteID"];
+            var clientSecret = _configuration["Spotify:ClienteSecret"];
+
+            using var client = new HttpClient();
+            var postData = new List<KeyValuePair<string, string>>
+    {
+        new("grant_type", "refresh_token"),
+        new("refresh_token", refreshToken),
+        new("client_id", clientId),
+        new("client_secret", clientSecret)
+    };
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://accounts.spotify.com/api/token")
+            {
+                Content = new FormUrlEncodedContent(postData)
+            };
+
+            var response = client.Send(request);
+            var content = response.Content.ReadAsStringAsync().Result;
+
+            var tokenResponse = JsonConvert.DeserializeObject<SpotifyTokenResponse>(content);
+            HttpContext.Session.SetString("SpotifyAccessToken", tokenResponse.access_token);
+
+            ViewBag.TokenRenovado = tokenResponse.access_token;
+            return View("PerfilSpotify");
         }
     }
 }

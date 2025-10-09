@@ -1,4 +1,6 @@
 ﻿@model Logica.ViewModels.UsuarioViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
 @{
     ViewBag.Title = "Registro";
 }
@@ -137,5 +139,9 @@
     }
 </script>
 
-
+<script>
+    const RECAPTCHA_SITEKEY = '@Configuration["GoogleReCaptcha:SiteKey"]';
+    const RECAPTCHA_ACTION = 'login';
+</script>
+<script src="/Captcha/captchaScripts.js"></script>
 

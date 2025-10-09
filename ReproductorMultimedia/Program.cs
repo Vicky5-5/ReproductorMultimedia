@@ -1,10 +1,12 @@
 using Logica.Contexto;
 using Logica.Managers;
+using Logica.PayPal_Settings;
 using Logica.Servicios;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
+using System.Configuration;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +21,11 @@ builder.Services.AddControllersWithViews();
 
 //Para controlar el el http current
 builder.Services.AddHttpContextAccessor(); // Permite el acceso a HttpContext
+
+//Configuración de PayPal desde appsettings.json
+builder.Services.Configure<PayPalSettings>(
+    builder.Configuration.GetSection("PayPal")
+);
 
 //Se registra con un servicio inyectable en el contenedor de dependenica
 //Para que pueda ser inyectada en culaquier controlado o servicio. El patrón Sinleton es una instancia GLOBAL

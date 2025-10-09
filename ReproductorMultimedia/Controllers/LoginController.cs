@@ -1,6 +1,9 @@
 ﻿using Logica.Managers;
 using Logica.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using ReproductorMultimedia.wwwroot.Captcha;
+using System.Net.Http;
 
 namespace ReproductorMultimedia.Controllers
 {
@@ -10,16 +13,22 @@ namespace ReproductorMultimedia.Controllers
         //Para enviar el correo
         private readonly CorreoService _correoService;
 
-        public LoginController(LoginManager loginManager, CorreoService correoService)
+        private readonly IConfiguration _configuration;
+        private static readonly HttpClient _httpClient = new HttpClient();
+
+        public LoginController(LoginManager loginManager, CorreoService correoService, IConfiguration configuration)
         {
             _loginManager = loginManager;
             _correoService = correoService;
+            _configuration = configuration;
+
         }
 
 
         // GET: Login
         public ActionResult Login()
         {
+            ViewBag.SiteKey = _configuration["GoogleReCaptcha:SiteKey"]; // Pasar la clave del sitio a la vista
             return View();
         }
 
@@ -30,6 +39,33 @@ namespace ReproductorMultimedia.Controllers
             Response.Cookies.Delete("Nombre"); // Elimina la cookie si la estás usando
             return RedirectToAction("Login", "Login");
         }
+        // Método para validar el reCAPTCHA v3
+        private bool ValidarReCaptcha(string token)
+        {
+            var secretKey = _configuration["GoogleReCaptcha:SecretKey"]; // Obtener la clave secreta desde la configuración
+            try
+            {
+                // Realizar la solicitud a la API de verificación de reCAPTCHA
+                var response = _httpClient.PostAsync($"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={token}", null)
+                                          .GetAwaiter().GetResult();
+
+                // Verificar si la respuesta fue exitosa. Si no, consideramos el captcha inválido
+                if (!response.IsSuccessStatusCode)
+                    return false;
+
+                // Leer y deserializar la respuesta JSON de Google
+                var responseString = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                var result = JsonConvert.DeserializeObject<ReCaptchaResponse>(responseString);
+
+                return result?.success ?? false;
+            }
+            catch
+            {
+                // En caso de error (conexión, etc.) consideramos captcha inválido
+                return false;
+            }
+        }
+
 
 
         [HttpPost]
@@ -41,6 +77,19 @@ namespace ReproductorMultimedia.Controllers
                 Email = email,
                 Password = password
             };
+
+            // Obtener el token de reCAPTCHA enviado desde el formulario
+            var captchaToken = Request.Form["g-recaptcha-response"];
+
+            // Verificar el token de reCAPTCHA si está vacío o inválido
+            if (string.IsNullOrWhiteSpace(captchaToken) || !ValidarReCaptcha(captchaToken))
+            {
+                ViewBag.ModalTitulo = "Captcha inválido";
+                ViewBag.ModalMensaje = "Por favor, verifica que no eres un robot.";
+                ViewBag.ModalBoton = "Cerrar";
+                ViewBag.MostrarModal = true;
+                return View("Login", viewModel);
+            }
 
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {

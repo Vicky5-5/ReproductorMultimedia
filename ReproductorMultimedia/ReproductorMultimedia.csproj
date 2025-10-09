@@ -7,6 +7,10 @@
 		<EnableCompressedStaticFiles>false</EnableCompressedStaticFiles>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Include="wwwroot\Captcha\ReCaptchaResponse.cs" />
+	</ItemGroup>
+
 
 	<ItemGroup>
     <PackageReference Include="bootstrap" Version="5.3.7" />
@@ -18,6 +22,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="RestSharp" Version="112.1.0" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
     <PackageReference Include="Xabe.FFmpeg" Version="6.0.1" />
@@ -34,6 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\Captcha\captchaScripts.js" />
     <None Include="wwwroot\Icono\icono.png" />
   </ItemGroup>
 

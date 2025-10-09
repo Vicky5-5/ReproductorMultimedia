@@ -27,6 +27,15 @@
     <i class="fa-solid fa-music"></i> Ver Listas Personalizadas
 </a>
 
+<!--Para realizar el pago-->
+@* <a href="@Url.Action("PagoPayPal", "VistaUsuario")" class="btn btn-outline-success mb-4">
+    <i class="fa-solid fa-wifi"></i> Modo Online (Spotify)
+</a> *@
+
+<!--Para probar el online-->
+<a href="@Url.Action("LoginSpotify", "VistaUsuario")" class="btn btn-outline-success mb-4">
+    <i class="fa-solid fa-wifi"></i> Modo Online (Spotify)
+</a>
 
 <!-- Para crear una barra de búsqueda. Esta barra solo busca el nombre de las canciones -->
 <form id="formularioBusqueda" class="busqueda-container">
@@ -76,7 +85,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>                
+            <tr>
                 <td>
                     <div class="disco" id="disco-@item.idCancion">
                         <img src="@item.RutaCaratulaAlbum" alt="Carátula" />
@@ -151,7 +160,7 @@
     <script src="~/js/HomeVistaUsuario/likes.js"></script>
     <script src="~/js/HomeVistaUsuario/audio-player.js"></script>
     <script src="~/js/HomeVistaUsuario/busqueda.js"></script>
-    <script src="~/js/HomeVistaUsuario/listas-personalizadas.js"></script>    
+    <script src="~/js/HomeVistaUsuario/listas-personalizadas.js"></script>
     <script src="~/js/HomeVistaUsuario/actualizacionReproducciones.js"></script>
 
 }

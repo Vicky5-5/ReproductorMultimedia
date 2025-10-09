@@ -1,7 +1,10 @@
 ﻿@model Logica.ViewModels.UsuarioViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
 @{
     ViewData["Title"] = "InicioLogin";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var siteKey = Configuration["GoogleReCaptcha:SiteKey"];
 }
 
 <canvas id="mouseTrailCanvas"></canvas> <!--Añadimos un canvas al fondo para la animación-->
@@ -51,6 +54,7 @@
 <link href="~/css/Login/estilosLogin.css" rel="stylesheet" />
 @section Scripts {
     <script src="~/js/Canvas/mouseTrail.js"></script> <!--Añadimos el script del canvas-->
+
 }
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
@@ -84,20 +88,40 @@
         );
     }
 
-    function mostrarModalConfirmacion(titulo, mensaje, textoBoton, accionCallback) {
+        function mostrarModalConfirmacion(titulo, mensaje, textoBoton, accionCallback) {
         $('#tituloModal').text(titulo);
         $('#mensajeModal').text(mensaje);
         $('#btnConfirmarModal').text(textoBoton);
         $('#btnConfirmarModal').off('click');
-        $('#btnConfirmarModal').on('click', function () {
-            $('#modalConfirmacion').modal('hide');
-            if (typeof accionCallback === 'function') {
-                accionCallback();
-            }
+
+        // Espera a que el modal esté completamente visible antes de asignar eventos
+        $('#modalConfirmacion').one('shown.bs.modal', function () {
+            $('#btnConfirmarModal').focus(); // Asigna el foco de forma segura
+
+            $('#btnConfirmarModal').on('click', function () {
+                $('#modalConfirmacion').modal('hide');
+                if (typeof accionCallback === 'function') {
+                    accionCallback();
+                }
+            });
         });
+
         $('#modalConfirmacion').modal('show');
     }
+
 </script>
+
+<!--Script para Google ReCaptcha v3-->
+<script>
+    const RECAPTCHA_SITEKEY = '@siteKey';
+    const RECAPTCHA_ACTION = 'login';
+</script>
+
+<script src="https://www.google.com/recaptcha/api.js?render=@siteKey"></script>
+<script src="/Captcha/captchaScripts.js"></script>
+
+
+
 <!--Para que funcione el modal e informárte de que el usuario se equivocó en el usuario o contraseña-->
 @if (ViewBag.MostrarModal != null && (bool)ViewBag.MostrarModal)
 {

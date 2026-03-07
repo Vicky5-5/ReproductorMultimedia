@@ -1,7 +1,10 @@
-﻿using Logica.Servicios;
+﻿using Logica.Modelos_Auxiliares;
+using Logica.Servicios;
 using Microsoft.Extensions.Options;
 using System.IO;
+using System.Net;
 using System.Net.Mail;
+using System.Security.Cryptography;
 using System.Text;
 
 public class CorreoService
@@ -12,6 +15,15 @@ public class CorreoService
         _smtpSettings = smtpOptions.Value; 
     }
 
+    // Método específico para enviar el código de verificación al iniciar sesión desde un nuevo dispositivo
+    public void EnviarCodigoVerificacion(string email, string codigo)
+    {
+        string asunto = "Código de verificación de inicio de sesión";
+        string cuerpo = $"Tu código de verificación es: {codigo}\n\nEste código expirará en 10 minutos.";
+
+        EnviarCorreo(email, asunto, cuerpo);
+    }
+   
     //Creamos el método para enviar el correo y que funciona tanto para en alta y baja. Así ahorramos código y es más fácil de mantener
     private void EnviarCorreo(string destinatario, string asunto, string cuerpo)
     {

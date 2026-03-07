@@ -10,6 +10,7 @@ namespace ReproductorMultimedia.Controllers
     public class CancionesController : Controller
     {
         // GET: Canciones/ListaCanciones
+        [HttpGet]
         public IActionResult ListaCanciones()
         {
             var lista = CancionesViewModel.ListSongs();

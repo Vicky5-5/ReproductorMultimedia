@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Azure.Core;
+using Logica.Contexto;
 using Logica.Models;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace Logica.Managers
 {
@@ -17,7 +19,8 @@ namespace Logica.Managers
         {
             _contextAccessor = contextAccessor;
         }
-
+     
+      
         public static LoginManager Instance(IHttpContextAccessor contextAccessor)
         {
             if (instance == null)

@@ -16,26 +16,27 @@
 
 <h1>Listado de Canciones</h1>
 
-<a href="@Url.Action("FavoritasUsuario", "VistaUsuario")" class="btn-favoritas mb-4">
+<a href="@Url.Action("FavoritasUsuario", "VistaUsuario")" class="btn-custom btn-favoritas mb-4">
     <i class="fa-solid fa-heart"></i> Ver favoritas
 </a>
-<button class="btn-lista mb-4" data-bs-toggle="modal" data-bs-target="#crearListaReproduccion">
+
+<button class="btn-custom btn-lista mb-4" data-bs-toggle="modal" data-bs-target="#crearListaReproduccion">
     <i class="fa-solid fa-plus"></i> Crear Lista Personalizada
 </button>
 
-<a href="@Url.Action("VerTodasLasListas", "VistaUsuario")" class="btn-ver-lista mb-4">
+<a href="@Url.Action("VerTodasLasListas", "VistaUsuario")" class="btn-custom btn-ver-lista mb-4">
     <i class="fa-solid fa-music"></i> Ver Listas Personalizadas
 </a>
 
-<!--Para realizar el pago-->
-@* <a href="@Url.Action("PagoPayPal", "VistaUsuario")" class="btn btn-outline-success mb-4">
-    <i class="fa-solid fa-wifi"></i> Modo Online (Spotify)
-</a> *@
-
-<!--Para probar el online-->
-<a href="@Url.Action("LoginSpotify", "VistaUsuario")" class="btn btn-outline-success mb-4">
+<a href="@Url.Action("PagoPayPal", "VistaUsuario")" class="btn-custom btn-online mb-4">
     <i class="fa-solid fa-wifi"></i> Modo Online (Spotify)
 </a>
+
+
+<!--Para probar el online-->
+@* <a href="@Url.Action("LoginSpotify", "VistaUsuario")" class="btn btn-outline-success mb-4">
+    <i class="fa-solid fa-wifi"></i> Modo Online (Spotify)
+</a> *@
 
 <!-- Para crear una barra de búsqueda. Esta barra solo busca el nombre de las canciones -->
 <form id="formularioBusqueda" class="busqueda-container">

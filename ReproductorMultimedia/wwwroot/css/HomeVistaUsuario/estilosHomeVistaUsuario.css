@@ -88,9 +88,9 @@
     color: #C73636;
 }
 
-.btn-favoritas {
+/* ==== CLASE BASE ==== */
+.btn-custom {
     display: inline-block;
-    background-color: #ff4b5c;
     color: white;
     border: none;
     border-radius: 30px;
@@ -99,87 +99,65 @@
     font-weight: bold;
     text-decoration: none;
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-    box-shadow: 0 4px 10px rgba(199, 54, 54, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-    .btn-favoritas i {
+    .btn-custom i {
         margin-right: 8px;
         transition: transform 0.4s ease;
     }
 
-    .btn-favoritas:hover {
-        background-color: #c73636; /* tono más oscuro */
-        transform: scale(1.05);
-        box-shadow: 0 6px 14px rgba(0,0,0,0.3);
-        text-decoration: none;
-        color: white;
-    }
-
-        .btn-favoritas:hover i {
-            transform: rotate(15deg);
-        }
-
-.btn-lista {
-    display: inline-block;
-    background-color: #7BBD3E;
-    color: white;
-    border: none;
-    border-radius: 30px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    text-decoration: none;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-    box-shadow: 0 4px 10px rgba(38, 92, 19, 0.3);
-}
-
-    .btn-lista i {
-        margin-right: 8px;
-        transition: transform 0.4s ease;
-    }
-
-    .btn-lista:hover {
-        background-color: #7BBD3E; /* tono más oscuro */
-        transform: scale(1.05);
-        box-shadow: 0 6px 14px rgba(0,0,0,0.3);
-        text-decoration: none;
-        color: white;
-    }
-
-        .btn-lista:hover i {
-            transform: rotate(15deg);
-        }
-
-.btn-ver-lista {
-    display: inline-block;
-    background-color: #3DB6BF;
-    color: white;
-    border: none;
-    border-radius: 30px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    text-decoration: none;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-    box-shadow: 0 4px 10px rgba(25, 69, 74, 0.3);
-}
-
-    .btn-ver-lista i {
-        margin-right: 8px;
-        transition: transform 0.4s ease;
-    }
-
-    .btn-ver-lista:hover {
-        background-color: #2E878F;
+    .btn-custom:hover {
         transform: scale(1.05);
         box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
         text-decoration: none;
         color: white;
     }
 
-        .btn-ver-lista:hover i {
+        .btn-custom:hover i {
             transform: rotate(15deg);
         }
+
+/* ==== VARIANTES DE COLOR ==== */
+
+/* Lista personalizada (azul) */
+.btn-ver-lista {
+    background-color: #3DB6BF;
+}
+
+    .btn-ver-lista:hover {
+        background-color: #2E878F;
+    }
+
+/* Favoritas (rojo) */
+.btn-favoritas {
+    background-color: #ff4b5c;
+    box-shadow: 0 4px 10px rgba(199, 54, 54, 0.3); /* más personalizado */
+}
+
+    .btn-favoritas:hover {
+        background-color: #c73636;
+    }
+
+/* Nueva lista (verde lima) */
+.btn-lista {
+    background-color: #7BBD3E;
+    box-shadow: 0 4px 10px rgba(38, 92, 19, 0.3);
+}
+
+    .btn-lista:hover {
+        background-color: #679e34;
+    }
+
+/* Modo Online (Spotify verde) */
+.btn-online {
+    background-color: #1DB954;
+}
+
+    .btn-online:hover {
+        background-color: #169442;
+    }
+
 
 /*Estilos de la barra de búsqueda*/
 .lupa {

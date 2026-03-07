@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Logica.Models;
+using Logica.Modelos_Auxiliares;
 
 namespace Logica.Contexto
 {
@@ -17,6 +18,9 @@ namespace Logica.Contexto
         public DbSet<ListaReproduccion> ListaReproduccion { get; set; }
         public DbSet<Canciones> Canciones { get; set; }
         public DbSet<CancionesFavoritas> Favoritas { get; set; }
+        // Para la tabla de relación entre Usuario y Dispositivo. Asi aseguramos que 
+        public DbSet<DispositivoUsuario> DispositivoUsuario { get; set; }
+        public DbSet<VerificacionLogin> LoginVerificacion { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

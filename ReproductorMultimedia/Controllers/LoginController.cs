@@ -16,12 +16,14 @@ namespace ReproductorMultimedia.Controllers
         private readonly IConfiguration _configuration;
         private static readonly HttpClient _httpClient = new HttpClient();
 
-        public LoginController(LoginManager loginManager, CorreoService correoService, IConfiguration configuration)
+        private readonly AuthManager _authManager;
+
+        public LoginController(LoginManager loginManager, CorreoService correoService, IConfiguration configuration, AuthManager authManager)
         {
             _loginManager = loginManager;
             _correoService = correoService;
             _configuration = configuration;
-
+            _authManager = authManager;
         }
 
 
@@ -30,6 +32,32 @@ namespace ReproductorMultimedia.Controllers
         {
             ViewBag.SiteKey = _configuration["GoogleReCaptcha:SiteKey"]; // Pasar la clave del sitio a la vista
             return View();
+        }
+        [HttpGet]
+        public ActionResult VerificarCodigo()
+        {
+            return View(); 
+        }
+        [HttpPost]
+        public IActionResult VerificarCodigo(string codigo)
+        {
+            int? userId = HttpContext.Session.GetInt32("UsuarioVerificacion");
+
+            if (userId == null)
+                return RedirectToAction("Login");
+
+            bool valido = _authManager.VerificarCodigo(userId.Value, codigo);
+
+            if (!valido)
+            {
+                ViewBag.Error = "Código incorrecto o expirado";
+                return View();
+            }
+
+            HttpContext.Session.SetInt32("idUsuario", userId.Value);
+            HttpContext.Session.Remove("UsuarioVerificacion");
+
+            return RedirectToAction("Home", "VistaUsuario");
         }
 
         [ActionName("LogOut")]
@@ -64,9 +92,7 @@ namespace ReproductorMultimedia.Controllers
                 // En caso de error (conexión, etc.) consideramos captcha inválido
                 return false;
             }
-        }
-
-
+        }      
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -103,15 +129,25 @@ namespace ReproductorMultimedia.Controllers
             try
             {
                 var usuario = _loginManager.Login(email, password);
+
                 if (usuario != null)
                 {
                     if (!usuario.Estado)
                     {
                         ViewBag.ModalTitulo = "Cuenta inactiva";
                         ViewBag.ModalMensaje = "Tu cuenta está inactiva. Por favor, contacta al administrador.";
-                        ViewBag.ModalBoton = "Cerrar";
                         ViewBag.MostrarModal = true;
                         return View("Login", viewModel);
+                    }
+
+                    // Se comprueba si el dispositivo es nuevo 
+                    if (_authManager.EsNuevoDispositivo(usuario.idUsuario))
+                    {
+                        _authManager.GenerarYEnviarCodigo(usuario.idUsuario, usuario.Email);
+
+                        HttpContext.Session.SetInt32("UsuarioVerificacion", usuario.idUsuario);
+
+                        return RedirectToAction("VerificarCodigo");
                     }
 
                     HttpContext.Session.SetString("Nombre", usuario.Nombre);
